@@ -1,3 +1,9 @@
+---
+title: Linear Regression Simplified
+layout: default
+output: bookdown::html_chapter
+---
+
 > Linear regression is a fundamental predictive modelling technique that aims to predict the value of an outcome variable based on  one or more input predictor variables. The aim is to establish a linear relationship (a mathematical formula) between the predictor variable(s) and the response variable, so we can use it to estimate the value of the response, when predictors values are known.
 
 ##Introduction
