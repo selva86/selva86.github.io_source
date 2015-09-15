@@ -1,5 +1,5 @@
 ---
-title: Linear Regression Simplified
+title: Linear Regression With R
 layout: default
 ---
 
