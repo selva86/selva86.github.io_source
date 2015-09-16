@@ -1,0 +1,175 @@
+---
+title: Feature Selection
+layout: default
+---
+> Finding the most important predictor variables (of features) that explains major part of variance of the response variable is key to identify and build high performing models.
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(error=FALSE, message=FALSE, warning=FALSE)
+```
+
+##Data Preparation
+For illustrating the various methods, we will use the ‘Ozone’ data from ‘mlbench’ package, except for Information value method which is applicable for binary categorical response variables.
+
+```{r, eval=TRUE}
+library(mlbench)
+data(Ozone, package="mlbench")
+inputData <- Ozone
+names(inputData) <- c("Month", "Day_of_month", "Day_of_week", "ozone_reading", "pressure_height", "Wind_speed", "Humidity", "Temperature_Sandburg", "Temperature_ElMonte", "Inversion_base_height", "Pressure_gradient", "Inversion_temperature", "Visibility")  # assign names
+```
+
+
+####Impute missing values using k-Nearest Neighbours
+```{r, eval=TRUE}
+library(DMwR)
+inputData <- knnImputation(inputData)
+```
+
+####Segregate continuous and categorical variables
+
+```{r, eval=TRUE}
+inputData_cont <- inputData[, c("pressure_height", "Wind_speed", "Humidity", "Temperature_Sandburg", "Temperature_ElMonte", "Inversion_base_height", "Pressure_gradient", "Inversion_temperature", "Visibility")] # all continuous vars in inputData_cont
+inputData_cat <- inputData[, c("Month", "Day_of_month", "Day_of_week")]  # all categorical variables in inputData_cat
+inputData_response <- data.frame(ozone_reading=inputData[, "ozone_reading"])  # response variable as a dataframe
+response_name <- "ozone_reading"  # name of response variable
+response <- inputData[, response_name]  # response variable as a vector
+```
+
+##1. Random Forest Method
+
+Random forest can be very effective to find a set of predictors that best explains the variance in the response variable.
+
+```{r, eval=TRUE, echo=FALSE, results="hide"}
+library(party)
+```
+
+```{r, eval=TRUE, echo=TRUE}
+library(party)
+cf1 <- cforest(ozone_reading ~ . , data= inputData, control=cforest_unbiased(mtry=2,ntree=50)) # fit the random forest
+varimp(cf1) # get variable importance, based on mean decrease in accuracy
+varimp(cf1, conditional=TRUE)  # conditional=True, adjusts for correlations between predictors
+varimpAUC(cf1)  # more robust towards class imbalance.
+```
+
+
+ 
+##2. Relative Importance
+
+Using calc.relimp {relaimpo}, the relative importance of variables fed into a lm model can be determined as a relative percentage.
+
+```{r, eval=TRUE, echo=FALSE}
+library(relaimpo)
+```
+
+```{r, eval=TRUE, echo=TRUE}
+library(relaimpo)
+lmMod <- lm(ozone_reading ~ . , data = inputData)  # fit lm() model
+relImportance <- calc.relimp(lmMod, type = "lmg", rela = TRUE)  # calculate relative importance scaled to 100
+sort(relImportance$lmg, decreasing=TRUE)  # relative importance
+```
+
+##4. MARS
+
+The earth package implements variable importance based on Generalized cross validation (GCV), number of subset models the variable occurs (nsubsets) and residual sum of squares (RSS).
+```{r, eval=TRUE, echo=FALSE}
+library(earth)
+```
+
+```{r, eval=-4, echo=TRUE}
+library(earth)
+marsModel <- earth(ozone_reading ~ ., data=inputData) # build model
+ev <- evimp (marsModel) # estimate variable importance
+plot (ev)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/variable-importance-mars.png", dpi = 220)
+```
+
+##5. Step-wise Regression
+
+If you have large number of predictors (> 15), split the inputData in chunks of 10 predictors with each chunk holding the responseVar.
+```{r, eval=TRUE}
+base.mod <- lm(ozone_reading ~ 1 , data= inputData)  # base intercept only model
+all.mod <- lm(ozone_reading ~ . , data= inputData) # full model with all predictors
+stepMod <- step(base.mod, scope = list(lower = base.mod, upper = all.mod), direction = "both", trace = 0, steps = 1000)  # perform step-wise algorithm
+shortlistedVars <- names(unlist(stepMod[[1]])) # get the shortlisted variable.
+shortlistedVars <- shortlistedVars[!shortlistedVars %in% "(Intercept)"]  # remove intercept 
+print(shortlistedVars)
+```
+
+The output could includes levels within categorical variables, since ‘stepwise’ is a linear regression based technique, as seen above.
+
+If you have a large number of predictor variables (100+), the above code may need to be placed in a loop that will run stepwise on sequential chunks of predictors. The shortlisted variables can be accumulated for further analysis towards the end of each iteration. This can be very effective method, if you want to (i) be highly selective about discarding valuable predictor variables. (ii) build multiple models on the response variable.
+ 
+##6. Boruta
+
+The ‘Boruta’ method can be used to decide if a variable is important or not.
+```{r, eval=TRUE, echo=FALSE}
+library(Boruta)
+```
+
+```{r, eval=TRUE, echo=TRUE}
+library(Boruta)
+# Decide if a variable is important or not using Boruta
+boruta_output <- Boruta(response ~ ., data=na.omit(inputData), doTrace=2)  # perform Boruta search
+# Confirmed 10 attributes: Humidity, Inversion_base_height, Inversion_temperature, Month, Pressure_gradient and 5 more.
+# Rejected 3 attributes: Day_of_month, Day_of_week, Wind_speed.
+boruta_signif <- names(boruta_output$finalDecision[boruta_output$finalDecision %in% c("Confirmed", "Tentative")])  # collect Confirmed and Tentative variables
+```
+
+
+##7. Information value and Weight of evidence
+
+#### Install package from github
+```{r, eval=FALSE}
+library(devtools)
+install_github("riv","tomasgreif")
+install_github("woe","tomasgreif")
+```
+
+```{r, eval=TRUE, echo=FALSE}
+library(woe)
+library(riv)
+```
+
+```{r, eval=FALSE, echo=TRUE}
+library(woe)
+library(riv)
+iv_df <- iv.mult(german_data, y="gb", summary=T)
+iv <- iv.mult(german_data, y="gb")
+print(iv_df)
+```
+
+```{r, eval=TRUE, echo=FALSE}
+library(woe)
+library(riv)
+iv_df <- invisible(iv.mult(german_data, y="gb", summary=T))
+iv <- invisible(iv.mult(german_data, y="gb"))
+print(iv_df)
+```
+
+###Plot the information value summary
+```{r, eval=FALSE}
+# Plot information value summary
+iv.plot.summary(iv_df)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/information-value-plot.png", dpi = 220)
+```
+
+###Calculate weight of evidence variables
+```{r, eval=FALSE, echo=TRUE}
+german_data_iv <- iv.replace.woe(german_data, iv, verbose=TRUE)  # add 
+woe variables to original data frame.
+# results not shown because of large data size
+
+```
+
+```{r, eval=TRUE, echo=FALSE}
+german_data_iv <- iv.replace.woe(german_data, iv, verbose=FALSE)  # add woe variables to original data frame.
+```
+
+
+The newly created woe variables can alternatively be in place of the original factor variables.
