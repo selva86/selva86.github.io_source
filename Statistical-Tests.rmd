@@ -12,18 +12,19 @@ To test if a sample follows a *normal distribution*.
 ```{r, eval=FALSE}
 shapiro.test(numericVector) # Does myVec follow a normal disbn?
 ```
+Lets see how to do the test on a sample from a normal distribution.
 
 ```{r, eval=TRUE}
 # Example: Test a normal distribution
 normaly_disb <- rnorm(100, mean=5, sd=1) # generate a normal distribution
-shapiro.test(normaly_disb)
+shapiro.test(normaly_disb)  # the shapiro test.
 ```
 ####How to interpret?
-The null hypothesis is that the sample being tested is normally distributed. Since the p Value is not less that the significane level of 0.05, we don't reject the null hypothesis. Therefore, the tested sample is from a normal distribution.
+The null hypothesis here is that the sample being tested is normally distributed. Since the p Value is not less that the significane level of 0.05, we don't reject the null hypothesis. Therefore, the tested sample is confirmed to follow a normal distribution (thou, we already know that!).
 
 ```{r, eval=TRUE}
 # Example: Test a uniform distribution
-not_normaly_disb <- runif(100)
+not_normaly_disb <- runif(100)  # uniform distribution.
 shapiro.test(not_normaly_disb)
 ```
 ####How to interpret?
