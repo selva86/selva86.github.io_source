@@ -2,9 +2,9 @@
 title: R Tutorial
 layout: default
 ---
-> This is a beginner, non-programmer friendly guide to learn and understand the R language from scratch, giving a brief walk through of the most important parts of the language in plain english, designed to get you on board fairly quick.
+> This is a beginner, non-programmer friendly guide to learn and understand the R language from scratch, giving a brief walkthrough of the most important parts of the language in plain english, intended to get you on board fairly quick.
 
-I assume that you have R or RS tudio installed and are ready to follow along, typing the codes in to your R console as you learn. So without further adieu lets jump right in.
+I assume that you have R or RStudio installed and are ready to follow along, typing the codes in to your R console as you learn. So without further adieu lets jump right in.
 
 ##SECTION 1
 
@@ -73,11 +73,13 @@ The next question naturally is what are the different types of classes available
 * vector  – A collection of elements of same class
 * matrix  – All columns must uniformly contain only one variable type.
 * data.frame  – The columns can contain different classes.
-* list  – Can hold objects of different classes and lengths
+* list  – Can hold objects of different classes and lengths  
 
-####Some Miscellaneous but Important Items Before We Proceed . .
+***
 
-#####What is a R package and how to install them?
+###Some Miscellaneous but Important Items Before We Proceed . .
+
+####What is a R package and how to install them?
 
 Upon your first install, R comes with a built-in set of packages which can be invoked directly from your R console. However, since R is a open-source language, anyone can contribute to its capabilities by writing packages. Over the years, these contributions have resulted in growing list of over 5k packages. Here is how you can install the packages from within R console:
 
