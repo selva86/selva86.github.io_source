@@ -300,7 +300,7 @@ gvlma::gvlma(mod)
 plot(mod)
 ```
 
-3 of the assumptions are not satisfied. This is probably because we have only 50 data points in the data and having even 2 or 3 outliers can impact the quality of the model. So the immediate approach to address this is to remove those outliers are re-build the model. Take a look at the diagnostic plot below as arrive at your own conclusion.
+Three of the assumptions are not satisfied. This is probably because we have only 50 data points in the data and having even 2 or 3 outliers can impact the quality of the model. So the immediate approach to address this is to remove those outliers and re-build the model. Take a look at the diagnostic plot below to arrive at your own conclusion.
 
 ```{r, echo = FALSE}
 embed_png("screenshots/regression-plot-big.png", dpi = 220)
