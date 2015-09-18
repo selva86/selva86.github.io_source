@@ -28,9 +28,10 @@ Here, the beta parameter is raised to power 2, which is not linear. So the assum
 ####How to check?
 Check the mean of the residuals. If it approximately zero, then this assumption is held true for that model.
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 mod <- lm(dist ~ speed, data=cars)
 mean(mod$residuals)
+#=> 2.442491e-17
 ```
 Since the mean of residuals is approximately zero, this assumption holds true for this model.
 
@@ -53,16 +54,18 @@ embed_png("screenshots/regression-plot-mtcars.png", dpi = 220)
 
 From the first plot (topleft), as the fitted values along x increase, the residuals decrease and then increase. This pattern is indicated by the red line, which should be approximately flat if the errors are homoscedastic. The plot on the bottom left also checks this, and is more convenient as the error term in Y axis is standardised. 
 
-In this case, there is a definite pattern noticed. So, there is heterscedasticity. Lets check this on a 
+In this case, there is a definite pattern noticed. So, there is heterscedasticity. Lets check this on a different model. 
 
 ```{r, eval=FALSE}
-mod <- lm(dist ~ speed, data=cars)  #  linear model
+mod <- lm(dist ~ speed, data=cars[1:20, ])  #  linear model
 plot(mod)
 ```
 
 ```{r, echo = FALSE}
-embed_png("screenshots/regression-plot.png", dpi = 220)
+embed_png("screenshots/regression-plot-cars-20rows.png", dpi = 220)
 ```
+
+Now, the points appear random and the line looks pretty flat, with no increasing or decreasing trend. So, the condition of homoscedasticity can be accepted.
 
 ##Assumption 4
 >####_No autocorrelation of errors_
@@ -168,7 +171,7 @@ If, even after adding lag1 as an X variable, does not satidfy the assumption of 
 #### How to check?
 Do a correlation test on the X variable and the residuals.
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 mod.lm <- lm(dist ~ speed, data=cars)
 cor.test(cars$speed, mod.lm$residuals)  # do correlation test 
 #=>   Pearson's product-moment correlation
@@ -320,6 +323,7 @@ gvlma::gvlma(mod)
 ```{r, echo = FALSE}
 embed_png("screenshots/regression-plot-big-no-outliers.png", dpi = 220)
 ```
+
 Though the changes look minor, it is more closer to conforming with the assumptions. There is one more thing left to be explained. That is, the plot in the bottom right. It is the plot of standardised residuals against the leverage. Leverage is a measure of how much each datapoint influences the regression. The plot also contours values of [Cook’s distance](https://en.wikipedia.org/wiki/Cook%27s_distance), which reflects how much the fitted values would change if a point was deleted. 
 
 A point far from the centroid with a large residual can severely distort the regression. For a good regression model, the red smoothed line should stay close to the mid-line and no point should have a large cook's distance (i.e. should not have too much influence on the model.)
