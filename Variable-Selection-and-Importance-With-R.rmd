@@ -8,21 +8,11 @@ layout: default
 knitr::opts_chunk$set(error=FALSE, message=FALSE, warning=FALSE)
 ```
 
-##Data Preparation
+## Import Data
 For illustrating the various methods, we will use the ‘Ozone’ data from ‘mlbench’ package, except for Information value method which is applicable for binary categorical response variables.
 
 ```{r, eval=TRUE}
 inputData <- read.csv("http://rstatistics.net/wp-content/uploads/2015/09/ozone1.csv", stringsAsFactors=F)
-```
-
-####Segregate continuous and categorical variables
-
-```{r, eval=TRUE}
-inputData_cont <- inputData[, c("pressure_height", "Wind_speed", "Humidity", "Temperature_Sandburg", "Temperature_ElMonte", "Inversion_base_height", "Pressure_gradient", "Inversion_temperature", "Visibility")] # all continuous vars in inputData_cont
-inputData_cat <- inputData[, c("Month", "Day_of_month", "Day_of_week")]  # all categorical variables in inputData_cat
-inputData_response <- data.frame(ozone_reading=inputData[, "ozone_reading"])  # response variable as a dataframe
-response_name <- "ozone_reading"  # name of response variable
-response <- inputData[, response_name]  # response variable as a vector
 ```
 
 ##1. Random Forest Method
@@ -120,7 +110,7 @@ embed_png("screenshots/variable-importance-mars.png", dpi = 220)
 
 ##5. Step-wise Regression
 
-If you have large number of predictors (> 15), split the inputData in chunks of 10 predictors with each chunk holding the responseVar.
+If you have large number of predictors (> 15), split the inputData in chunks of 10 predictors with each chunk holding the `responseVar`.
 ```{r, eval=FALSE}
 base.mod <- lm(ozone_reading ~ 1 , data= inputData)  # base intercept only model
 all.mod <- lm(ozone_reading ~ . , data= inputData) # full model with all predictors
@@ -143,7 +133,7 @@ The ‘Boruta’ method can be used to decide if a variable is important or not.
 ```{r, eval=FALSE, echo=TRUE}
 library(Boruta)
 # Decide if a variable is important or not using Boruta
-boruta_output <- Boruta(response ~ ., data=na.omit(inputData), doTrace=2)  # perform Boruta search
+boruta_output <- Boruta(ozone_reading ~ ., data=na.omit(inputData), doTrace=2)  # perform Boruta search
 # Confirmed 10 attributes: Humidity, Inversion_base_height, Inversion_temperature, Month, Pressure_gradient and 5 more.
 # Rejected 3 attributes: Day_of_month, Day_of_week, Wind_speed.
 boruta_signif <- names(boruta_output$finalDecision[boruta_output$finalDecision %in% c("Confirmed", "Tentative")])  # collect Confirmed and Tentative variables
