@@ -11,7 +11,7 @@ knitr::opts_chunk$set(error=FALSE, message=FALSE, warning=FALSE)
 ## Import Data
 For illustrating the various methods, we will use the ‘Ozone’ data from ‘mlbench’ package, except for Information value method which is applicable for binary categorical response variables.
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 inputData <- read.csv("http://rstatistics.net/wp-content/uploads/2015/09/ozone1.csv", stringsAsFactors=F)
 ```
 
