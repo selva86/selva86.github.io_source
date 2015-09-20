@@ -1,5 +1,5 @@
 ---
-title: Statistical Tests With R
+title: Statistical Tests
 layout: default
 ---
 > This chapter explains the purpose of some of the most commonly used statistical tests and how to implement them in R
@@ -14,18 +14,28 @@ shapiro.test(numericVector) # Does myVec follow a normal disbn?
 ```
 Lets see how to do the test on a sample from a normal distribution.
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 # Example: Test a normal distribution
+set.seed(100)
 normaly_disb <- rnorm(100, mean=5, sd=1) # generate a normal distribution
 shapiro.test(normaly_disb)  # the shapiro test.
+#=> Shapiro-Wilk normality test
+#=>
+#=> data:  normaly_disb
+#=> W = 0.98836, p-value = 0.535
 ```
 ####How to interpret?
 The null hypothesis here is that the sample being tested is normally distributed. Since the p Value is not less that the significane level of 0.05, we don't reject the null hypothesis. Therefore, the tested sample is confirmed to follow a normal distribution (thou, we already know that!).
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 # Example: Test a uniform distribution
+set.seed(100)
 not_normaly_disb <- runif(100)  # uniform distribution.
 shapiro.test(not_normaly_disb)
+#=>  	Shapiro-Wilk normality test
+
+#=> data:  not_normaly_disb
+#=> W = 0.96509, p-value = 0.009436
 ```
 ####How to interpret?
 If p-Value is less than the significance level of 0.05, the null-hypothesis that it is normally distributed can be rejected, which is the case here.
@@ -35,9 +45,20 @@ If p-Value is less than the significance level of 0.05, the null-hypothesis that
 ####Why is it used?
 It is a parametric test used to test if the mean of a sample from a normal distribution could reasonably be a specific value.
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
+set.seed(100)
 x <- rnorm(50, mean = 10, sd = 0.5)
 t.test(x, mu=10) # testing if mean of x could be
+#=> One Sample t-test
+#=> 
+#=> data:  x
+#=> t = 0.70372, df = 49, p-value = 0.4849
+#=> alternative hypothesis: true mean is not equal to 10
+#=> 95 percent confidence interval:
+#=>   9.924374 10.157135
+#=> sample estimates:
+#=> mean of x 
+#=>  10.04075 
 ```
  
 ####How to interpret?
@@ -66,16 +87,31 @@ Both t.Test and Wilcoxon rank test can be used to compare the mean of 2 samples.
 ####How to implement in R?
 Pass the two numeric vector samples into the t.test() when sample is distributed ‘normal’y and wilcox.test() when it isn’t assumed to follow a normal distribution.
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 x <- c(0.80, 0.83, 1.89, 1.04, 1.45, 1.38, 1.91, 1.64, 0.73, 1.46)
 y <- c(1.15, 0.88, 0.90, 0.74, 1.21)
 wilcox.test(x, y, alternative = "g")  # g for greater
+#=> Wilcoxon rank sum test
+#=> 
+#=> data:  x and y
+#=> W = 35, p-value = 0.1272
+#=> alternative hypothesis: true location shift is greater than 0
 ```
 
 With a p-Value of 0.1262, we cannot reject the null hypothesis that both x and y have same means.
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 t.test(1:10, y = c(7:20))      # P = .00001855
+#=> Welch Two Sample t-test
+#=> 
+#=> data:  1:10 and c(7:20)
+#=> t = -5.4349, df = 21.982, p-value = 1.855e-05
+#=> alternative hypothesis: true difference in means is not equal to 0
+#=> 95 percent confidence interval:
+#=>   -11.052802  -4.947198
+#=> sample estimates:
+#=> mean of x mean of y 
+#=>       5.5      13.5
 ```
 
 With p-Value < 0.05, we can safely reject the null hypothesis that there is no difference in mean. 
@@ -100,11 +136,16 @@ Kolmogorov-Smirnov test is used to check whether 2 samples follow the same distr
 ks.test(x, y) # x and y are two numeric vector
 ```
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 # From different distributions
 x <- rnorm(50)
 y <- runif(50)
 ks.test(x, y)  # perform ks test
+#=> Two-sample Kolmogorov-Smirnov test
+#=> 
+#=> data:  x and y
+#=> D = 0.58, p-value = 4.048e-08
+#=> alternative hypothesis: two-sided
 ```
 
 ```{r, eval=TRUE}
@@ -112,6 +153,11 @@ ks.test(x, y)  # perform ks test
 x <- rnorm(50)
 y <- rnorm(50)
 ks.test(x, y)  # perform ks test
+#=> Two-sample Kolmogorov-Smirnov test
+#=> 
+#=> data:  x and y
+#=> D = 0.18, p-value = .3959
+#=> alternative hypothesis: two-sided
 ```
 
 ####How to tell if they are from the same distribution ?
@@ -137,11 +183,11 @@ Example use case: You may want to figure out if big budget films become box-offi
 chisq.test(matrix, correct = FALSE)  # Yates continuity correction not applied
 #or
 summary(table(x, y)) # performs a chi-squared test.
+# Sample results
+#=> Pearson's Chi-squared test
+#=> data:  M
+#=> X-squared = 30.0701, df = 2, p-value = 2.954e-07
 ```
-
-Pearson's Chi-squared test
-data:  M
-X-squared = 30.0701, df = 2, p-value = 2.954e-07
  
 ####How to tell if x, y are independent?
 There are two ways to tell if they are independent: 
@@ -162,8 +208,18 @@ The cor.test() function computes the correlation between two continuous variable
 cor.test(x, y) # where x and y are numeric vectors.
 ```
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 cor.test(cars$speed, cars$dist)
+#=> Pearson's product-moment correlation
+#=> 
+#=> data:  cars$speed and cars$dist
+#=> t = 9.464, df = 48, p-value = 1.49e-12
+#=> alternative hypothesis: true correlation is not equal to 0
+#=> 95 percent confidence interval:
+#=>   0.6816422 0.8862036
+#=> sample estimates:
+#=>       cor 
+#=> 0.8068949
 ```
 
 ####How to interpret?
@@ -178,4 +234,4 @@ friedman.test()  # Friedman's rank sum non-parametric test
 
 There are more useful tests available in various other packages.
 
-The package *lawstat* has a good collection. The outliers package has a number of test for testing for presence of outliers.
+The package `lawstat` has a good collection. The outliers package has a number of test for testing for presence of outliers.
