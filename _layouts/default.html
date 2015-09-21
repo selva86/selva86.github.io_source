@@ -4,7 +4,7 @@
     <title>{{page.title}} &middot; r-statistics.co</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="shortcut icon" href="/screenshots/iconb-64.png" type="image/x-icon" />
     <link href="www/bootstrap.min.css" rel="stylesheet">
     <link href="www/highlight.css" rel="stylesheet">
 
@@ -51,10 +51,11 @@
           Want to get involved? <a href="mailto:rcodeprogramming@gmail.com">Let me know!</a>.
         </div>
 
-        <!--
+        {% if page.url != "/index.html" %}
         <h4>Contents</h4>
+        {% endif %}
           <ul class="list-unstyled" id="toc"></ul>
-
+        <!--
           <hr>
           <p><a href="/contribute.html">How to contribute</a></p>
 

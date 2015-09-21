@@ -148,7 +148,7 @@ ks.test(x, y)  # perform ks test
 #=> alternative hypothesis: two-sided
 ```
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 # Both from normal distribution
 x <- rnorm(50)
 y <- rnorm(50)
