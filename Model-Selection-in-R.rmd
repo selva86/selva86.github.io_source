@@ -2,6 +2,7 @@
 title: Model Selection
 layout: default
 ---
+> It is possible to build multiple models from a given set of X variables. But building a good quality model can make all the difference. Here, we explore various approaches to build and evaluate regression models.
 
 ## Data Prep
 Lets prepare the data upon which the various model selection approaches will be applied. A dataframe containing only the predictors and one containing the response variable is created for use in the model seection algorithms.

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Welcome
+title: Advanced R Stats
 ---
 
 # Welcome to r-statistics.co

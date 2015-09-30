@@ -1,0 +1,53 @@
+---
+title: Logistic Regression
+layout: default
+---
+> If linear regression serves to predict continuous Y variables, logistic regression is used for binary classification.
+
+```{r, eval=FALSE}
+inputData <- read.csv("http://rstatistics.net/wp-content/uploads/2015/09/adult.csv")
+head(inputData)
+#=>   AGE         WORKCLASS FNLWGT  EDUCATION EDUCATIONNUM       MARITALSTATUS
+#=> 1  39         State-gov  77516  Bachelors           13       Never-married
+#=> 2  50  Self-emp-not-inc  83311  Bachelors           13  Married-civ-spouse
+#=> 3  38           Private 215646    HS-grad            9            Divorced
+#=> 4  53           Private 234721       11th            7  Married-civ-spouse
+#=> 5  28           Private 338409  Bachelors           13  Married-civ-spouse
+#=> 6  37           Private 284582    Masters           14  Married-civ-spouse
+#             OCCUPATION   RELATIONSHIP   RACE     SEX CAPITALGAIN CAPITALLOSS
+#=> 1       Adm-clerical  Not-in-family  White    Male        2174           0
+#=> 2    Exec-managerial        Husband  White    Male           0           0
+#=> 3  Handlers-cleaners  Not-in-family  White    Male           0           0
+#=> 4  Handlers-cleaners        Husband  Black    Male           0           0
+#=> 5     Prof-specialty           Wife  Black  Female           0           0
+#=> 6    Exec-managerial           Wife  White  Female           0           0
+#     HOURSPERWEEK  NATIVECOUNTRY ABOVE50K
+#=> 1           40  United-States        0
+#=> 2           13  United-States        0
+#=> 3           40  United-States        0
+#=> 4           40  United-States        0
+#=> 5           40           Cuba        0
+#=> 6           40  United-States        0
+```
+Ideally, the proportion of events and non-events in the Y variable should approxiately be the same. So, lets first check the proportion of classes in the dependent variable `ABOVE50K`.
+
+```{r, eval=FALSE}
+table(inputData$ABOVE50K)
+#     0     1 
+# 24720  7841 
+```
+
+Clearly, there is a class bias, a condition observed when the proportion of events is much smaller than proportion of non-events. So we must sample the observations in approximately equal proportions to get better models.
+
+```{r, eval=F}
+input_ones <- which(inputData$ABOVE50K == 1)  # row nums of all 1's
+input_zeros <- which(inputData$ABOVE50K == 0)  # row nums of all 0's
+set.seed(100) 
+input_zeros_reduced <- sample(input_zeros, length(input_ones))  # sample as many 0's as there are 1's
+inputData_reduced <- inputData[c(input_ones, input_zeros_reduced), ]  # input with equal 1's and 0's
+training <- sample(1:nrow(inputData_reduced), size=round(0.7*NROW(inputData_reduced)))  # training row positions
+trainingData <- inputData[training, ]  # make training data
+testData <- inputData[-training, ]  # make test data
+```
+
+
