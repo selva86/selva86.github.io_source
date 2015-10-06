@@ -150,58 +150,114 @@ embed_png("screenshots/boruta-variable-importance.png", dpi = 220)
 
 ##7. Information value and Weight of evidence
 
+The [InformationValue package](https://cran.r-project.org/web/packages/InformationValue/vignettes/InformationValue.html) provides convenient functions to compute *weights of evidence* and *information value* for categorical variables.
+
+**Weights of Evidence (WOE)** provides a method of recoding the categorical `x` variable to continuous variables. For each category of a categorical variable, the **WOE** is calculated as:
+
+> **WOE = ln(percentage.good.of.all.goods / percentage.bad.of.all.bads)**
+
+In above formula, 'goods' is same as 'ones' and 'bads' is same as 'zeros'.
+
+**Information Value (IV)** is a measure of the predictive capability of a categorical `x` variable to accurately predict the goods and bads. For each category of `x`, information value is computed as:
+
+> **IV = (percentage.good.of.all.goods - percentage.bad.of.all.bads) * WOE**
+
+The total IV of a variable is the sum of IV's of its categories.
+
+### Example
+
+Let me demonstrate how to create the weights of evidence for categorical variables using the `WOE` function in `InformationValue` pkg. For this we will use the `adult` data as imported below. The response variable in `adult` is the `ABOVE50K` which indicates if the yearly salary of the individual in that row exceeds $50K. We have a number of predictor variables originally, out of which few of them are catgorical variables. On these categorical variables, we will derive the respective `WOE`s using the `InformationValue::WOE` function. Then, lets find out the `InformationValue:IV` of all categorical variables.
+
 #### Install package from github
 ```{r, eval=FALSE}
 library(devtools)
-install_github("riv","tomasgreif")
-install_github("woe","tomasgreif")
+install_github("selva86/InformationValue")
 ```
+
+#### Import the data
+```{r, eval=FALSE, echo=TRUE}
+library(InformationValue)
+inputData <- read.csv("http://rstatistics.net/wp-content/uploads/2015/09/adult.csv")
+head(inputData)
+#=>   AGE         WORKCLASS FNLWGT  EDUCATION EDUCATIONNUM       MARITALSTATUS
+#=> 1  39         State-gov  77516  Bachelors           13       Never-married
+#=> 2  50  Self-emp-not-inc  83311  Bachelors           13  Married-civ-spouse
+#=> 3  38           Private 215646    HS-grad            9            Divorced
+#=> 4  53           Private 234721       11th            7  Married-civ-spouse
+#=> 5  28           Private 338409  Bachelors           13  Married-civ-spouse
+#=> 6  37           Private 284582    Masters           14  Married-civ-spouse
+#             OCCUPATION   RELATIONSHIP   RACE     SEX CAPITALGAIN CAPITALLOSS
+#=> 1       Adm-clerical  Not-in-family  White    Male        2174           0
+#=> 2    Exec-managerial        Husband  White    Male           0           0
+#=> 3  Handlers-cleaners  Not-in-family  White    Male           0           0
+#=> 4  Handlers-cleaners        Husband  Black    Male           0           0
+#=> 5     Prof-specialty           Wife  Black  Female           0           0
+#=> 6    Exec-managerial           Wife  White  Female           0           0
+#     HOURSPERWEEK  NATIVECOUNTRY ABOVE50K
+#=> 1           40  United-States        0
+#=> 2           13  United-States        0
+#=> 3           40  United-States        0
+#=> 4           40  United-States        0
+#=> 5           40           Cuba        0
+#=> 6           40  United-States        0
+```
+
+#### Calculate the Information Values
+
+Below, the information value of each categorical variable is calculated using the `InformationValue::IV` and the strength of each variable is contained within the `howgood` attribute in the returned result. If you are want to dig further into the `IV` of individual categories within a categorical variable, the [`InformationValue::WOETable`](https://cran.r-project.org/web/packages/InformationValue/vignettes/InformationValue.html#woetable) will be helpful.
 
 ```{r, eval=FALSE, echo=TRUE}
-library(woe)
-library(riv)
-iv_df <- iv.mult(german_data, y="gb", summary=T)
-iv <- iv.mult(german_data, y="gb")
-print(iv_df)
-print(iv_df)
-#=>                     Variable InformationValue Bins ZeroBins    Strength
-#=> 1                  ca_status      0.666011503    4        0 Very strong
-#=> 2             credit_history      0.293233547    5        0      Strong
-#=> 3                   duration      0.259146834    5        0      Strong
-#=> 4              credit_amount      0.207970035    5        0      Strong
-#=> 5                    savings      0.196009557    5        0     Average
-#=> 6                    purpose      0.169195066   10        0     Average
-#=> 7                        age      0.125210683    5        0     Average
-#=> 8                   property      0.112638262    4        0     Average
-#=> 9   present_employment_since      0.086433631    5        0        Weak
-#=> 10                   housing      0.083293434    3        0        Weak
-#=> 11         other_installment      0.057614542    3        0        Weak
-#=> 12                status_sex      0.044670678    5        1        Weak
-#=> 13            foreign_worker      0.043877412    2        0        Weak
-#=> 14             other_debtors      0.032019322    3        0        Weak
-#=> 15   installment_rate_income      0.023858552    2        0        Weak
-#=> 16          existing_credits      0.010083557    2        0   Wery weak
-#=> 17                       job      0.008762766    4        0   Wery weak
-#=> 18                 telephone      0.006377605    2        0   Wery weak
-#=> 19 liable_maintenance_people      0.000000000    1        0   Wery weak
-#=> 20   present_residence_since      0.000000000    1        0   Wery weak
+factor_vars <- c ("WORKCLASS", "EDUCATION", "MARITALSTATUS", "OCCUPATION", "RELATIONSHIP", "RACE", "SEX", "NATIVECOUNTRY")  # get all categorical variables
+all_iv <- data.frame(VARS=factor_vars, IV=numeric(length(factor_vars)), STRENGTH=character(length(factor_vars)), stringsAsFactors = F)  # init output dataframe
+for (factor_var in factor_vars){
+  all_iv[all_iv$VARS == factor_var, "IV"] <- InformationValue::IV(X=inputData[, factor_var], Y=inputData$ABOVE50K)
+  all_iv[all_iv$VARS == factor_var, "STRENGTH"] <- attr(InformationValue::IV(X=inputData[, factor_var], Y=inputData$ABOVE50K), "howgood")
+}
+
+all_iv <- all_iv[order(-all_iv$IV), ]  # sort
+#>           VARS         IV            STRENGTH
+#>   RELATIONSHIP 1.53560810   Highly Predictive
+#>  MARITALSTATUS 1.33882907   Highly Predictive
+#>     OCCUPATION 0.77622839   Highly Predictive
+#>      EDUCATION 0.74105372   Highly Predictive
+#>            SEX 0.30328938   Highly Predictive
+#>      WORKCLASS 0.16338802   Highly Predictive
+#>  NATIVECOUNTRY 0.07939344 Somewhat Predictive
+#>           RACE 0.06929987 Somewhat Predictive
 ```
 
-###Plot the information value summary
-```{r, eval=FALSE}
-# Plot information value summary
-iv.plot.summary(iv_df)
-```
+#### Compute the weights of evidence (optional)
 
-```{r, echo = FALSE}
-embed_png("screenshots/information-value-plot.png", dpi = 220)
-```
+Optionally, we could create the weights of evidence for the factor variables and use it as continuous variables in place of the factors.
 
-###Calculate weight of evidence variables
 ```{r, eval=FALSE, echo=TRUE}
-# add woe variables to original data frame.
-german_data_iv <- iv.replace.woe(german_data, iv, verbose=TRUE)  
-# results not shown because of large data size
+for(factor_var in factor_vars){
+  inputData[[factor_var]] <- WOE(X=inputData[, factor_var], Y=inputData$ABOVE50K)
+}
+#>   AGE  WORKCLASS FNLWGT  EDUCATION EDUCATIONNUM MARITALSTATUS OCCUPATION
+#> 1  39  0.1608547  77516  0.7974104           13    -1.8846680  -0.713645
+#> 2  50  0.2254209  83311  0.7974104           13     0.9348331   1.084280
+#> 3  38 -0.1278453 215646 -0.5201257            9    -1.0030638  -1.555142
+#> 4  53 -0.1278453 234721 -1.7805021            7     0.9348331  -1.555142
+#> 5  28 -0.1278453 338409  0.7974104           13     0.9348331   0.943671
+#> 6  37 -0.1278453 284582  1.3690863           14     0.9348331   1.084280
+
+#>   RELATIONSHIP        RACE        SEX CAPITALGAIN CAPITALLOSS HOURSPERWEEK
+#> 1    -1.015318  0.08064715  0.3281187        2174           0           40
+#> 2     0.941801  0.08064715  0.3281187           0           0           13
+#> 3    -1.015318  0.08064715  0.3281187           0           0           40
+#> 4     0.941801 -0.80794676  0.3281187           0           0           40
+#> 5     1.048674 -0.80794676 -0.9480165           0           0           40
+#> 6     1.048674  0.08064715 -0.9480165           0           0           40
+
+#>   NATIVECOUNTRY ABOVE50K
+#> 1    0.02538318        0
+#> 2    0.02538318        0
+#> 3    0.02538318        0
+#> 4    0.02538318        0
+#> 5    0.11671564        0
+#> 6    0.02538318        0
 ```
 
 The newly created woe variables can alternatively be in place of the original factor variables.
+
