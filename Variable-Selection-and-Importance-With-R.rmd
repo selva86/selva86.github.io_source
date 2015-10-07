@@ -154,13 +154,13 @@ The [InformationValue package](https://cran.r-project.org/web/packages/Informati
 
 **Weights of Evidence (WOE)** provides a method of recoding the categorical `x` variable to continuous variables. For each category of a categorical variable, the **WOE** is calculated as:
 
-> **WOE = ln(percentage.good.of.all.goods / percentage.bad.of.all.bads)**
+$$WOE = ln \left(\frac{percentage.good.of.all.goods}{percentage.bad.of.all.bads}\right)$$
 
 In above formula, 'goods' is same as 'ones' and 'bads' is same as 'zeros'.
 
 **Information Value (IV)** is a measure of the predictive capability of a categorical `x` variable to accurately predict the goods and bads. For each category of `x`, information value is computed as:
 
-> **IV = (percentage.good.of.all.goods - percentage.bad.of.all.bads) * WOE**
+$$Information Value_{category} = {percentage.good.of.all.goods - percentage.bad.of.all.bads \over WOE} $$
 
 The total IV of a variable is the sum of IV's of its categories.
 
