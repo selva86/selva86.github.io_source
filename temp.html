@@ -1,315 +1,208 @@
 <blockquote>
-<p>It is possible to build multiple models from a given set of X variables. But building a good quality model can make all the difference. Here, we explore various approaches to build and evaluate regression models.</p>
+<p>If linear regression serves to predict continuous Y variables, logistic regression is used for binary classification.</p>
 </blockquote>
-<h2>Data Prep</h2>
-<p>Lets prepare the data upon which the various model selection approaches will be applied. A dataframe containing only the predictors and one containing the response variable is created for use in the model seection algorithms.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inputData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;http://rstatistics.net/wp-content/uploads/2015/09/ozone2.csv&quot;</span>, <span class="dt">stringsAsFactors=</span>F)
-response_df &lt;-<span class="st"> </span>inputData[<span class="st">&#39;ozone_reading&#39;</span>]  <span class="co"># Y variable</span>
-predictors_df &lt;-<span class="st"> </span>inputData[, !<span class="kw">names</span>(inputData) %in%<span class="st"> &quot;ozone_reading&quot;</span> ]  <span class="co"># X variables</span>
+<p>If we use linear regression to model a dichotomous variable (as <span class="math inline"><em>Y</em></span>), the resulting model might not restrict the predicted <span class="math inline"><em>Y</em><em>s</em></span> within 0 and 1. Besides, other <a href="Assumptions-of-Linear-Regression.html">assumptions of linear regression</a> such as normality of errors may get violated. So instead, we model the log odds of the event <span class="math inline">$ln \left( P \over 1-P \right)$</span>, where, <span class="math inline"><em>P</em></span> is the probability of event.</p>
+<p><br /><span class="math display">$$Z_{i} = ln{\left(P_{i} \over 1-P_{i} \right)} = \beta_{0} + \beta_{1} x_{1} + . . + \beta_{n} x_{n} $$</span><br /></p>
+<p>The above equation can be modeled using the <code>glm()</code> by setting the <code>family</code> argument to <code>&quot;binomial&quot;</code>. But we are more interested in the probability of the event, than the log odds of the event. So, the predicted values from the above model, i.e. the log odds of the event, can be converted to probability of event as follows:</p>
+<p><br /><span class="math display">$$P_{i} = 1 - {\left( 1 \over 1 + e^z\right)}$$</span><br /></p>
+<p>This conversion is achieved using the <code>plogis()</code> function, as shown below when we <a href="Logistic-Regression-With-R.html#Build%20Logit%20Models%20and%20Predict">build logit models and predict</a>.</p>
+<h2>Example Problem</h2>
+<p>Lets try and predict if an individual will earn more than $50K using logistic regression based on demographic variables available in the <a href="http://rstatistics.net/wp-content/uploads/2015/09/adult.csv"><code>adult</code> data</a>. In this process, we will:</p>
+<ol style="list-style-type: decimal">
+<li>Import the data</li>
+<li>Check for class bias</li>
+<li>Create training and test samples</li>
+<li>Compute information value to find out important variables</li>
+<li>Build logit models and predict on test data</li>
+<li>Do model diagnostics</li>
+</ol>
+<h2>Import data</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inputData &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;http://rstatistics.net/wp-content/uploads/2015/09/adult.csv&quot;</span>)
 <span class="kw">head</span>(inputData)
-<span class="co">#=&gt; Month Day_of_month Day_of_week ozone_reading pressure_height Wind_speed Humidity</span>
-<span class="co">#=&gt;     1            1           4          3.01            5480          8 20.00000</span>
-<span class="co">#=&gt;     1            2           5          3.20            5660          6 48.41432</span>
-<span class="co">#=&gt;     1            3           6          2.70            5710          4 28.00000</span>
-<span class="co">#=&gt;     1            4           7          5.18            5700          3 37.00000</span>
-<span class="co">#=&gt;     1            5           1          5.34            5760          3 51.00000</span>
-<span class="co">#=&gt;     1            6           2          5.77            5720          4 69.00000</span>
-<span class="co">#=&gt;</span>
-<span class="co">#=&gt; Temperature_Sandburg Temperature_ElMonte Inversion_base_height Pressure_gradient</span>
-<span class="co">#=&gt;             37.78175            35.31509              5000.000               -15</span>
-<span class="co">#=&gt;             38.00000            45.79294              4060.589               -14</span>
-<span class="co">#=&gt;             40.00000            48.48006              2693.000               -25</span>
-<span class="co">#=&gt;             45.00000            49.19898               590.000               -24</span>
-<span class="co">#=&gt;             54.00000            45.32000              1450.000                25</span>
-<span class="co">#=&gt;             35.00000            49.64000              1568.000                15</span>
-<span class="co">#=&gt;</span>
-<span class="co">#=&gt; Inversion_temperature Visibility</span>
-<span class="co">#=&gt;              30.56000        200</span>
-<span class="co">#=&gt;              46.86914        300</span>
-<span class="co">#=&gt;              47.66000        250</span>
-<span class="co">#=&gt;              55.04000        100</span>
-<span class="co">#=&gt;              57.02000         60</span>
-<span class="co">#=&gt;              53.78000         60</span></code></pre></div>
-<h2>Stepwise Regression</h2>
-<p>In stepwise regression, we pass the full model to <code>step</code> function. It iteratively searches the full scope of variables in <code>backwards</code> directions by default, if <code>scope</code> is not given. It performs multiple iteractions by droping one X variable at a time. In each iteration, multiple models are built by dropping each of the X variables at a time. The <code>AIC</code> of the models is also computed and the model that yields the lowest AIC is retained for the next iteration.</p>
-<p>In simpler terms, the variable that gives the minimum AIC when dropped, is dropped for the next iteration, until there is no significant drop in AIC is noticed.</p>
-<p>The code below shows how stepwise regression can be done. We are providing the full model here, so a backwards stepwise will be performed, which means, variables will only be removed. In forward stepwise, variables will be progressively added.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lmMod &lt;-<span class="st"> </span><span class="kw">lm</span>(ozone_reading ~<span class="st"> </span>. , <span class="dt">data =</span> inputData)
-selectedMod &lt;-<span class="st"> </span><span class="kw">step</span>(lmMod)
-<span class="kw">summary</span>(selectedMod)
-<span class="co">#=&gt; Call:</span>
-<span class="co">#=&gt; lm(formula = ozone_reading ~ Month + pressure_height + Wind_speed + </span>
-<span class="co">#=&gt;      Humidity + Temperature_Sandburg + Temperature_ElMonte + Inversion_base_height, </span>
-<span class="co">#=&gt;    data = inputData)</span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Residuals:</span>
-<span class="co">#=&gt;      Min       1Q   Median       3Q      Max </span>
-<span class="co">#=&gt; -13.5219  -2.6652  -0.1885   2.5702  12.7184 </span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Coefficients:</span>
-<span class="co">#=&gt; Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">#=&gt; (Intercept)           97.9206462 27.5285900   3.557 0.000425 ***</span>
-<span class="co">#=&gt; Month                 -0.3632285  0.0752403  -4.828 2.05e-06 ***</span>
-<span class="co">#=&gt; pressure_height       -0.0218974  0.0051670  -4.238 2.87e-05 ***</span>
-<span class="co">#=&gt; Wind_speed            -0.1738621  0.1207299  -1.440 0.150715    </span>
-<span class="co">#=&gt; Humidity               0.0817383  0.0132480   6.170 1.85e-09 ***</span>
-<span class="co">#=&gt; Temperature_Sandburg   0.1532862  0.0403667   3.797 0.000172 ***</span>
-<span class="co">#=&gt; Temperature_ElMonte    0.5149553  0.0686170   7.505 4.92e-13 ***</span>
-<span class="co">#=&gt; Inversion_base_height -0.0003529  0.0001743  -2.025 0.043629 *  </span>
-<span class="co">#=&gt; ---</span>
-<span class="co">#=&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Residual standard error: 4.233 on 358 degrees of freedom</span>
-<span class="co">#=&gt; Multiple R-squared:  0.7186,    Adjusted R-squared:  0.7131 </span>
-<span class="co">#=&gt; F-statistic: 130.6 on 7 and 358 DF,  p-value: &lt; 2.2e-16</span>
+<span class="co">#=&gt;   AGE         WORKCLASS FNLWGT  EDUCATION EDUCATIONNUM       MARITALSTATUS</span>
+<span class="co">#=&gt; 1  39         State-gov  77516  Bachelors           13       Never-married</span>
+<span class="co">#=&gt; 2  50  Self-emp-not-inc  83311  Bachelors           13  Married-civ-spouse</span>
+<span class="co">#=&gt; 3  38           Private 215646    HS-grad            9            Divorced</span>
+<span class="co">#=&gt; 4  53           Private 234721       11th            7  Married-civ-spouse</span>
+<span class="co">#=&gt; 5  28           Private 338409  Bachelors           13  Married-civ-spouse</span>
+<span class="co">#=&gt; 6  37           Private 284582    Masters           14  Married-civ-spouse</span>
+<span class="co">#             OCCUPATION   RELATIONSHIP   RACE     SEX CAPITALGAIN CAPITALLOSS</span>
+<span class="co">#=&gt; 1       Adm-clerical  Not-in-family  White    Male        2174           0</span>
+<span class="co">#=&gt; 2    Exec-managerial        Husband  White    Male           0           0</span>
+<span class="co">#=&gt; 3  Handlers-cleaners  Not-in-family  White    Male           0           0</span>
+<span class="co">#=&gt; 4  Handlers-cleaners        Husband  Black    Male           0           0</span>
+<span class="co">#=&gt; 5     Prof-specialty           Wife  Black  Female           0           0</span>
+<span class="co">#=&gt; 6    Exec-managerial           Wife  White  Female           0           0</span>
+<span class="co">#     HOURSPERWEEK  NATIVECOUNTRY ABOVE50K</span>
+<span class="co">#=&gt; 1           40  United-States        0</span>
+<span class="co">#=&gt; 2           13  United-States        0</span>
+<span class="co">#=&gt; 3           40  United-States        0</span>
+<span class="co">#=&gt; 4           40  United-States        0</span>
+<span class="co">#=&gt; 5           40           Cuba        0</span>
+<span class="co">#=&gt; 6           40  United-States        0</span></code></pre></div>
+<h2>Check Class bias</h2>
+<p>Ideally, the proportion of events and non-events in the Y variable should approxiately be the same. So, lets first check the proportion of classes in the dependent variable <code>ABOVE50K</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(inputData$ABOVE50K)
+<span class="co">#     0     1 </span>
+<span class="co"># 24720  7841 </span></code></pre></div>
+<p>Clearly, there is a class bias, a condition observed when the proportion of events is much smaller than proportion of non-events. So we must sample the observations in approximately equal proportions to get better models.</p>
+<h2>Create Training and Test Samples</h2>
+<p>One way to address the problem of class bias is to draw the 0’s and 1’s for the <code>trainingData</code> (development sample) in equal proportions. In doing so, we will put rest of the <code>inputData</code> not included for training into <code>testData</code> (validation sample). As a result, the size of development sample will be smaller that validation, which is okay, because, there are large number of observations (&gt;10K).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create Training Data</span>
+input_ones &lt;-<span class="st"> </span>inputData[<span class="kw">which</span>(inputData$ABOVE50K ==<span class="st"> </span><span class="dv">1</span>), ]  <span class="co"># all 1&#39;s</span>
+input_zeros &lt;-<span class="st"> </span>inputData[<span class="kw">which</span>(inputData$ABOVE50K ==<span class="st"> </span><span class="dv">0</span>), ]  <span class="co"># all 0&#39;s</span>
+<span class="kw">set.seed</span>(<span class="dv">100</span>)  <span class="co"># for repeatability of samples</span>
+input_ones_training_rows &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(input_ones), <span class="fl">0.7</span>*<span class="kw">nrow</span>(input_ones))  <span class="co"># 1&#39;s for training</span>
+input_zeros_training_rows &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(input_zeros), <span class="fl">0.7</span>*<span class="kw">nrow</span>(input_ones))  <span class="co"># 0&#39;s for training. Pick as many 0&#39;s as 1&#39;s</span>
+training_ones &lt;-<span class="st"> </span>input_ones[input_ones_training_rows, ]  
+training_zeros &lt;-<span class="st"> </span>input_zeros[input_zeros_training_rows, ]
+trainingData &lt;-<span class="st"> </span><span class="kw">rbind</span>(training_ones, training_zeros)  <span class="co"># row bind the 1&#39;s and 0&#39;s </span>
 
-all_vifs &lt;-<span class="st"> </span>car::<span class="kw">vif</span>(selectedMod)
-<span class="kw">print</span>(all_vifs)
-<span class="co">#=&gt;                Month       pressure_height            Wind_speed              Humidity </span>
-<span class="co">#=&gt;             1.377397              5.995937              1.330647              1.386716 </span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Temperature_Sandburg   Temperature_ElMonte Inversion_base_height </span>
-<span class="co">#=&gt;             6.781597             11.616208              1.926758</span></code></pre></div>
-<h2>Multicollinearity and Statistical Significance</h2>
-<p>Say, one of the methods discussed above or below has given us a best model based on a criteria such as Adj-Rsq. It is not guaranteed that the condition of multicollinearity (checked using <code>car::vif</code>) will be satisfied or even the model be statistically significant. To satisfy these two conditions, the below approach can be taken.</p>
-<h4>Recursively remove variables with VIF &gt; 4</h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">signif_all &lt;-<span class="st"> </span><span class="kw">names</span>(all_vifs)
-
-<span class="co"># Remove vars with VIF&gt; 4 and re-build model until none of VIFs don&#39;t exceed 4.</span>
-while(<span class="kw">any</span>(all_vifs &gt;<span class="st"> </span><span class="dv">4</span>)){
-  var_with_max_vif &lt;-<span class="st"> </span><span class="kw">names</span>(<span class="kw">which</span>(all_vifs ==<span class="st"> </span><span class="kw">max</span>(all_vifs)))  <span class="co"># get the var with max vif</span>
-  signif_all &lt;-<span class="st"> </span>signif_all[!(signif_all) %in%<span class="st"> </span>var_with_max_vif]  <span class="co"># remove</span>
-  myForm &lt;-<span class="st"> </span><span class="kw">as.formula</span>(<span class="kw">paste</span>(<span class="st">&quot;ozone_reading ~ &quot;</span>, <span class="kw">paste</span> (signif_all, <span class="dt">collapse=</span><span class="st">&quot; + &quot;</span>), <span class="dt">sep=</span><span class="st">&quot;&quot;</span>))  <span class="co"># new formula</span>
-  selectedMod &lt;-<span class="st"> </span><span class="kw">lm</span>(myForm, <span class="dt">data=</span>inputData)  <span class="co"># re-build model with new formula</span>
-  all_vifs &lt;-<span class="st"> </span>car::<span class="kw">vif</span>(selectedMod)
+<span class="co"># Create Test Data</span>
+test_ones &lt;-<span class="st"> </span>input_ones[-input_ones_training_rows, ]
+test_zeros &lt;-<span class="st"> </span>input_zeros[-input_zeros_training_rows, ]
+testData &lt;-<span class="st"> </span><span class="kw">rbind</span>(test_ones, test_zeros)  <span class="co"># row bind the 1&#39;s and 0&#39;s </span></code></pre></div>
+<p>Next it is desirable to find the <a href="Variable-Selection-and-Importance-With-R.html#7.%20Information%20value%20and%20Weight%20of%20evidence">information value</a> of variables to get an idea of how valuable they are in explaining the dependent variable (ABOVE50K).</p>
+<h2>Create WOE for categorical variables (optional)</h2>
+<p>Optionally, we can create <code>WOE</code> equivalents for all categorical variables. This is only an optional step, for simplicity, this step is NOT run for this analysis.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">for(factor_var in factor_vars){
+  inputData[[factor_var]] &lt;-<span class="st"> </span><span class="kw">WOE</span>(<span class="dt">X=</span>inputData[, factor_var], <span class="dt">Y=</span>inputData$ABOVE50K)
 }
-<span class="kw">summary</span>(selectedMod)
-<span class="co"># Call:</span>
-<span class="co">#   lm(formula = myForm, data = inputData)</span>
-<span class="co"># </span>
-<span class="co"># Residuals:</span>
-<span class="co">#      Min       1Q   Median       3Q      Max </span>
-<span class="co"># -15.5859  -3.4922  -0.3876   3.1741  16.7640 </span>
-<span class="co"># </span>
-<span class="co"># Coefficients:</span>
-<span class="co">#   Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">#   (Intercept)           -2.007e+02  1.942e+01 -10.335  &lt; 2e-16 ***</span>
-<span class="co">#   Month                 -2.322e-01  8.976e-02  -2.587   0.0101 *  </span>
-<span class="co">#   pressure_height        3.607e-02  3.349e-03  10.773  &lt; 2e-16 ***</span>
-<span class="co">#   Wind_speed             2.346e-01  1.423e-01   1.649   0.1001    </span>
-<span class="co">#   Humidity               1.391e-01  1.492e-02   9.326  &lt; 2e-16 ***</span>
-<span class="co">#   Inversion_base_height -1.122e-03  1.975e-04  -5.682 2.76e-08 ***</span>
-<span class="co">#   ---</span>
-<span class="co">#   Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co"># </span>
-<span class="co"># Residual standard error: 5.172 on 360 degrees of freedom</span>
-<span class="co"># Multiple R-squared:  0.5776,  Adjusted R-squared:  0.5717 </span>
-<span class="co"># F-statistic: 98.45 on 5 and 360 DF,  p-value: &lt; 2.2e-16</span>
+<span class="kw">head</span>(inputData)
+<span class="co">#&gt;   AGE  WORKCLASS FNLWGT  EDUCATION EDUCATIONNUM MARITALSTATUS OCCUPATION</span>
+<span class="co">#&gt; 1  39  0.1608547  77516  0.7974104           13    -1.8846680  -0.713645</span>
+<span class="co">#&gt; 2  50  0.2254209  83311  0.7974104           13     0.9348331   1.084280</span>
+<span class="co">#&gt; 3  38 -0.1278453 215646 -0.5201257            9    -1.0030638  -1.555142</span>
+<span class="co">#&gt; 4  53 -0.1278453 234721 -1.7805021            7     0.9348331  -1.555142</span>
+<span class="co">#&gt; 5  28 -0.1278453 338409  0.7974104           13     0.9348331   0.943671</span>
+<span class="co">#&gt; 6  37 -0.1278453 284582  1.3690863           14     0.9348331   1.084280</span>
 
-car::<span class="kw">vif</span>(selectedMod)
-<span class="co">#    Month       pressure_height            Wind_speed              Humidity Inversion_base_height </span>
-<span class="co"># 1.313154              1.687105              1.238613              1.178276              1.658603 </span></code></pre></div>
-<p>The VIFs of all the X’s are below 2 now. So, the condition of multicollinearity is satisfied. But the variable <code>wind_speed</code> in the model with p value &gt; .1 is not statistically significant. For this specific case, we could just re-build the model without <code>wind_speed</code> and check all variables are statistically significant. But, what if you had a different data that selected a model with 2 or more non-significant variables. What if, you had to select models for many such data. So, lets write a generic code for this.</p>
-<h4>Recursively remove non-significant variables</h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">all_vars &lt;-<span class="st"> </span><span class="kw">names</span>(selectedMod[[<span class="dv">1</span>]])[-<span class="dv">1</span>]  <span class="co"># names of all X variables</span>
-<span class="co"># Get the non-significant vars</span>
-summ &lt;-<span class="st"> </span><span class="kw">summary</span>(selectedMod)  <span class="co"># model summary</span>
-pvals &lt;-<span class="st"> </span>summ[[<span class="dv">4</span>]][, <span class="dv">4</span>]  <span class="co"># get all p values</span>
-not_significant &lt;-<span class="st"> </span><span class="kw">character</span>()  <span class="co"># init variables that aren&#39;t statsitically significant</span>
-not_significant &lt;-<span class="st"> </span><span class="kw">names</span>(<span class="kw">which</span>(pvals &gt;<span class="st"> </span><span class="fl">0.1</span>))
-not_significant &lt;-<span class="st"> </span>not_significant[!not_significant %in%<span class="st"> &quot;(Intercept)&quot;</span>]  <span class="co"># remove &#39;intercept&#39;. Optional!</span>
+<span class="co">#&gt;   RELATIONSHIP        RACE        SEX CAPITALGAIN CAPITALLOSS HOURSPERWEEK</span>
+<span class="co">#&gt; 1    -1.015318  0.08064715  0.3281187        2174           0           40</span>
+<span class="co">#&gt; 2     0.941801  0.08064715  0.3281187           0           0           13</span>
+<span class="co">#&gt; 3    -1.015318  0.08064715  0.3281187           0           0           40</span>
+<span class="co">#&gt; 4     0.941801 -0.80794676  0.3281187           0           0           40</span>
+<span class="co">#&gt; 5     1.048674 -0.80794676 -0.9480165           0           0           40</span>
+<span class="co">#&gt; 6     1.048674  0.08064715 -0.9480165           0           0           40</span>
 
-<span class="co"># If there are any non-significant variables, </span>
-while(<span class="kw">length</span>(not_significant) &gt;<span class="st"> </span><span class="dv">0</span>){
-  all_vars &lt;-<span class="st"> </span>all_vars[!all_vars %in%<span class="st"> </span>not_significant[<span class="dv">1</span>]]
-  myForm &lt;-<span class="st"> </span><span class="kw">as.formula</span>(<span class="kw">paste</span>(<span class="st">&quot;ozone_reading ~ &quot;</span>, <span class="kw">paste</span> (all_vars, <span class="dt">collapse=</span><span class="st">&quot; + &quot;</span>), <span class="dt">sep=</span><span class="st">&quot;&quot;</span>))  <span class="co"># new formula</span>
-  selectedMod &lt;-<span class="st"> </span><span class="kw">lm</span>(myForm, <span class="dt">data=</span>inputData)  <span class="co"># re-build model with new formula</span>
-  
-  <span class="co"># Get the non-significant vars.</span>
-  summ &lt;-<span class="st"> </span><span class="kw">summary</span>(selectedMod)
-  pvals &lt;-<span class="st"> </span>summ[[<span class="dv">4</span>]][, <span class="dv">4</span>]
-  not_significant &lt;-<span class="st"> </span><span class="kw">character</span>()
-  not_significant &lt;-<span class="st"> </span><span class="kw">names</span>(<span class="kw">which</span>(pvals &gt;<span class="st"> </span><span class="fl">0.1</span>))
-  not_significant &lt;-<span class="st"> </span>not_significant[!not_significant %in%<span class="st"> &quot;(Intercept)&quot;</span>]
+<span class="co">#&gt;   NATIVECOUNTRY ABOVE50K</span>
+<span class="co">#&gt; 1    0.02538318        0</span>
+<span class="co">#&gt; 2    0.02538318        0</span>
+<span class="co">#&gt; 3    0.02538318        0</span>
+<span class="co">#&gt; 4    0.02538318        0</span>
+<span class="co">#&gt; 5    0.11671564        0</span>
+<span class="co">#&gt; 6    0.02538318        0</span></code></pre></div>
+<h2>Compute Information Values</h2>
+<p>The <code>smbinning::smbinning</code> function converts a continuous variable intoa a categorical variable using recursive partitioning. We will first convert them to categoricals and then, capture the information values for all variables in <code>iv_df</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(smbinning)
+<span class="co"># segregate continuous and factor variables</span>
+factor_vars &lt;-<span class="st"> </span><span class="kw">c</span> (<span class="st">&quot;WORKCLASS&quot;</span>, <span class="st">&quot;EDUCATION&quot;</span>, <span class="st">&quot;MARITALSTATUS&quot;</span>, <span class="st">&quot;OCCUPATION&quot;</span>, <span class="st">&quot;RELATIONSHIP&quot;</span>, <span class="st">&quot;RACE&quot;</span>, <span class="st">&quot;SEX&quot;</span>, <span class="st">&quot;NATIVECOUNTRY&quot;</span>)
+continuous_vars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;AGE&quot;</span>, <span class="st">&quot;FNLWGT&quot;</span>,<span class="st">&quot;EDUCATIONNUM&quot;</span>, <span class="st">&quot;HOURSPERWEEK&quot;</span>, <span class="st">&quot;CAPITALGAIN&quot;</span>, <span class="st">&quot;CAPITALLOSS&quot;</span>)
+
+iv_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">VARS=</span><span class="kw">c</span>(factor_vars, continuous_vars), <span class="dt">IV=</span><span class="kw">numeric</span>(<span class="dv">14</span>))  <span class="co"># init for IV results</span>
+
+<span class="co"># compute IV for categoricals</span>
+for(factor_var in factor_vars){
+  smb &lt;-<span class="st"> </span><span class="kw">smbinning.factor</span>(trainingData, <span class="dt">y=</span><span class="st">&quot;ABOVE50K&quot;</span>, <span class="dt">x=</span>factor_var)  <span class="co"># WOE table</span>
+  if(<span class="kw">class</span>(smb) !=<span class="st"> &quot;character&quot;</span>){ <span class="co"># heck if some error occured</span>
+    iv_df[iv_df$VARS ==<span class="st"> </span>factor_var, <span class="st">&quot;IV&quot;</span>] &lt;-<span class="st"> </span>smb$iv
+  }
 }
-<span class="kw">summary</span>(selectedMod)
-<span class="co">#=&gt; Call:</span>
-<span class="co">#=&gt; lm(formula = myForm, data = inputData)</span>
-<span class="co"># </span>
-<span class="co">#=&gt; Residuals:</span>
-<span class="co">#=&gt;    Min       1Q   Median       3Q      Max </span>
-<span class="co">#=&gt; -15.1537  -3.5541  -0.2294   3.2273  17.0106 </span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Coefficients:</span>
-<span class="co">#=&gt; Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">#=&gt; (Intercept)           -1.989e+02  1.944e+01 -10.234  &lt; 2e-16 ***</span>
-<span class="co">#=&gt; Month                 -2.694e-01  8.709e-02  -3.093  0.00213 ** </span>
-<span class="co">#=&gt; pressure_height        3.589e-02  3.355e-03  10.698  &lt; 2e-16 ***</span>
-<span class="co">#=&gt; Humidity               1.466e-01  1.426e-02  10.278  &lt; 2e-16 ***</span>
-<span class="co">#=&gt; Inversion_base_height -1.047e-03  1.927e-04  -5.435 1.01e-07 ***</span>
-<span class="co">#=&gt; ---</span>
-<span class="co">#=&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Residual standard error: 5.184 on 361 degrees of freedom</span>
-<span class="co">#=&gt; Multiple R-squared:  0.5744,    Adjusted R-squared:  0.5697 </span>
-<span class="co">#=&gt; F-statistic: 121.8 on 4 and 361 DF,  p-value: &lt; 2.2e-16</span>
 
-<span class="co">#=&gt; car::vif(selectedMod)</span>
-<span class="co">#=&gt;    Month       pressure_height              Humidity Inversion_base_height </span>
-<span class="co">#=&gt; 1.230346              1.685245              1.071214              1.570431 </span></code></pre></div>
-<p>In the resulting model, both statistical significance and multicollinearity is acceptable.</p>
-<h2>Best subsets</h2>
-<p>Best subsets is a technique that relies on stepwise regression to search, find and visualise regression models. But unlike stepwise regression, you have more options to see what variables were included in various shortlisted models, force-in or force-out some of the explanatory variables and also visually inspect the model’s performance w.r.t Adj R-sq.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(leaps)
-regsubsetsObj &lt;-<span class="st"> </span><span class="kw">regsubsets</span>(<span class="dt">x=</span>predictors_df ,<span class="dt">y=</span>response_df, <span class="dt">nbest =</span> <span class="dv">2</span>, <span class="dt">really.big =</span> T)
-<span class="kw">plot</span>(regsubsetsObj, <span class="dt">scale =</span> <span class="st">&quot;adjr2&quot;</span>)  <span class="co"># regsubsets plot based on R-sq</span></code></pre></div>
-<p><img src='screenshots/regsubsets-plot.png' width=528 height=349 /></p>
-<h4>How to interpret the <code>regsubsets</code> plot?</h4>
-<p>The <code>regsubsets</code> plot shows the adjusted R-sq along the Y-axis for many models created by combinations of variables shown on the X-axis. For instance, draw an imaginary horizontal line along the X-axis from any point along the Y-axis. That line would correspond to a linear model, where, the black boxes that line touches form the X variables. For example, the red line in the image touches the black boxes belonging to <code>Intercept</code>, <code>Month</code>, <code>pressure_height</code>, <code>Humidity</code>, <code>Temperature_Sandburg</code> and <code>Temperature_Elmonte</code>. The Adjusted R-sq for that model is the value at which the red line touches the Y-axis.</p>
-<p>The caveat however is that it is not guaranteed that these models will be statistically significant.</p>
-<h2>Leaps</h2>
-<p>Leaps is similar to best subsets but is known to use a better algorithm to shortlist the models.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(leaps)
-leapSet &lt;-<span class="st"> </span><span class="kw">leaps</span>(<span class="dt">x=</span>predictors_df, <span class="dt">y=</span>inputData$ozone_reading, <span class="dt">nbest =</span> <span class="dv">1</span>, <span class="dt">method =</span> <span class="st">&quot;adjr2&quot;</span>) <span class="co"># criterion could be one of &quot;Cp&quot;, &quot;adjr2&quot;, &quot;r2&quot;. Works for max of 32 predictors.</span>
-<span class="co">#=&gt; $which</span>
-<span class="co">#=&gt;        1     2     3     4     5     6     7     8     9     A     B     C</span>
-<span class="co">#=&gt; 1  FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE</span>
-<span class="co">#=&gt; 2  FALSE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE</span>
-<span class="co">#=&gt; 3   TRUE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE</span>
-<span class="co">#=&gt; 4   TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE</span>
-<span class="co">#=&gt; 5   TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE</span>
-<span class="co">#=&gt; 6   TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE</span>
-<span class="co">#=&gt; 7   TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE</span>
-<span class="co">#=&gt; 8   TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE</span>
-<span class="co">#=&gt; 9   TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE</span>
-<span class="co">#=&gt; 10  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE</span>
-<span class="co">#=&gt; 11  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE</span>
-<span class="co">#=&gt; 12  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE</span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; $adjr2</span>
-<span class="co">#=&gt; [1] 0.5945612 0.6544828 0.6899196 0.6998209 0.7079506 0.7122214 0.7130796 0.7134627 0.7130404 0.7125416</span>
-<span class="co">#=&gt; [11] 0.7119148 0.7112852</span>
+<span class="co"># compute IV for continuous vars</span>
+for(continuous_var in continuous_vars){
+  smb &lt;-<span class="st"> </span><span class="kw">smbinning</span>(trainingData, <span class="dt">y=</span><span class="st">&quot;ABOVE50K&quot;</span>, <span class="dt">x=</span>continuous_var)  <span class="co"># WOE table</span>
+  if(<span class="kw">class</span>(smb) !=<span class="st"> &quot;character&quot;</span>){  <span class="co"># any error while calculating scores.</span>
+    iv_df[iv_df$VARS ==<span class="st"> </span>continuous_var, <span class="st">&quot;IV&quot;</span>] &lt;-<span class="st"> </span>smb$iv
+  }
+}
 
-<span class="co"># Suppose, we want to choose a model with 4 variables.</span>
-selectVarsIndex &lt;-<span class="st"> </span>leapSet$which[<span class="dv">4</span>, ]  <span class="co"># pick selected vars</span>
-newData &lt;-<span class="st"> </span><span class="kw">cbind</span>(response_df, predictors_df[, selectVarsIndex])  <span class="co"># new data for building selected model</span>
-selectedMod &lt;-<span class="st"> </span><span class="kw">lm</span>(ozone_reading ~<span class="st"> </span>., <span class="dt">data=</span>newData)  <span class="co"># build model</span>
-<span class="kw">summary</span>(selectedMod)
-<span class="co">#=&gt; Call:</span>
-<span class="co">#=&gt;  lm(formula = ozone_reading ~ ., data = newData)</span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Residuals:</span>
-<span class="co">#=&gt;     Min       1Q   Median       3Q      Max </span>
-<span class="co">#=&gt; -13.9636  -2.8928  -0.0581   2.8549  12.6286 </span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Coefficients:</span>
-<span class="co">#=&gt;  Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">#=&gt;  (Intercept)         74.611786  27.188323   2.744 0.006368 ** </span>
-<span class="co">#=&gt;  Month               -0.426133   0.069892  -6.097 2.78e-09 ***</span>
-<span class="co">#=&gt;  pressure_height     -0.018478   0.005137  -3.597 0.000366 ***</span>
-<span class="co">#=&gt;  Humidity             0.096978   0.012529   7.740 1.01e-13 ***</span>
-<span class="co">#=&gt;  Temperature_ElMonte  0.704866   0.049984  14.102  &lt; 2e-16 ***</span>
-<span class="co">#=&gt;  ---</span>
-<span class="co">#=&gt;  Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Residual standard error: 4.33 on 361 degrees of freedom</span>
-<span class="co">#=&gt; Multiple R-squared:  0.7031,    Adjusted R-squared:  0.6998 </span>
-<span class="co">#=&gt; F-statistic: 213.7 on 4 and 361 DF,  p-value: &lt; 2.2e-16</span></code></pre></div>
-<h2>RegBest() from FactoMineR</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FactoMineR)
-regMod &lt;-<span class="st"> </span><span class="kw">RegBest</span>(<span class="dt">y=</span>inputData$ozone_reading, <span class="dt">x =</span> predictors_df)
-regMod$all  <span class="co"># summary of best model of all sizes based on Adj A-sq</span>
-regMod$best  <span class="co"># best model</span>
-<span class="co">#=&gt; Call:</span>
-<span class="co">#=&gt;  lm(formula = as.formula(as.character(formul)), data = don)</span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Residuals:</span>
-<span class="co">#=&gt;  Min       1Q   Median       3Q      Max </span>
-<span class="co">#=&gt; -13.6805  -2.6589  -0.1952   2.6045  12.6521 </span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Coefficients:</span>
-<span class="co">#=&gt;                          Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">#=&gt;  (Intercept)           88.8519747 26.8386969   3.311 0.001025 ** </span>
-<span class="co">#=&gt;  Month                 -0.3354044  0.0728259  -4.606 5.72e-06 ***</span>
-<span class="co">#=&gt;  pressure_height       -0.0202670  0.0050489  -4.014 7.27e-05 ***</span>
-<span class="co">#=&gt;  Humidity               0.0784813  0.0130730   6.003 4.73e-09 ***</span>
-<span class="co">#=&gt;  Temperature_Sandburg   0.1450456  0.0400188   3.624 0.000331 ***</span>
-<span class="co">#=&gt;  Temperature_ElMonte    0.5069526  0.0684938   7.401 9.65e-13 ***</span>
-<span class="co">#=&gt;  Inversion_base_height -0.0004224  0.0001677  -2.518 0.012221 *  </span>
-<span class="co">#=&gt;  ---</span>
-<span class="co">#=&gt;  Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Residual standard error: 4.239 on 359 degrees of freedom</span>
-<span class="co">#=&gt; Multiple R-squared:  0.717, Adjusted R-squared:  0.7122 </span>
-<span class="co">#=&gt; F-statistic: 151.6 on 6 and 359 DF,  p-value: &lt; 2.2e-16</span></code></pre></div>
-<h2>Simulated Annealing</h2>
-<p>Given a set of variables, a simulated annealing algorithm seeks a k-variable subset which is optimal, as a surrogate for the whole set, with respect to a given criterion. Annealing offers a method of finding the best subsets of predictor variables. Since the correlation or covariance matrix is a input to the <code>anneal()</code> function, only continuous variables are used to compute the best subsets.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(subselect)
-results &lt;-<span class="st"> </span><span class="kw">anneal</span>(<span class="kw">cor</span>(predictors_df), <span class="dt">kmin=</span><span class="dv">1</span>, <span class="dt">kmax=</span><span class="kw">ncol</span>(predictors_df)-<span class="dv">1</span>, <span class="dt">nsol=</span><span class="dv">4</span>, <span class="dt">niter=</span><span class="dv">10</span>, <span class="dt">setseed=</span><span class="ot">TRUE</span>)  <span class="co"># perform annealing&lt;</span>
-<span class="kw">print</span>(results$bestsets)
-<span class="co">#=&gt;         Var.1 Var.2 Var.3 Var.4 Var.5 Var.6 Var.7 Var.8 Var.9 Var.10 Var.11</span>
-<span class="co">#=&gt; Card.1     11     0     0     0     0     0     0     0     0      0      0</span>
-<span class="co">#=&gt; Card.2      7    10     0     0     0     0     0     0     0      0      0</span>
-<span class="co">#=&gt; Card.3      5     6     8     0     0     0     0     0     0      0      0</span>
-<span class="co">#=&gt; Card.4      1     2     6    11     0     0     0     0     0      0      0</span>
-<span class="co">#=&gt; Card.5      1     3     5     6    11     0     0     0     0      0      0</span>
-<span class="co">#=&gt; Card.6      2     3     5     6     9    11     0     0     0      0      0</span>
-<span class="co">#=&gt; Card.7      1     2     3     5    10    11    12     0     0      0      0</span>
-<span class="co">#=&gt; Card.8      1     2     3     4     5     6     8    12     0      0      0</span>
-<span class="co">#=&gt; Card.9      1     2     3     4     5     6     9    10    12      0      0</span>
-<span class="co">#=&gt; Card.10     1     2     3     4     5     6     8     9    10     12      0</span>
-<span class="co">#=&gt; Card.11     1     2     3     4     5     6     7     8     9     10     12</span></code></pre></div>
-<p>The bestsets value in the output reveal the best variables to select for each cardinality (number of predictors). The values inside <code>results$bestsets</code> correspond to the column index position of <code>predicted_df</code>, that is, which variables are selected for each cardinality.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">num_vars &lt;-<span class="st"> </span><span class="dv">3</span>
-selectVarsIndex &lt;-<span class="st"> </span>results$bestsets[num_vars, <span class="dv">1</span>:num_vars]
-newData &lt;-<span class="st"> </span><span class="kw">cbind</span>(response_df, predictors_df[, selectVarsIndex])  <span class="co"># new data for building selected model</span>
-selectedMod &lt;-<span class="st"> </span><span class="kw">lm</span>(ozone_reading ~<span class="st"> </span>., <span class="dt">data=</span>newData)  <span class="co"># build model</span>
-<span class="kw">summary</span>(selectedMod)
-<span class="co">#=&gt; Call:</span>
-<span class="co">#=&gt;   lm(formula = ozone_reading ~ ., data = newData)</span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Residuals:</span>
-<span class="co">#=&gt;   Min       1Q   Median       3Q      Max </span>
-<span class="co">#=&gt; -14.6948  -2.7279  -0.3532   2.9004  13.4161 </span>
-<span class="co">#=&gt; </span>
-<span class="co">#=&gt; Coefficients:</span>
-<span class="co">#=&gt;   Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">#=&gt;   (Intercept)         -23.98819    1.50057 -15.986  &lt; 2e-16 ***</span>
-<span class="co">#=&gt;   Wind_speed            0.08796    0.11989   0.734    0.464    </span>
-<span class="co">#=&gt;   Humidity              0.11169    0.01319   8.468 6.34e-16 ***</span>
-<span class="co">#=&gt;   Temperature_ElMonte   0.49985    0.02324  21.506  &lt; 2e-16 ***</span>
-<span class="co">#=&gt;   ---</span>
-<span class="co">#=&gt;   Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
-<span class="co"># </span>
-<span class="co"># Residual standard error: 4.648 on 362 degrees of freedom</span>
-<span class="co"># Multiple R-squared:  0.6569,  Adjusted R-squared:  0.654 </span>
-<span class="co"># F-statistic:   231 on 3 and 362 DF,  p-value: &lt; 2.2e-16</span></code></pre></div>
-<p>Like other methods, <code>anneal()</code> does not guarantee that the model be statistically significant.</p>
-<h2>Comparing Models Using ANOVA</h2>
-<p>If you have two or more models that are subsets of a larger model, you can use <code>anova()</code> to check if the additional variable(s) contribute to the predictive ability of the model. In below example, the <code>baseMod</code> is a model built with 7 explanatory variables, while, <code>mod1</code> through <code>mod5</code> contain one predictor less than the previous model.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ANOVA</span>
-baseMod &lt;-<span class="st"> </span><span class="kw">lm</span>(ozone_reading ~<span class="st"> </span>Month +<span class="st"> </span>pressure_height +<span class="st"> </span>Humidity +<span class="st"> </span>Temperature_Sandburg +<span class="st"> </span>Temperature_ElMonte +<span class="st"> </span>Inversion_base_height +<span class="st"> </span>Wind_speed, <span class="dt">data=</span>inputData)
-mod1 &lt;-<span class="st"> </span><span class="kw">lm</span>(ozone_reading ~<span class="st"> </span>Month +<span class="st"> </span>pressure_height +<span class="st"> </span>Humidity +<span class="st"> </span>Temperature_Sandburg +<span class="st"> </span>Temperature_ElMonte +<span class="st"> </span>Inversion_base_height, <span class="dt">data=</span>inputData)
-mod2 &lt;-<span class="st"> </span><span class="kw">lm</span>(ozone_reading ~<span class="st"> </span>Month +<span class="st"> </span>pressure_height +<span class="st"> </span>Humidity +<span class="st"> </span>Temperature_Sandburg +<span class="st"> </span>Temperature_ElMonte, <span class="dt">data=</span>inputData)
-mod3 &lt;-<span class="st"> </span><span class="kw">lm</span>(ozone_reading ~<span class="st"> </span>Month +<span class="st"> </span>pressure_height +<span class="st"> </span>Humidity +<span class="st"> </span>Temperature_ElMonte, <span class="dt">data=</span>inputData)
-mod4 &lt;-<span class="st"> </span><span class="kw">lm</span>(ozone_reading ~<span class="st"> </span>Month +<span class="st"> </span>pressure_height +<span class="st"> </span>Temperature_ElMonte, <span class="dt">data=</span>inputData)
-<span class="kw">anova</span>(baseMod, mod1, mod2, mod3, mod4)
-<span class="co">#=&gt; Model 1: ozone_reading ~ Month + pressure_height + Humidity + Temperature_Sandburg + </span>
-<span class="co">#=&gt; Temperature_ElMonte + Inversion_base_height + Wind_speed</span>
-<span class="co">#=&gt; Model 2: ozone_reading ~ Month + pressure_height + Humidity + Temperature_Sandburg + </span>
-<span class="co">#=&gt; Temperature_ElMonte + Inversion_base_height</span>
-<span class="co">#=&gt; Model 3: ozone_reading ~ Month + pressure_height + Humidity + Temperature_Sandburg + </span>
-<span class="co">#=&gt; Temperature_ElMonte</span>
-<span class="co">#=&gt; Model 4: ozone_reading ~ Month + pressure_height + Humidity + Temperature_ElMonte</span>
-<span class="co">#=&gt; Model 5: ozone_reading ~ Month + pressure_height + Temperature_ElMonte</span>
-<span class="co">#=&gt;</span>
-<span class="co">#=&gt;       Res.Df    RSS Df Sum of Sq       F    Pr(&gt;F)    </span>
-<span class="co">#=&gt; row 1    358 6414.4                                   </span>
-<span class="co">#=&gt; row 2    359 6451.5 -1    -37.16  2.0739  0.150715    </span>
-<span class="co">#=&gt; row 3    360 6565.5 -1   -113.98  6.3616  0.012095 *  </span>
-<span class="co">#=&gt; row 4    361 6767.0 -1   -201.51 11.2465  0.000883 ***</span>
-<span class="co">#=&gt; row 5    362 7890.0 -1  -1123.00 62.6772 3.088e-14 ***</span>
----
-Signif. codes:<span class="st">  </span><span class="dv">0</span> <span class="st">&#39;***&#39;</span> <span class="fl">0.001</span> <span class="st">&#39;**&#39;</span> <span class="fl">0.01</span> <span class="st">&#39;*&#39;</span> <span class="fl">0.05</span> <span class="st">&#39;.&#39;</span> <span class="fl">0.1</span> <span class="st">&#39; &#39;</span> <span class="dv">1</span></code></pre></div>
-<p>For each row in the output, the <code>anova()</code> tests a hypothesis comparing two models. For instance, <code>row 2</code> compares <code>baseMod</code> (Model 1) and <code>mod1</code> (Model 2) in the output. The null hypothesis is that the two models are equal in fitting the data (i.e. the Y variable), while, the alternative hypothesis is that the full model is better (i.e. the additional X variable improves the model).</p>
-<p>So what’s the inference? Except for row 2, all other rows have significant p values. This means all the additional variables in models 1, 2 and 3 are contributing to respective models. From row 1 output, the <code>Wind_speed</code> is not making the <code>baseMod</code> (Model 1) any better. So the best model we have amongst this set is <code>mod1</code> (Model1).</p>
+iv_df &lt;-<span class="st"> </span>iv_df[<span class="kw">order</span>(-iv_df$IV), ]  <span class="co"># sort</span>
+iv_df
+<span class="co">#&gt;           VARS     IV</span>
+<span class="co">#&gt;   RELATIONSHIP 1.5739</span>
+<span class="co">#&gt;  MARITALSTATUS 1.3356</span>
+<span class="co">#&gt;            AGE 1.1748</span>
+<span class="co">#&gt;    CAPITALGAIN 0.8389</span>
+<span class="co">#&gt;     OCCUPATION 0.8259</span>
+<span class="co">#&gt;   EDUCATIONNUM 0.7776</span>
+<span class="co">#&gt;      EDUCATION 0.7774</span>
+<span class="co">#&gt;   HOURSPERWEEK 0.4682</span>
+<span class="co">#&gt;            SEX 0.3087</span>
+<span class="co">#&gt;      WORKCLASS 0.1633</span>
+<span class="co">#&gt;    CAPITALLOSS 0.1507</span>
+<span class="co">#&gt;  NATIVECOUNTRY 0.0815</span>
+<span class="co">#&gt;           RACE 0.0607</span>
+<span class="co">#&gt;         FNLWGT 0.0000</span></code></pre></div>
+<h2>Build Logit Models and Predict</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">logitMod &lt;-<span class="st"> </span><span class="kw">glm</span>(ABOVE50K ~<span class="st"> </span>RELATIONSHIP +<span class="st"> </span>AGE +<span class="st"> </span>CAPITALGAIN +<span class="st"> </span>OCCUPATION +<span class="st"> </span>EDUCATIONNUM, <span class="dt">data=</span>trainingData, <span class="dt">family=</span><span class="st">&quot;binomial&quot;</span>)
+predicted &lt;-<span class="st"> </span><span class="kw">plogis</span>(<span class="kw">predict</span>(logitMod, testData, <span class="dt">type=</span><span class="st">&quot;response&quot;</span>))  <span class="co"># predicted scores</span></code></pre></div>
+<p>A quick note about the <code>plogis</code> function: The <code>glm()</code> procedure with <code>family=&quot;binomial&quot;</code> will build the logistic regression model on the given formula. When we use the <code>predict</code> function on this model, it will predict the log(odds) of the Y variable. This is not what we ultimately want because, the predicted values may not lie within the 0 and 1 range as expected. So, to convert it into prediction probabiltiy scores that is bound between 0 and 1, we use the <code>plogis()</code>.</p>
+<h4>Decide on optimal prediction probability cutoff for the model</h4>
+<p>The default cutoff prediction probabilty score is 0.5 or the ratio of 1’s and 0’s in the training data. But sometimes, tuning the probability cutoff can improve the accuracy in both the development and validation samples. The <code>InformationValue::optimalCutoff</code> function provides ways to find the optimal cutoff to improve the prediction of 1’s, 0’s, both 1’s and 0’s and o reduce the misclassification error. Lets compute the optimal score that minimises the misclassification error for the above model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(InformationValue)
+optCutOff &lt;-<span class="st"> </span><span class="kw">optimalCutoff</span>(testData$ABOVE50K, predicted)[<span class="dv">1</span>] 
+<span class="co">#=&gt; 0.71</span></code></pre></div>
+<h2>Model Diagnostics</h2>
+<p>The <code>summary(logitMod)</code> gives the beta coefficients, Standard error, z Value and p Value. If your model had categorical variables with multiple levels, you will find a row-entry for each category of that variable. That is because, each individual category is considered as an independent binary variable by the <code>glm()</code>. In this case it is ok if few of the categories in a multi-category variable don’t turn out to be significant in the model (i.e. p Value turns out greater than significance level of 0.5).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(logitMod)
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt;   glm(formula = ABOVE50K ~ RELATIONSHIP + AGE + CAPITALGAIN + OCCUPATION + </span>
+<span class="co">#&gt;         EDUCATIONNUM, family = &quot;binomial&quot;, data = trainingData)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   Deviance Residuals: </span>
+<span class="co">#&gt;       Min       1Q   Median       3Q      Max  </span>
+<span class="co">#&gt;   -3.8380  -0.5319  -0.0073   0.6267   3.2847  </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   Coefficients:</span>
+<span class="co">#&gt;                                   Estimate  Std. Error z value             Pr(&gt;|z|)    </span>
+<span class="co">#&gt;   (Intercept)                  -4.57657130  0.24641856 -18.572 &lt; 0.0000000000000002 ***</span>
+<span class="co">#&gt;   RELATIONSHIP Not-in-family   -2.27712854  0.07205131 -31.604 &lt; 0.0000000000000002 ***</span>
+<span class="co">#&gt;   RELATIONSHIP Other-relative  -2.72926866  0.27075521 -10.080 &lt; 0.0000000000000002 ***</span>
+<span class="co">#&gt;   RELATIONSHIP Own-child       -3.56051255  0.17892546 -19.899 &lt; 0.0000000000000002 ***</span>
+<span class="co">#&gt;   ...</span>
+<span class="co">#&gt;   ...</span>
+<span class="co">#&gt;   Null deviance: 15216.0  on 10975  degrees of freedom</span>
+<span class="co">#&gt;   Residual deviance:  8740.9  on 10953  degrees of freedom</span>
+<span class="co">#&gt;   AIC: 8786.9</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;   Number of Fisher Scoring iterations: 8</span></code></pre></div>
+<h4>VIF</h4>
+<p>Like in case of linear regression, we should check for multicollinearity in the model. As seen below, all X variables in the model have VIF well below 4.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vif</span>(logitMod)
+<span class="co">#&gt;                  GVIF Df GVIF^(1/(2*Df))</span>
+<span class="co">#&gt; RELATIONSHIP 1.340895  5        1.029768</span>
+<span class="co">#&gt; AGE          1.119782  1        1.058198</span>
+<span class="co">#&gt; CAPITALGAIN  1.023506  1        1.011685</span>
+<span class="co">#&gt; OCCUPATION   1.733194 14        1.019836</span>
+<span class="co">#&gt; EDUCATIONNUM 1.454267  1        1.205930</span></code></pre></div>
+<h4>Misclassification Error</h4>
+<p>Misclassification error is the percentage mismatch of predcited vs actuals, irrespective of 1’s or 0’s. The lower the misclassification error, the better is your model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">misClassError</span>(testData$ABOVE50K, predicted, <span class="dt">threshold =</span> optCutOff)
+<span class="co">#=&gt; 0.0899</span></code></pre></div>
+<h4>ROC</h4>
+<p>Receiver Operating Characteristics Curve traces the percentage of true positives accurately predicted by a given logit model as the predicition probability cutoff is lowered from 1 to 0. For a good model, as the cutoff is lowered, it should mark more of actual 1’s as positives and lesser of actual 0’s as 1’s. So for a good model, the curve should rise steeply, indicating that the TPR (Y-Axis) increases faster than the FPR (X-Axis) as the cutoff score decreases. Greater the area under the ROC curve, better the predictve ability of the model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotROC</span>(testData$ABOVE50K, predicted, <span class="dt">threshold =</span> optCutOff)</code></pre></div>
+<p><img src='screenshots/ROC-Curve.png' width=528 height=528 /></p>
+<p>The above model has area under ROC curve 88.78%, which is pretty good.</p>
+<h4>Concordance</h4>
+<p>Ideally, the model-calculated-probability-scores of all actual Positive’s, (aka Ones) should be greater than the model-calculated-probability-scores of ALL the Negatives (aka Zeroes). Such a model is said to be perfectly concordant and a highly reliable one. This phenomenon can be measured by Concordance and Discordance.</p>
+<p>In simpler words, of all combinations of 1-0 pairs (actuals), <em>Concordance</em> is the percentage of pairs, whose scores of actual positive’s are greater than the scores of actual negative’s. For a perfect model, this will be 100%. So, the higher the concordance, the better is the quality of model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Concordance</span>(testData$ABOVE50K, predicted, <span class="dt">threshold =</span> optCutOff)
+<span class="co">#&gt; 0.8915</span></code></pre></div>
+<p>The above model with a concondance of 89.2% is indeed a good quality model.</p>
+<h4>Specificity and Sensitivity</h4>
+<p>Sensitivity (or True Positive Rate) is the percentage of 1’s (actuals) correctly predicted by the model, while, specificity is the percentage of 0’s (actuals) correctly predicted. Specificity can also be calculated as <span class="math inline">1 − <em>F</em><em>a</em><em>l</em><em>s</em><em>e</em> <em>P</em><em>o</em><em>s</em><em>i</em><em>t</em><em>i</em><em>v</em><em>e</em> <em>R</em><em>a</em><em>t</em><em>e</em></span>.</p>
+<p><br /><span class="math display">$$Sensitivity = \frac{\# \  Actual \  1's \  and \  Predicted \  as \  1's}{\# \  of \  Actual \  1's}$$</span><br /></p>
+<p><br /><span class="math display">$$Specificity = {\# \  Actual \  0's \  and \  Predicted \  as \  0's \over \#  \  of \  Actual \  0's}$$</span><br /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sensitivity</span>(testData$ABOVE50K, predicted, <span class="dt">threshold =</span> optCutOff)
+<span class="co">#&gt; 0.3089</span>
+<span class="kw">specificity</span>(testData$ABOVE50K, predicted, <span class="dt">threshold =</span> optCutOff)
+<span class="co">#&gt; 0.9836</span></code></pre></div>
+<p>The above numbers are calculated on the validation sample that was not used for training the model. So, a truth detection rate of 31% on test data is good.</p>
+<h4>Confusion Matrix</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">confusionMatrix</span>(testData$ABOVE50K, predicted, <span class="dt">threshold =</span> optCutOff)
+<span class="co"># The columns are actuals, while rows are predicteds.</span>
+<span class="co">#&gt;       0    1</span>
+<span class="co">#&gt; 0 18918 1626</span>
+<span class="co">#&gt; 1   314  727</span></code></pre></div>

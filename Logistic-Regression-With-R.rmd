@@ -4,6 +4,18 @@ layout: default
 ---
 > If linear regression serves to predict continuous Y variables, logistic regression is used for binary classification.
 
+If we use linear regression to model a dichotomous variable (as $Y$), the resulting model might not restrict the predicted $Ys$ within 0 and 1. Besides, other [assumptions of linear regression](Assumptions-of-Linear-Regression.html) such as normality of errors may get violated. So instead, we model the log odds of the event $ln \left( P \over 1-P \right)$, where, $P$ is the probability of event. 
+
+$$Z_{i} = ln{\left(P_{i} \over 1-P_{i} \right)} = \beta_{0} + \beta_{1} x_{1} + . . + \beta_{n} x_{n} $$
+
+The above equation can be modeled using the `glm()` by setting the `family` argument to `"binomial"`. But we are more interested in the probability of the event, than the log odds of the event. So, the predicted values from the above model, i.e. the log odds of the event, can be converted to probability of event as follows:
+
+$$P_{i} = 1 - {\left( 1 \over 1 + e^z\right)}$$
+
+This conversion is achieved using the `plogis()` function, as shown below when we [build logit models and predict](Logistic-Regression-With-R.html#Build Logit Models and Predict).
+
+## Example Problem
+
 Lets try and predict if an individual will earn more than $50K using logistic regression based on demographic variables available in the [`adult` data](http://rstatistics.net/wp-content/uploads/2015/09/adult.csv). In this process, we will:
 
 1. Import the data
@@ -220,7 +232,7 @@ misClassError(testData$ABOVE50K, predicted, threshold = optCutOff)
 ```
 
 #### ROC
-Receiver Operating Characteristics Curve traces the percentage of true positives accurately predicted by a given logit model as the predicition probability cutoff is lowered from 1 to 0. For a good model, as the cutoff is lowered, it should mark more of actual 1's as positives and lesser of actual 0's as 1's. So for a good model, the curve should rise steeply, indicating that the TPR (Y-Axis) increases faster than the FPR (X-Axis) as the Cutoff score decreases.Greater the area under the ROC curve, better the quality of the model.
+Receiver Operating Characteristics Curve traces the percentage of true positives accurately predicted by a given logit model as the predicition probability cutoff is lowered from 1 to 0. For a good model, as the cutoff is lowered, it should mark more of actual 1's as positives and lesser of actual 0's as 1's. So for a good model, the curve should rise steeply, indicating that the TPR (Y-Axis) increases faster than the FPR (X-Axis) as the cutoff score decreases. Greater the area under the ROC curve, better the predictve ability of the model.
 
 ```{r, eval=FALSE, echo=TRUE}
 plotROC(testData$ABOVE50K, predicted, threshold = optCutOff)
@@ -245,7 +257,11 @@ Concordance(testData$ABOVE50K, predicted, threshold = optCutOff)
 The above model with a concondance of 89.2% is indeed a good quality model.
 
 #### Specificity and Sensitivity
-Sensitivity (or True Positive Rate) is the percentage of 1's (actuals) correctly predicted by the model, while, specificity is the percentage of 0's (actuals) correctly predicted. Specificity can also be calculated as 1-False Positive Rate.
+Sensitivity (or True Positive Rate) is the percentage of 1's (actuals) correctly predicted by the model, while, specificity is the percentage of 0's (actuals) correctly predicted. Specificity can also be calculated as $1 - False \  Positive \  Rate$.
+
+$$Sensitivity = \frac{\# \  Actual \  1's \  and \  Predicted \  as \  1's}{\# \  of \  Actual \  1's}$$
+
+$$Specificity = {\# \  Actual \  0's \  and \  Predicted \  as \  0's \over \#  \  of \  Actual \  0's}$$
 
 ```{r, eval=FALSE, echo=TRUE}
 sensitivity(testData$ABOVE50K, predicted, threshold = optCutOff)

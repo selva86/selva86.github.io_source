@@ -13,12 +13,12 @@ knitr::opts_chunk$set(error=FALSE, message=FALSE, warning=FALSE)
 >####_The regression model is linear in parameters_
 
 An example of model equation that is _linear in parameters_
-__$$Y = a + (\beta1*X1) + (\beta2 * X2^2)$$__
+$$Y = a + \left( \beta1 * X1 \right) + \left( \beta2 * X2^2 \right)$$
 
 Though, the `X2` is raised to power 2, the equation is still linear in beta parameters. So the assumtion is satisfied in this case.
 
 An example of _linear in variables_ but _non-linear in parameters_. This will violate the assumption.
-__$$Y = a + (\beta1*X1) + (\beta2^2 * X2)$$__
+$$Y = a + \left( \beta1 * X1 \right) + \left( \beta2^2 * X2 \right)$$
 
 Here, the beta parameter is raised to power 2, which is not linear. So the assumption is violated by this equation.
 
@@ -211,7 +211,7 @@ The variance in the X variable above is much larger than 0. So, this assumption 
 
 This means that if the Y and X variable has an inverse relationship, the model equation should be specified appropriately:
 
-__$$Y = \beta1 + \beta2 * (1/X)$$__
+$$Y = \beta1 + \beta2 * \left( 1 \over X \right)$$
 
 ##Assumption 9
 >####_No perfect multicollinearity_
@@ -219,14 +219,15 @@ __$$Y = \beta1 + \beta2 * (1/X)$$__
 There is no perfect linear relationship between explanatory variables.
           
 ####How to check? 
-Using Variance Inflation factor (VIF). What is VIF? 
+Using Variance Inflation factor (VIF). But, What is VIF? 
 
-VIF is a metric computed for every X variable that goes into a linear model. VIF for a X var is calculated as: 
+VIF is a metric computed for every $X$ variable that goes into a linear model. The higher the VIF, more redundant is that variable. VIF for a $X$ var is calculated as: 
 
-__$$1/(1-Rsq)$$__, where,
+$$VIF = {1 \over \left( 1-R_{sq} \right)}$$
 
-Rsq is the R-sq term for the model that X against all other Xs that went into the model.
-Practically, if two of the Xs have high correlation, they will likely have high VIFs. Generally, VIF for an X variable should be less than 4 in order to be accepted as not causing multi-collinearity. The cutoff is kept as low as 2, if you want to be strict.
+where, $R_{sq}$ is the $R_{sq}$ term for the model with given $X$ as response against all other $Xs$ that went into the model as predictors.
+
+Practically, if two of the $X's$ have high correlation, they will likely have high VIFs. Generally, VIF for an $X$ variable should be less than 4 in order to be accepted as not causing multi-collinearity. The cutoff is kept as low as 2, if you want to be strict about your $X$ variables.
 
 ```{r, eval=FALSE}
 library(car)
@@ -238,7 +239,8 @@ vif(mod2)
 
 ####How to rectify?
 Two ways: 
-1. Either iteratively remove the var with the highest VIF or,
+
+1. Either iteratively remove the $X$ var with the highest VIF or,
 1. See correlation between all variables and keep only one of all highly correlated pairs.
 
 ```{r, eval=FALSE}
@@ -262,12 +264,12 @@ vif(mod)
 ```
   
 The convention is, the VIF should not go more than 4 for any of the X variables. 
-That means we are not letting the R-Sq of any of the Xs (the model that was built with that X as a response variable and the remaining X's are predictors) to go more than 75%. => 1/(1-0.75) => 1/0.24 => 4.
+That means we are not letting the $R_{Sq}$ of any of the $Xs$ (the model that was built with that X as a response variable and the remaining $Xs$ are predictors) to go more than 75%. => 1/(1-0.75) => 1/0.25 => 4.
             
 ## Assumption 10
 >####_Normality of Errors_
 
-The residuals should be normally distributed. This also implies the Y and the X's are also normally distributed. It is an essential assumption if the maximum likelihood method is used to commute the estimates. 
+The residuals should be normally distributed. This also implies the $Y$ and the $Xs$ are also normally distributed. It is an essential assumption if the maximum likelihood method is used to commute the estimates. 
 
 This can be visually checked using the `qqnorm()` plot (top right plot).
 

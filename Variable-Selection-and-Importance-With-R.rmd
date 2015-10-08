@@ -55,7 +55,7 @@ varimpAUC(cf1)  # more robust towards class imbalance.
  
 ##2. Relative Importance
 
-Using calc.relimp {relaimpo}, the relative importance of variables fed into a lm model can be determined as a relative percentage.
+Using `calc.relimp` {relaimpo}, the relative importance of variables fed into a lm model can be determined as a relative percentage.
 
 ```{r, eval=FALSE, echo=TRUE}
 library(relaimpo)
@@ -152,15 +152,15 @@ embed_png("screenshots/boruta-variable-importance.png", dpi = 220)
 
 The [InformationValue package](https://cran.r-project.org/web/packages/InformationValue/vignettes/InformationValue.html) provides convenient functions to compute *weights of evidence* and *information value* for categorical variables.
 
-**Weights of Evidence (WOE)** provides a method of recoding the categorical `x` variable to continuous variables. For each category of a categorical variable, the **WOE** is calculated as:
+**Weights of Evidence (WOE)** provides a method of recoding a categorical X variable to a continuous variable. For each category of a categorical variable, the **WOE** is calculated as:
 
-$$WOE = ln \left(\frac{percentage.good.of.all.goods}{percentage.bad.of.all.bads}\right)$$
+$$WOE = ln \left(\frac{percentage\ good\ of\ all\ goods}{percentage\ bad\ of\ all\ bads}\right)$$
 
 In above formula, 'goods' is same as 'ones' and 'bads' is same as 'zeros'.
 
 **Information Value (IV)** is a measure of the predictive capability of a categorical `x` variable to accurately predict the goods and bads. For each category of `x`, information value is computed as:
 
-$$Information Value_{category} = {percentage.good.of.all.goods - percentage.bad.of.all.bads \over WOE} $$
+$$Information Value_{category} = {percentage\ good\ of\ all\ goods - percentage\ bad\ of\ all\ bads \over WOE} $$
 
 The total IV of a variable is the sum of IV's of its categories.
 
