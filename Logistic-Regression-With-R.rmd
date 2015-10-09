@@ -10,7 +10,7 @@ $$Z_{i} = ln{\left(P_{i} \over 1-P_{i} \right)} = \beta_{0} + \beta_{1} x_{1} + 
 
 The above equation can be modeled using the `glm()` by setting the `family` argument to `"binomial"`. But we are more interested in the probability of the event, than the log odds of the event. So, the predicted values from the above model, i.e. the log odds of the event, can be converted to probability of event as follows:
 
-$$P_{i} = 1 - {\left( 1 \over 1 + e^z\right)}$$
+$$P_{i} = 1 - {\left( 1 \over 1 + e^z_{i}\right)}$$
 
 This conversion is achieved using the `plogis()` function, as shown below when we [build logit models and predict](Logistic-Regression-With-R.html#Build Logit Models and Predict).
 
