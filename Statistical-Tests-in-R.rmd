@@ -4,43 +4,7 @@ layout: default
 ---
 > This chapter explains the purpose of some of the most commonly used statistical tests and how to implement them in R
 
-##1. Shapiro Test
-
-####Why is it used?
-To test if a sample follows a *normal distribution*.
-
-```{r, eval=FALSE}
-shapiro.test(numericVector) # Does myVec follow a normal disbn?
-```
-Lets see how to do the test on a sample from a normal distribution.
-
-```{r, eval=FALSE}
-# Example: Test a normal distribution
-set.seed(100)
-normaly_disb <- rnorm(100, mean=5, sd=1) # generate a normal distribution
-shapiro.test(normaly_disb)  # the shapiro test.
-#=> Shapiro-Wilk normality test
-#=>
-#=> data:  normaly_disb
-#=> W = 0.98836, p-value = 0.535
-```
-####How to interpret?
-The null hypothesis here is that the sample being tested is normally distributed. Since the p Value is not less that the significane level of 0.05, we don't reject the null hypothesis. Therefore, the tested sample is confirmed to follow a normal distribution (thou, we already know that!).
-
-```{r, eval=FALSE}
-# Example: Test a uniform distribution
-set.seed(100)
-not_normaly_disb <- runif(100)  # uniform distribution.
-shapiro.test(not_normaly_disb)
-#=>  	Shapiro-Wilk normality test
-
-#=> data:  not_normaly_disb
-#=> W = 0.96509, p-value = 0.009436
-```
-####How to interpret?
-If p-Value is less than the significance level of 0.05, the null-hypothesis that it is normally distributed can be rejected, which is the case here.
-
-##2. One Sample t-Test
+## 1. One Sample t-Test
 
 ####Why is it used?
 It is a parametric test used to test if the mean of a sample from a normal distribution could reasonably be a specific value.
@@ -66,7 +30,7 @@ In above case, the p-Value is not less than significance level of 0.05,  therefo
 
 Note: Use conf.level argument to adjust the confidence level.
 
-##3. Wilcoxon Signed Rank Test
+## 2. Wilcoxon Signed Rank Test
 
 Why / When is it used?
 Testing the mean of a sample when normal distribution is not assumed.
@@ -80,7 +44,7 @@ wilcox.test(input.vector, mu = m, conf.int = TRUE)
 If p-Value < 0.05, reject the null hypothesis and accept the alternate mentioned in your R code’s output. Type example(wilcox.test) in R console for illustration.
 
 
-##4. Two Sample t-Test and Wilcoxon Rank Sum Test
+## 3. Two Sample t-Test and Wilcoxon Rank Sum Test
 
 Both t.Test and Wilcoxon rank test can be used to compare the mean of 2 samples. The difference is t-Test assumes the samples being tests is drawn from a normal distribution, while, Wilcoxon's rank sum test does not.
 
@@ -127,6 +91,44 @@ wilcox.test(x, y, paired = TRUE) # both x and y are assumed to have similar shap
 ####When can I conclude if the mean’s are different?
 
 Conventionally, If the p-Value is less than significance level (ideally 0.05), reject the null hypothesis that  both means are the are equal.
+
+
+## 4. Shapiro Test
+
+####Why is it used?
+To test if a sample follows a *normal distribution*.
+
+```{r, eval=FALSE}
+shapiro.test(numericVector) # Does myVec follow a normal disbn?
+```
+Lets see how to do the test on a sample from a normal distribution.
+
+```{r, eval=FALSE}
+# Example: Test a normal distribution
+set.seed(100)
+normaly_disb <- rnorm(100, mean=5, sd=1) # generate a normal distribution
+shapiro.test(normaly_disb)  # the shapiro test.
+#=> Shapiro-Wilk normality test
+#=>
+#=> data:  normaly_disb
+#=> W = 0.98836, p-value = 0.535
+```
+####How to interpret?
+The null hypothesis here is that the sample being tested is normally distributed. Since the p Value is not less that the significane level of 0.05, we don't reject the null hypothesis. Therefore, the tested sample is confirmed to follow a normal distribution (thou, we already know that!).
+
+```{r, eval=FALSE}
+# Example: Test a uniform distribution
+set.seed(100)
+not_normaly_disb <- runif(100)  # uniform distribution.
+shapiro.test(not_normaly_disb)
+#=>  	Shapiro-Wilk normality test
+
+#=> data:  not_normaly_disb
+#=> W = 0.96509, p-value = 0.009436
+```
+####How to interpret?
+If p-Value is less than the significance level of 0.05, the null-hypothesis that it is normally distributed can be rejected, which is the case here.
+
 
 ##5. Kolmogorov And Smirnov Test
 
@@ -180,9 +182,9 @@ Chi-squared test in R can be used to test if two categorical variables are depen
 Example use case: You may want to figure out if big budget films become box-office hits. We got 2 categorical variables (Budget of film, Success Status) each with 2 factors (Big/Low budget and Hit/Flop), which forms a 2 x 2 matrix.
 
 ```{r, eval=FALSE}
-chisq.test(matrix, correct = FALSE)  # Yates continuity correction not applied
+chisq.test(table(categorical_X, categorical_Y), correct = FALSE)  # Yates continuity correction not applied
 #or
-summary(table(x, y)) # performs a chi-squared test.
+summary(table(categorical_X, categorical_Y)) # performs a chi-squared test.
 # Sample results
 #=> Pearson's Chi-squared test
 #=> data:  M
