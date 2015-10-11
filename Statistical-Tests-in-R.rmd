@@ -32,16 +32,27 @@ Note: Use conf.level argument to adjust the confidence level.
 
 ## 2. Wilcoxon Signed Rank Test
 
-Why / When is it used?
-Testing the mean of a sample when normal distribution is not assumed.
+#### Why / When is it used?
+To test the mean of a sample when normal distribution is not assumed.
 Wilcoxon signed rank test can be an  alternative to t-Test, especially when the data sample is not assumed to follow a normal distribution. It is a non-parametric method used to test if an estimate is different from its true value.
 
 ```{r, eval=FALSE}
-wilcox.test(input.vector, mu = m, conf.int = TRUE)
+numeric_vector <- c(20, 29, 24, 19, 20, 22, 28, 23, 19, 19)
+wilcox.test(numeric_vector, mu=20, conf.int = TRUE)
+#>	Wilcoxon signed rank test with continuity correction
+#>
+#> data:  numeric_vector
+#> V = 30, p-value = 0.1056
+#> alternative hypothesis: true location is not equal to 20
+#> 90 percent confidence interval:
+#>  19.00006 25.99999
+#> sample estimates:
+#> (pseudo)median 
+#>       23.00002
 ```
 
 ####How to interpret?
-If p-Value < 0.05, reject the null hypothesis and accept the alternate mentioned in your R code’s output. Type example(wilcox.test) in R console for illustration.
+If p-Value < 0.05, reject the null hypothesis and accept the alternate mentioned in your R code’s output. Type example(wilcox.test) in R console for more illustration.
 
 
 ## 3. Two Sample t-Test and Wilcoxon Rank Sum Test
