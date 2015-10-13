@@ -1,0 +1,4 @@
+---
+title: Dirichlet Regression
+layout: default
+---

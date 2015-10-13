@@ -168,7 +168,7 @@ iv_df
 ## Build Logit Models and Predict
 
 ```{r, eval=FALSE, echo=TRUE}
-logitMod <- glm(ABOVE50K ~ RELATIONSHIP + AGE + CAPITALGAIN + OCCUPATION + EDUCATIONNUM, data=trainingData, family="binomial")
+logitMod <- glm(ABOVE50K ~ RELATIONSHIP + AGE + CAPITALGAIN + OCCUPATION + EDUCATIONNUM, data=trainingData, family=binomial(link="logit"))
 predicted <- plogis(predict(logitMod, testData, type="response"))  # predicted scores
 ```
 A quick note about the `plogis` function: The `glm()` procedure with `family="binomial"` will build the logistic regression model on the given formula. When we use the `predict` function on this model, it will predict the log(odds) of the Y variable. This is not what we ultimately want because, the predicted values may not lie within the 0 and 1 range as expected. So, to convert it into prediction probabiltiy scores that is bound between 0 and 1, we use the `plogis()`.
@@ -235,7 +235,7 @@ misClassError(testData$ABOVE50K, predicted, threshold = optCutOff)
 Receiver Operating Characteristics Curve traces the percentage of true positives accurately predicted by a given logit model as the predicition probability cutoff is lowered from 1 to 0. For a good model, as the cutoff is lowered, it should mark more of actual 1's as positives and lesser of actual 0's as 1's. So for a good model, the curve should rise steeply, indicating that the TPR (Y-Axis) increases faster than the FPR (X-Axis) as the cutoff score decreases. Greater the area under the ROC curve, better the predictve ability of the model.
 
 ```{r, eval=FALSE, echo=TRUE}
-plotROC(testData$ABOVE50K, predicted, threshold = optCutOff)
+plotROC(testData$ABOVE50K, predicted)
 ```
 
 ```{r, echo = FALSE}
@@ -250,7 +250,7 @@ Ideally, the model-calculated-probability-scores of all actual Positive’s, (ak
 In simpler words, of all combinations of 1-0 pairs (actuals), *Concordance* is the percentage of pairs, whose scores of actual positive’s are greater than the scores of actual negative’s. For a perfect model, this will be 100%. So, the higher the concordance, the better is the quality of model.
 
 ```{r, eval=FALSE, echo=TRUE}
-Concordance(testData$ABOVE50K, predicted, threshold = optCutOff)
+Concordance(testData$ABOVE50K, predicted)
 #> 0.8915
 ```
 

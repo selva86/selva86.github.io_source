@@ -1,0 +1,4 @@
+---
+title: Loess Regression
+layout: default
+---

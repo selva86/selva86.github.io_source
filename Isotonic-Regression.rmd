@@ -1,0 +1,4 @@
+---
+title: Isotonic Regression
+layout: default
+---

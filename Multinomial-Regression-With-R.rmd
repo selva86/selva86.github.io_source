@@ -1,0 +1,4 @@
+---
+title: Multinomial Regression
+layout: default
+---
