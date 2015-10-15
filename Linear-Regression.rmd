@@ -3,11 +3,11 @@ title: Linear Regression With R
 layout: default
 ---
 
-> Linear regression is a fundamental predictive modelling technique that aims to predict the value of an outcome variable based on  one or more input predictor variables. The aim is to establish a linear relationship (a mathematical formula) between the predictor variable(s) and the response variable, so we can use it to estimate the value of the response, when predictors values are known.
+> Linear regression is a predictive modeling technique that aims to predict the value of an outcome variable based on one or more input predictor variables. The aim is to establish a linear relationship (a mathematical formula) between the predictor variable(s) and the response variable, so we can use it to estimate the value of the response, when predictors values are known.
 
 ##Introduction
 
-The aim of linear regression is to model a continuous variable $Y$ as a mathematical function of 1 or more $X$ variable(s), so that we can use this regression model to predict the $Y$ when only the $X$ is known. This mathematical equation can be generalised as follows:
+The aim of linear regression is to model a continuous variable $Y$ as a mathematical function of 1 or more $X$ variable(s), so that we can use this regression model to predict the $Y$ when only the $X$ is known. This mathematical equation can be generalized as follows:
 
 $$Y = \beta_{1} + \beta_{2} X + \epsilon$$
 
@@ -30,7 +30,7 @@ Before we begin building the regression model, it is a good practice to analyse 
 ##Graphical Analysis
 
 The aim of this exercise is to build a simple regression model that we can use to predict Distance (dist) by establishing a statistically significant linear relationship with Speed (speed). But before jumping in to the syntax, lets try to understand these variables graphically.
-Typically, for each of the independent variables (predictors), the following plots are drawn to visualize the followiing behaviour:
+Typically, for each of the independent variables (predictors), the following plots are drawn to visualize the following behavior:
 
 1. **Scatter plot**: Visualize the linear relationship between the predictor and response
 1. **Box plot**: To spot any outlier observations in the variable. Having outliers in your predictor can drastically affect the predictions as they can easily affect the direction/slope of the line of best fit.
@@ -80,7 +80,7 @@ embed_png("screenshots/density-plot.png", dpi = 220)
 
 Correlation is a statistical measure that suggests the level of linear dependence between two variables, that occur in pair – just like what we have here in speed and dist. Correlation can take values between -1 to +1.
 If we observe for every instance where speed increases, the distance also increases along with it, then there is a high positive correlation between them and therefore the correlation between them will be closer to 1. The opposite is true for an inverse relationship, in which case, the correlation between the variables will be close to -1. Any value closer to 0 suggests a weak relationship between the variables.
-It is important to note that, correlation is a relative measure. You cannot reject a variable when building regression models because of ‘low’ correlation. A low correlation probably suggests that there are still unexplained variance in the response variable, in which case, we should probably look for new variables.
+It is important to note that, correlation is a relative measure. You cannot reject a variable when building regression models because of low correlation. A low correlation probably suggests that there are still unexplained variance in the response variable, in which case, we should probably look for new variables.
 
 ```{r, eval=TRUE}
 cor(cars$speed, cars$dist)  # calculate correlation between speed and distance 
@@ -88,7 +88,7 @@ cor(cars$speed, cars$dist)  # calculate correlation between speed and distance
 
 ##Build Linear Model
 
-Now that we have seen the linear relationship pictorially in the scatter plot and by computing the correlation, lets see the syntax for building the linear model. The function used for building linear models is lm(). The lm() function takes in two main arguments, namely: 1. Formula 2. data The data is typicallly a data.frame and the formula is a object of class formula. But the most common convention is to write out the formula directly in place of the argument as seen below.
+Now that we have seen the linear relationship pictorially in the scatter plot and by computing the correlation, lets see the syntax for building the linear model. The function used for building linear models is lm(). The lm() function takes in two main arguments, namely: 1. Formula 2. data The data is typically a data.frame and the formula is a object of class formula. But the most common convention is to write out the formula directly in place of the argument as seen below.
 ```{r, eval=TRUE}
 linearMod <- lm(dist ~ speed, data=cars)  # build linear regression model on full data
 print(linearMod)
@@ -119,7 +119,7 @@ We can interpret the t-value something like this. A larger *t-value* indicates t
 *Pr(>|t|)* is the probability that you get a t-value as high or higher than the observed value when the Null Hypothesis (the coefficient is equal to zero or that there is no relationship) is true. So if the *Pr(>|t|)* is low the coefficients are significant (significantly different from zero). If the *Pr(>|t|)* is high, the coefficients are not significant.
 What this means to us is, when p Value is less that significance level, we can safely reject the null hypothesis that the co-efficient *β* of the predictor is zero. In our case, linearMod, both these p-Values are well below the 0.05 threshold, so we can conclude our model is indeed statistically significant.
 
-It is extremely important for the model to be statistically significant before we can go ahead and use it to predict (or estimate) the dependent variable, otherwise, the confidence in predicted values from that model reduces and may be construed as an event of chance.ance
+It is extremely important for the model to be statistically significant before we can go ahead and use it to predict (or estimate) the dependent variable, otherwise, the confidence in predicted values from that model reduces and may be construed as an event of chance.
 
 ##How to calculate the t Statistic and p-Values?
 
@@ -147,7 +147,7 @@ cat("Model p-Value: ", model_p)
 
 The actual information in a data is the total variation it contains, remember?. What R-Squared tells us is the proportion of variation in the dependent (response) variable that has been explained by this model. Also, we don’t necessarily have discard a model based on a low R-Squared value. It’s a better practice to look at the AIC and prediction accuracy on validation sample when deciding on the efficacy of a model.
 
-Now that’s about R-Squared. What about adjusted R-Squared? As you add terms to your model, the R-Squared value of the new model will always be greater than that of its subset. This is because, since all the variables in the original model is also present, their contribution to explain the depend variable still remains in the super-set and therefore, whatever new variable we add can only enhance (if not significantly) what was already explained. Here is how, the adjusted R-Squared value comes to help. Adj R-Squared penalizes total value for the number of terms (read predictors) in your model. Therefore when comparing nested models, it is a good practice to look at adj-R-squared value over R-squared.
+Now thats about R-Squared. What about adjusted R-Squared? As you add terms to your model, the R-Squared value of the new model will always be greater than that of its subset. This is because, since all the variables in the original model is also present, their contribution to explain the depend variable still remains in the super-set and therefore, whatever new variable we add can only enhance (if not significantly) what was already explained. Here is how, the adjusted R-Squared value comes to help. Adj R-Squared penalizes total value for the number of terms (read predictors) in your model. Therefore when comparing nested models, it is a good practice to look at adj-R-squared value over R-squared.
 
 ##AIC and BIC
 
@@ -192,7 +192,7 @@ Doing it this way, we will have the model predicted values for the 20% data (tes
 ```{r, eval=TRUE}
 # Create Training and Test data -
 set.seed(100)  # setting seed to reproduce results of random sampling
-trainingRowIndex <- sample(1:nrow(cars), 0.8*nrow(cars))  # row incices for training data
+trainingRowIndex <- sample(1:nrow(cars), 0.8*nrow(cars))  # row indices for training data
 trainingData <- cars[trainingRowIndex, ]  # model training data
 testData  <- cars[-trainingRowIndex, ]   # test data
 ```
@@ -210,18 +210,18 @@ summary (lmMod)  # model summary
 AIC (lmMod)  # Calculate akaike information criterion
 ```
 
-From the model summary, the model p value and predictor’s p value are less than the significance level, so we know we have a statistically significant model. Also, the R-Sq and Adj R-Sq are comparitive to the original model built on full data.
+From the model summary, the model p value and predictor’s p value are less than the significance level, so we know we have a statistically significant model. Also, the R-Sq and Adj R-Sq are comparative to the original model built on full data.
 
 ###Step 4: Calculate prediction accuracy and error rates
 
-A simple correlation between the actuals and predicted values can be used as a form of accuracy measure. A higher correlation accuracy implies that the actuals and predicted values have similar directional movement, i.e. when the actuals values increase the predicteds also increase and viceversa.
+A simple correlation between the actuals and predicted values can be used as a form of accuracy measure. A higher correlation accuracy implies that the actuals and predicted values have similar directional movement, i.e. when the actuals values increase the predicteds also increase and vice-versa.
 
 ```{r, eval=TRUE}
 actuals_preds <- data.frame(cbind(actuals=testData$dist, predicteds=distPred))  # make actuals_predicteds dataframe.
 correlation_accuracy <- cor(actuals_preds)  # 82.7%
 ```
 
-Now lets calculate the Min Max accuraccy and MAPE:
+Now lets calculate the Min Max accuracy and MAPE:
 **$$MinMaxAccuracy = Average(Min(Actuals, Predicteds) / Max(Actuals,Predicteds))$$**
 **$$MeanAbsolutePercentageError(MAPE) = Average(abs(Predicteds−Actuals) / Actuals))$$**
 

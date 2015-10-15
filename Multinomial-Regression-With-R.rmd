@@ -5,17 +5,24 @@ layout: default
 > Multinomial regression is much similar to logistic regression but is applicable when the response variable is a nominal categorical variable with more than 2 levels.
 
 ## Introduction
-Multinomial logistic regression can be implemented using `mlogit()` from mlogit package and `multinom()` from `nnet` package. We will use the later for this example.
+Multinomial logistic regression can be implemented with `mlogit()` from mlogit package and `multinom()` from `nnet` package. We will use the latter for this example.
 
-## Example: Predict Contraceptive Method Choice
+## Example: Predict Choice of Contraceptive Method
 
-In this example, we will try to predict the choice of contraceptives preferred by women. We have the eduction, work, religion, number of childers, media exposure and standard of living as variables available in the [cmc data](http://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice). In this example, we will model the conraceptive method used `cmc` as a function of all these variables. 
+In this example, we will try to predict the choice of contraceptive preferred by women _(1=No-use, 2=Long-term, 3=Short-term)_. We have the education, work, religion, number of children, media exposure and standard of living as variables available in the [cmc data](http://archive.ics.uci.edu/ml/datasets/Contraceptive+Method+Choice). In this example, we will model the choice of contraceptive method `cmc` as a function of all these variables. 
 
 ## Import Data
 ```{r, eval=FALSE}
-library (nnet)
 cmcData <- read.csv("http://archive.ics.uci.edu/ml/machine-learning-databases/cmc/cmc.data", stringsAsFactors=FALSE, header=F)
 colnames(cmcData) <- c("wife_age", "wife_edu", "hus_edu", "num_child", "wife_rel", "wife_work", "hus_occu", "sil", "media_exp", "cmc")
+head(cmcData)
+#>   wife_age wife_edu hus_edu num_child wife_rel wife_work hus_occu sil media_exp cmc
+#> 1       24        2       3         3        1         1        2   3         0   1
+#> 2       45        1       3        10        1         1        3   4         0   1
+#> 3       43        2       3         7        1         1        3   4         0   1
+#> 4       42        3       2         9        1         1        3   3         0   1
+#> 5       36        3       3         8        1         1        3   2         0   1
+#> 6       19        4       4         0        1         1        3   3         0   1
 ```
 
 ## Convert Numerics to Factors
