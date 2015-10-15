@@ -2,3 +2,16 @@
 title: Loess Regression
 layout: default
 ---
+> Loess Regression is the most common method used to smoothen a volatile time series. It is a non-parametric methods where least squares regression is performed in localized subsets, which makes it a suitable candidate for smoothing any numerical vector.
+
+## Introduction
+Loess regression can be applied using the `loess()` on a numerical vector to smoothen it. The predictor variable can just be indices from 1 to number of observations. If other predictors are available, feel free to test them out too.
+
+## Example
+
+```{r, eval=FALSE}
+data(fuel, package="fpp") # initialize data
+loessMod10 <- loess(Cost ~ c(1:nrow(fuel)), data=fuel, span=0.10) # span arg control the degree of smoothing
+smoothed10 <- predict(loessMod10) # get smoothed output
+predicted <- predict(loessMod10, newData) # predict on new data
+```
