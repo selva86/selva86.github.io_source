@@ -4,7 +4,7 @@ layout: default
 ---
 > Ordinal logistic regression can be used to model a ordered factor response. 
 
-The `polr()` function from the `MASS` package can be used to build the _proportional odds logistic regression_ and predict the class of multiclass ordered variables. One such use case is described below.
+The `polr()` function from the `MASS` package can be used to build the _proportional odds logistic regression_ and predict the class of multi-class ordered variables. One such use case is described below.
 
 ## Example: Predict Cars Evaluation
 Below is a example on how we can use ordered logistic regression to predict the cars evaluation based on [cars evaluation dataset](http://archive.ics.uci.edu/ml/datasets/Car+Evaluation). The cars are evaluated as one amongst `very good`, `good`, `acceptable` or `unacceptable`. The attributes of the cars available to use to predict this decision are:
@@ -16,7 +16,7 @@ Below is a example on how we can use ordered logistic regression to predict the 
    1. lug_boot     : small, med, big
    1. safety       : low, med, high
 
-Also, it is worthhile to note that about 70% of the cars are evaluated as _unacceptable_. The class distribution of the ordered multiclass $Y$ is as follows:
+Also, it is worthwhile to note that about 70% of the cars are evaluated as _unacceptable_. The class distribution of the ordered multi class $Y$ is as follows:
 
    class   |   N    |         N[%]
    ------- | ------ | ------------

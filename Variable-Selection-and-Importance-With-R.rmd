@@ -101,7 +101,7 @@ ev <- evimp (marsModel) # estimate variable importance
 #=> Day_of_week4                 2  -3.9    5.9
 #=> Day_of_month7-unused         1  -4.7    2.8
 
-plot (ev)
+plot(ev)
 ```
 
 ```{r, echo = FALSE}
@@ -166,7 +166,7 @@ The total IV of a variable is the sum of IV's of its categories.
 
 ### Example
 
-Let me demonstrate how to create the weights of evidence for categorical variables using the `WOE` function in `InformationValue` pkg. For this we will use the `adult` data as imported below. The response variable in `adult` is the `ABOVE50K` which indicates if the yearly salary of the individual in that row exceeds $50K. We have a number of predictor variables originally, out of which few of them are catgorical variables. On these categorical variables, we will derive the respective `WOE`s using the `InformationValue::WOE` function. Then, lets find out the `InformationValue:IV` of all categorical variables.
+Let me demonstrate how to create the weights of evidence for categorical variables using the `WOE` function in `InformationValue` pkg. For this we will use the `adult` data as imported below. The response variable in `adult` is the `ABOVE50K` which indicates if the yearly salary of the individual in that row exceeds $50K. We have a number of predictor variables originally, out of which few of them are categorical variables. On these categorical variables, we will derive the respective `WOE`s using the `InformationValue::WOE` function. Then, lets find out the `InformationValue:IV` of all categorical variables.
 
 #### Install package from github
 ```{r, eval=FALSE}

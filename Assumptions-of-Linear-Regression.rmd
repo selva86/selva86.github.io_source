@@ -52,9 +52,9 @@ plot(mod_1)
 embed_png("screenshots/regression-plot-mtcars.png", dpi = 220)
 ```
 
-From the first plot (topleft), as the fitted values along x increase, the residuals decrease and then increase. This pattern is indicated by the red line, which should be approximately flat if the errors are homoscedastic. The plot on the bottom left also checks this, and is more convenient as the error term in Y axis is standardised. 
+From the first plot (top-left), as the fitted values along x increase, the residuals decrease and then increase. This pattern is indicated by the red line, which should be approximately flat if the errors are homoscedastic. The plot on the bottom left also checks this, and is more convenient as the error term in Y axis is standardized. 
 
-In this case, there is a definite pattern noticed. So, there is heterscedasticity. Lets check this on a different model. 
+In this case, there is a definite pattern noticed. So, there is heteroscedasticity. Lets check this on a different model. 
 
 ```{r, eval=FALSE}
 mod <- lm(dist ~ speed, data=cars[1:20, ])  #  linear model
@@ -86,7 +86,7 @@ acf(lmMod$residuals)  # highly autocorrelated from the picture.
 embed_png("screenshots/acf-plot.png", dpi = 220)
 ```
 
-The X axis correponds to the lags of the residual, increasing in steps of 1. The very first line (to the left) shows the correlation of residual with itself (Lag0), therefore, it will always be equal to 1.
+The X axis corresponds to the lags of the residual, increasing in steps of 1. The very first line (to the left) shows the correlation of residual with itself (Lag0), therefore, it will always be equal to 1.
 
 If the errors were not autocorrelated, the correlation (Y-axis) from the immediate next line onwards will drop to a near zero value below the dashed blue line (significance level). Clearly, this is not the case here. So we can conclude that the residuals are autocorrelated.
 
@@ -148,7 +148,7 @@ runs.test(lmMod2$residuals)  # runs test
 #=> Standardized Runs Statistic = 0.96176, p-value = 0.3362
 ```
 
-p-value = 0.3362. Can't reject null hyp that it is random.
+p-value = 0.3362. Can't reject null hypothesis that it is random.
 With a p-value = 0.3362, we cannot reject the null hypothesis. Therefore we can safely assume that residuals are not autocorrelated.
 
 **Check 3**
@@ -163,7 +163,7 @@ lmtest::dwtest(lmMod2)
 
 With a high p value of 0.667, we cannot reject the null hypothesis that true autocorrelation is zero. So the assumption that errors should not be autocorrelated is satisfied by this model.
 
-If, even after adding lag1 as an X variable, does not satidfy the assumption of autocorrelation of errors, you might want to try adding lag2, or be creative in making meaningful derived explanatory variables or interaction terms. This is more like art than an algorithm.
+If, even after adding lag1 as an X variable, does not satisfy the assumption of autocorrelation of errors, you might want to try adding lag2, or be creative in making meaningful derived explanatory variables or interaction terms. This is more like art than an algorithm.
 
 ##Assumption 5
 >####_The X variables and Errors are uncorrelated_
@@ -194,7 +194,7 @@ p-value is high, so null hypothesis that true correlation is 0 can't be rejected
 This can be directly observed by looking at the data.            
 
 ##Assumption 7
->####_The variablility in X values is positive_
+>####_The variability in X values is positive_
 
 This means the X values in a given sample must not all be the same (or even nearly the same).
             
@@ -326,7 +326,7 @@ gvlma::gvlma(mod)
 embed_png("screenshots/regression-plot-big-no-outliers.png", dpi = 220)
 ```
 
-Though the changes look minor, it is more closer to conforming with the assumptions. There is one more thing left to be explained. That is, the plot in the bottom right. It is the plot of standardised residuals against the leverage. Leverage is a measure of how much each datapoint influences the regression. The plot also contours values of [Cook’s distance](https://en.wikipedia.org/wiki/Cook%27s_distance), which reflects how much the fitted values would change if a point was deleted. 
+Though the changes look minor, it is more closer to conforming with the assumptions. There is one more thing left to be explained. That is, the plot in the bottom right. It is the plot of standardized residuals against the leverage. Leverage is a measure of how much each data point influences the regression. The plot also contours values of [Cook’s distance](https://en.wikipedia.org/wiki/Cook%27s_distance), which reflects how much the fitted values would change if a point was deleted. 
 
 A point far from the centroid with a large residual can severely distort the regression. For a good regression model, the red smoothed line should stay close to the mid-line and no point should have a large cook's distance (i.e. should not have too much influence on the model.)
 

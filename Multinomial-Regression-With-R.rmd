@@ -114,4 +114,4 @@ mean(as.character(predicted_class) != as.character(test$cmc))
 #=> 0.4932127
 ```
 
-A misclassification error of 49.3% is probably too high. May be it can be improved by improving the model terms or may be the variables are not as good in explaining the contraceptive method used. Either ways, I would encourage the analyst to try other ML approaches.
+A misclassification error of 49.3% is probably too high. May be it can be improved by improving the model terms or may be the variables are not as good in explaining the contraceptive method used. Either ways, I would encourage the investigator to try other ML approaches as well for this problem.
