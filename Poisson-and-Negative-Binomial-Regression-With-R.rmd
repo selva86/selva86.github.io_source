@@ -2,3 +2,31 @@
 title: Poisson and Negative Binomial Regression
 layout: default
 ---
+> _Poisson regression_ models count variables that assumes poisson distribution. When the count variable is over dispersed, having to much variation, _Negative Binomial_ regression is more suitable.
+
+## Introduction
+
+A count variable is something that can take only non-negative integer values. Some examples of count variables could be:
+1. Number of vehicles manufactured.
+1. Number of phone calls arriving at a call center.
+1. Number of patents granted.
+
+## How to Implement Poisson Regression? 
+
+Poisson regression can be implemented in a similar manner as other _Generalised Linear Models (GLMs)_, by adjusting the family argument to `poisson`.
+
+```{r, eval=FALSE}
+library (MASS)
+poissonModel <- glm(countResponse ~ pred1 + pred2, family="poisson", data=inputData) # poisson Model
+summary (poissonModel) # model summary
+predict(poissonModel, newdata, type="response") # predict on new data 
+```
+
+## How to Implement Negative Binomial Regression?
+
+```{r, eval=FALSE}
+library (MASS)
+negBinomModel <- glm.nb(countResponse ~ pred1 + pred2, data = inputData)) # negative Binomial model
+summary (negBinomModel) # Model summary
+predict (negBinomModel, newdata, type="response") # predict on new data 
+```
