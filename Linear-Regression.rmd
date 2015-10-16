@@ -21,11 +21,11 @@ embed_png("screenshots/linear-regression-small.png", dpi = 220)
 
 For this analysis, we will use the ‘cars’ dataset that comes with R by default. ‘cars’ is a standard built-in dataset, that makes it convenient to demonstrate linear regression in a simple and easy to understand fashion. You can access this dataset simply by typing in ‘cars’ in your R console. You will find that it consists of 50 observations(rows) and 2 variables (columns) – Dist and Speed. Lets print out the first six observations here..
 
-```{r echo = TRUE, eval = TRUE}
+```{r echo = TRUE, eval = FALSE}
 head(cars)  # display the first 6 observations
 ```
 
-Before we begin building the regression model, it is a good practice to analyse and understand the variables. The graphical analysis and correlation study below will help with this.
+Before we begin building the regression model, it is a good practice to analyze and understand the variables. The graphical analysis and correlation study below will help with this.
 
 ##Graphical Analysis
 
