@@ -2,3 +2,60 @@
 title: Beta Regression
 layout: default
 ---
+> Beta regression is commonly used when you want to model $Y$ that are probabilities themselves. 
+
+This is evident when the value of $Y$ is a _proportion_ that ranges between 0 to 1. The data points of $Y$ variable typically represent a proportion of events that form a subset of the total population (assuming that it follows a beta distribution).
+
+## Use Cases
+
+1. From GasolineYield data: Proportion of crude oil converted to gasoline after distillation and fractionation
+2. Proportion of individuals infected with ‘xyz’ when exposed to various levels of artificial preservative agent.
+
+## Example: Gasoline Yield
+Lets predict the gasoline `yield` as a function of `batch` and temperature. The example below shows an example implementation of beta regression using the GasolineYield data from `betareg` package.
+
+```{r, eval=FALSE}
+library (betareg)
+data("GasolineYield", package = "betareg")  # initialize data
+inputData <- GasolineYield  # plug-in your data here
+trainingIndex <- c(1:(nrow(inputData)-1))  # create row indices of training data
+trainingData <- inputData[trainingIndex, ] # training data
+testData <- inputData[-trainingIndex, ] # test data
+betaMod <- betareg(yield ~ batch + temp, data = trainingData) # train model. Tune var names.
+summary (betaMod) # model summary
+predict (betaMod, testData) # predict on test data (0.19 vs actual 0.18)
+
+#> Call:
+#> betareg(formula = yield ~ batch + temp, data = GasolineYield)
+#> 
+#> Standardized weighted residuals 2:
+#>     Min      1Q  Median      3Q     Max 
+#> -2.8750 -0.8149  0.1601  0.8384  2.0483 
+#> 
+#> Coefficients (mean model with logit link):
+#>               Estimate Std. Error z value Pr(>|z|)    
+#> (Intercept) -6.1595710  0.1823247 -33.784  < 2e-16 
+#> batch1       1.7277289  0.1012294  17.067  < 2e-16 
+#> batch2       1.3225969  0.1179020  11.218  < 2e-16 
+#> batch3       1.5723099  0.1161045  13.542  < 2e-16 
+#> batch4       1.0597141  0.1023598  10.353  < 2e-16 
+#> batch5       1.1337518  0.1035232  10.952  < 2e-16 
+#> batch6       1.0401618  0.1060365   9.809  < 2e-16 
+#> batch7       0.5436922  0.1091275   4.982 6.29e-07 
+#> batch8       0.4959007  0.1089257   4.553 5.30e-06 
+#> batch9       0.3857930  0.1185933   3.253  0.00114 ** 
+#> temp         0.0109669  0.0004126  26.577  < 2e-16 
+#> 
+#> Phi coefficients (precision model with identity link):
+#>       Estimate Std. Error z value Pr(>|z|)    
+#> (phi)    440.3      110.0   4.002 6.29e-05 
+#> 
+#> Signif. codes:  0 '' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1 
+#> 
+#> Type of estimator: ML (maximum likelihood)
+#> Log-likelihood:  84.8 on 12 Df
+#> Pseudo R-squared: 0.9617
+#> Number of iterations: 51 (BFGS) + 3 (Fisher scoring)
+```
+
+This page is based on the examples available in [Beta regression vignette](http://cran.r-project.org/web/packages/betareg/vignettes/betareg.pdf).

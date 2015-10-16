@@ -112,4 +112,4 @@ plot(inputData$Y)
 embed_png("screenshots/Dirichlet-Plot.png", dpi = 220)
 ```
 
-More detailed examples are available in the [Dirichlet regression](https://cran.r-project.org/web/packages/DirichletReg/vignettes/DirichletReg-vig.pdf) vignette and details about the implementation are available in [here](http://epub.wu.ac.at/4077/1/Report125.pdf).
+This page is based on the examples available in [Dirichlet regression vignette](https://cran.r-project.org/web/packages/DirichletReg/vignettes/DirichletReg-vig.pdf) and details about the implementation are available in [here](http://epub.wu.ac.at/4077/1/Report125.pdf).
