@@ -1,0 +1,23 @@
+---
+title: Isotonic Regression
+layout: default
+---
+> If you know that your data should be strictly increasing, but the real data shows otherwise, use _Isotonic regression_ to get a suitable strictly increasing approximation.
+
+Applying isotonic regression is quite straight forward in R. The `isoreg()` function comes handy for this, as it can be used on numeric data without supplying special arguments.
+
+```{r, eval=FALSE}
+y <- c(1, 0, 4, 3, 3, 5, 4, 2, 3)  # actual y that should only be increasing.
+ir3 <- isoreg(y)
+ir3$y # actuals
+# [1] 1 0 4 3 3 5 4 2 3
+ir3$yf # isotonic approximation
+# [1] 0.50 0.50 3.33 3.33 3.33 3.50 3.50 3.50 3.50
+plot(ir3) # graph
+ir3$yf[ir3$iKnots] # Increasing points
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/Isotonic-Regression-Plot-R.png", dpi = 220)
+```
+
