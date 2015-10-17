@@ -1,0 +1,6 @@
+---
+title: Multi Dimensional Scaling
+layout: default
+---
+> If you have multiple features for each individual/row in a dataset and would like to visualize which ones are similar, _Multi Dimensional Scaling (MDS)_ will help. MDS reduces the large number of features to desired _k_ dimensions.
+
