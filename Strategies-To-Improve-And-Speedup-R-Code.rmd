@@ -35,7 +35,7 @@ system.time({
 
 All the computations below, for processing times, were done on a MAC OS X with 2.6 Ghz processor and 8GB RAM.
 
-## 1. Vectorize and pre-allocate data structures
+## 1. Vectorize and Pre-allocate 
 
 Always initialize your data structures and output variable to required length and data type before taking it to loop for computations. Try not to incrementally increase the size of your data inside the loop. Lets compare how vectorization improves speed on a range of data sizes from 1000 to 100,000 rows.
 
@@ -45,12 +45,17 @@ output <- character (nrow(df)) # initialize output vector
 system.time({
   for (i in 1:nrow(df)) {
     if ((df[i, 'col1'] + df[i, 'col2'] + df[i, 'col3'] + df[i, 'col4']) > 4) {
-      output[i] <- "greater_than_4"
+      output[i] <- "greater_than_4"  # assign to vector 
     } else {
       output[i] <- "lesser_than_4"
     }
   }
-df$output})
+df$output <- output  # finally assign to data frame
+})
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/strategies-to-speedup-r-code/strategies-to-speedup-r-code-1.png", dpi = 220)
 ```
  
 ## 2. Take statements that check for conditions (if statements) outside the loop
@@ -73,6 +78,10 @@ system.time({
 })
 ```
 
+```{r, echo = FALSE}
+embed_png("screenshots/strategies-to-speedup-r-code/strategies-to-speedup-r-code-2.png", dpi = 220)
+```
+
 ## 3. Run the loop only for True conditions
 
 Another optimization we can do here is to run the loop only for condition cases that are ‘True’, by initializing (pre-allocating) the default value of output vector to that of ‘False’ state. The speed improvement here largely depends on the proportion of ‘True’ cases in your data.
@@ -92,6 +101,10 @@ system.time({
   df$output })
 ```
 
+```{r, echo = FALSE}
+embed_png("screenshots/strategies-to-speedup-r-code/strategies-to-speedup-r-code-3.png", dpi = 220)
+```
+
 ## 4. Use ifelse() whenever possible 
 
 You can make this logic much simpler and faster by using the ifelse() statement. The  syntax is similar to the ‘if’ function in MS Excel, but the speed increase is phenomenal, especially considering that there is no vector pre-allocation here and the condition is checked in every case. Looks like this is going to be a highly preferred option to speed up simple loops.
@@ -101,6 +114,10 @@ system.time({
   output <- ifelse ((df$col1 + df$col2 + df$col3 + df$col4) > 4, "greater_than_4", "lesser_than_4")
   df$output <- output
 })
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/strategies-to-speedup-r-code/strategies-to-speedup-r-code-4.png", dpi = 220)
 ```
 
 ## 5. Using which()
@@ -137,6 +154,10 @@ system.time({
 })
 ```
 
+```{r, echo = FALSE}
+embed_png("screenshots/strategies-to-speedup-r-code/strategies-to-speedup-r-code-5.png", dpi = 220)
+```
+
 ## 7. Use byte code compilation for functions `cmpfun()` from compiler package, rather than the actual function itself.
 
 This may not be the best example to illustrate the effectiveness of byte code compilation, as the time taken is marginally higher than the regular form. However, for more complex functions, byte-code compilation is known to perform faster. So you should definitely give it a shot.
@@ -148,6 +169,10 @@ myFuncCmp <- cmpfun(myfunc)
 system.time({
   output <- apply(df[, c (1:4)], 1, FUN=myFuncCmp)
 })
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/strategies-to-speedup-r-code/strategies-to-speedup-r-code-6.png", dpi = 220)
 ```
 
 ## 8. Use Rcpp
@@ -186,6 +211,10 @@ CharacterVector myFunc(DataFrame x) {
   return out;
 }
 ```
+
+```{r, echo = FALSE}
+embed_png("screenshots/strategies-to-speedup-r-code/strategies-to-speedup-r-code-7.png", dpi = 220)
+```
  
 ## 9. Use parallel processing if you have a multicore machine.
 
@@ -215,7 +244,7 @@ df$output <- output
 Remove objects `rm()` that are no longer needed, as early as possible in code, especially before going in to lengthy loop operations. Sometimes, flushing `gc()` at the end of each iteration with in the loops can help.
  
 
-## 11. Use data structures that consume lesser memory
+## 11. Use data structures that consume less memory
 
 `data.table()` is an excellent example, as it reduces the memory overload which helps to speed up operations like merging data.
 
@@ -231,6 +260,11 @@ system.time({
   }
 })
 ```
+
+```{r, echo = FALSE}
+embed_png("screenshots/strategies-to-speedup-r-code/strategies-to-speedup-r-code-8.png", dpi = 220)
+```
+
 ## Summary
 
 Method                 | Speed   | nrow(df)/time_taken = _n_ rows per second
