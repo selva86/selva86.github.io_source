@@ -1,69 +1,63 @@
 <blockquote>
-<p>R provides a number of convenient facilities for parallel computing. The following method shows you how to setup and run a parallel process on your current multi-core device, without need for additional hardware.</p>
+<p>Loess Regression is the most common method used to smoothen a volatile time series. It is a non-parametric methods where least squares regression is performed in localized subsets, which makes it a suitable candidate for smoothing any numerical vector.</p>
 </blockquote>
-<h2>Setting up for parallelization</h2>
-<p>The number of parallel processes you can run simultaneously depends on the number of cores in your machine. If you are on a Windows PC, open ‘Task Manager’ =&gt; ‘Performance’ tab, and count the number of boxes below “CPU Usage History”. That is the maximum number of parallel processes you can run in your computer. You can practically use all of them for R computations, however, it is a good idea to leave out a core or two for background system processes. Here is how you can set up your R session for parallel processing:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Registering cores for parallel process</span>
-<span class="kw">library</span>(doSNOW)
-cl &lt;-<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">4</span>, <span class="dt">type=</span><span class="st">&quot;SOCK&quot;</span>) <span class="co"># 4 – number of cores</span>
-<span class="kw">registerDoSNOW</span>(cl) <span class="co"># Register back end Cores for Parallel Computing</span></code></pre></div>
-<h2>Running the parallel process</h2>
-<p>Once the cores are set up to run computations in parallel, the ‘foreach’ loop (from foreach package) can run your functions in parallel by opening as many parallel R session as the number of cores you have registered. The difference between a regular for-loop and for-each loop is, the for-loop runs serially, i.e. your loop processes one value of loop-counter (i) at a time. While in for-each, the arguments you supply to the loop-counter (‘i’ in this case) will be run simultaneously at {number_of_cores_initialised} number of processes at a time. After running the functions defined inside the loop, it combines all the returned values based on the function supplied to the ‘.combine‘ argument.</p>
-<h2>Parallel processing: some simple examples</h2>
-<p>In the examples below, replace %dopar% with %do% to make it run as a non-parallel process.</p>
-<h4>Example 1</h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(foreach)
-<span class="kw">foreach</span>(<span class="dt">i =</span> <span class="dv">1</span>:<span class="dv">28</span>) %dopar%<span class="st"> </span>{<span class="kw">sqrt</span>(i)} <span class="co"># example 1</span></code></pre></div>
-<h4>Example 2</h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># returned output values of the parallel process are combined using &#39;c()&#39; function</span>
-<span class="kw">foreach</span>(<span class="dt">i =</span> <span class="dv">1</span>:<span class="dv">28</span>,<span class="dt">.combine =</span> <span class="st">&quot;c&quot;</span>) %dopar%<span class="st"> </span>{<span class="kw">sqrt</span>(i)} <span class="co"># example 2</span></code></pre></div>
-<h4>Example 3</h4>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># returned output values of the parallel process are combined using &#39;cbind()&#39; function</span>
-<span class="kw">foreach</span>(<span class="dt">i =</span> <span class="dv">1</span>:<span class="dv">28</span>,<span class="dt">.combine =</span> <span class="st">&quot;cbind&quot;</span>) %dopar%<span class="st"> </span>{letters[<span class="dv">1</span>:<span class="dv">4</span>]} <span class="co"># example 3 </span></code></pre></div>
-<h4>Example 4</h4>
-<p>You can also create your own combining function as you wish.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># combine using your custom defined function: &quot;myCustomFunc()&quot; and store in &#39;output&#39; variable</span>
-output &lt;-<span class="st"> </span><span class="kw">foreach</span>(<span class="dt">i =</span> <span class="dv">1</span>:<span class="dv">28</span>, <span class="dt">.combine =</span> <span class="st">&quot;myCustomFunc&quot;</span>) %dopar%<span class="st"> </span>{
-  <span class="kw">sqrt</span>(i)
-}</code></pre></div>
-<p><code>myCustomFunc</code> above is just a placeholder. ## Further Customizing for packages and output aggregation</p>
-<p>You are nearly there, just a couple more things left. If you are using functions from packages loaded to your global R environment, they may not work inside the for-each loop, because, multiple R sessions are instantiated for each parallel process. So you need to define the packages you need inside the foreach loop in the .packages argument. Additionally, if you have a set of variables to iterate over in a separate R object (like a data frame), you can even pass it as a separate iterating variable (allRowIndices) in this case, in the foreach statement. Here is a sample of the code to show how it might look like.</p>
-<h2>Structure of a typical parallel processing code</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">allRowIndices &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(inputData)) <span class="co"># assign row indices of inputData, that will be processed in parallel</span>
-
-output &lt;-<span class="st"> </span><span class="kw">foreach</span> (<span class="dt">rowNum =</span> allRowIndices, <span class="dt">.combine =</span> rbind, <span class="dt">.packages =</span> <span class="kw">c</span>(<span class="st">&quot;caret&quot;</span>, <span class="st">&quot;ggplot2&quot;</span>, <span class="st">&quot;Hmisc&quot;</span>)) %dopar%<span class="st"> </span>{
-  <span class="co"># code to process each rowNum goes within this block.</span>
-  <span class="co"># &#39;n&#39; rows will be processed simultaneously, where &#39;n&#39; is number of registered cores.</span>
-  <span class="co"># after processing all rows, the returned value is combined using the function defined in `.combine` argument `rbind` in this case. The output thus aggregated is stored in output variable.</span>
-  <span class="co"># Finally, the packages required by functions in this block has to be mentioned within .packages argument.</span>
+<h2>Introduction</h2>
+<p><em>Loess</em> short for Local Regression is a non-parametric approach that fits multiple regressions in local neighborhood. This can be particularly resourceful, if you know that your <span class="math inline"><em>X</em></span> variables are bound within a range.</p>
+<p>Loess regression can be applied using the <code>loess()</code> on a numerical vector to smoothen it and to predict the Y locally (i.e, within the trained values of <span class="math inline"><em>X</em><em>s</em></span>). The size of the neighborhood can be controlled using the <code>span</code> argument, which ranges between 0 to 1. It controls the degree of smoothing. So, the greater the value of <code>span</code>, more smooth is the fitted curve.</p>
+<p>The predictor variable can just be indices from 1 to number of observations in the absence of explanatory variables. If other explanatory variables are available, they can be used as well (maximum of 4).</p>
+<h2>Example</h2>
+<p>For this example we will try to locally regress and smooth the <em>median duration of unemployment</em> based on the <code>economics</code> dataset from <code>ggplot2</code> package. We consider only the first 80 rows for this analysis, so it is easier to observe the degree of smoothing in the graphs below.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(economics, <span class="dt">package=</span><span class="st">&quot;ggplot2&quot;</span>)  <span class="co"># load data</span>
+economics$index &lt;-<span class="st"> </span><span class="dv">1</span>:<span class="kw">nrow</span>(economics)  <span class="co"># create index variable</span>
+economics &lt;-<span class="st"> </span>economics[<span class="dv">1</span>:<span class="dv">80</span>, ]  <span class="co"># retail 80rows for better graphical understanding</span>
+loessMod10 &lt;-<span class="st"> </span><span class="kw">loess</span>(uempmed ~<span class="st"> </span>index, <span class="dt">data=</span>economics, <span class="dt">span=</span><span class="fl">0.10</span>) <span class="co"># 10% smoothing span</span>
+loessMod25 &lt;-<span class="st"> </span><span class="kw">loess</span>(uempmed ~<span class="st"> </span>index, <span class="dt">data=</span>economics, <span class="dt">span=</span><span class="fl">0.25</span>) <span class="co"># 25% smoothing span</span>
+loessMod50 &lt;-<span class="st"> </span><span class="kw">loess</span>(uempmed ~<span class="st"> </span>index, <span class="dt">data=</span>economics, <span class="dt">span=</span><span class="fl">0.50</span>) <span class="co"># 50% smoothing span</span></code></pre></div>
+<h2>Predict Loess</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># get smoothed output</span>
+smoothed10 &lt;-<span class="st"> </span><span class="kw">predict</span>(loessMod10) 
+smoothed25 &lt;-<span class="st"> </span><span class="kw">predict</span>(loessMod25) 
+smoothed50 &lt;-<span class="st"> </span><span class="kw">predict</span>(loessMod50) </code></pre></div>
+<p><img src='screenshots/Loess-Smoothing.png' width=528 height=393 /></p>
+<p>From above plot, you would notice that as the span increases, the smoothing of the curve also increases.</p>
+<h5>Code for Plot</h5>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Plot it</span>
+<span class="kw">plot</span>(economics$uempmed, <span class="dt">x=</span>economics$date, <span class="dt">type=</span><span class="st">&quot;l&quot;</span>, <span class="dt">main=</span><span class="st">&quot;Loess Smoothing and Prediction&quot;</span>, <span class="dt">xlab=</span><span class="st">&quot;Date&quot;</span>, <span class="dt">ylab=</span><span class="st">&quot;Unemployment (Median)&quot;</span>)
+<span class="kw">lines</span>(smoothed10, <span class="dt">x=</span>economics$date, <span class="dt">col=</span><span class="st">&quot;red&quot;</span>)
+<span class="kw">lines</span>(smoothed25, <span class="dt">x=</span>economics$date, <span class="dt">col=</span><span class="st">&quot;green&quot;</span>)
+<span class="kw">lines</span>(smoothed50, <span class="dt">x=</span>economics$date, <span class="dt">col=</span><span class="st">&quot;blue&quot;</span>)</code></pre></div>
+<h2>Finding the optimal smoothing span</h2>
+<p>As the smoothing <code>span</code> changes, the accuracy of the fitted curve also changes. If your intent is to minimize the error, the <code>optim()</code> can be used to find that value of <code>span</code>, that minimizes the <em>Sum of Squared Errors (SSE)</em>. For this case, it is graphically intuitive that lower SSE will likely be achieved at lower values of <code>span</code>, but for more challenging cases, <code>optimizing</code> span could help.</p>
+<p>To implement <code>optim()</code>, we define the function that computes the <em>SSE</em>. An error handling mechanism is needed to address very low values of <code>span</code> and cases where the non-numerics are produced. The simulated annealing method (<code>SANN</code>) is implemented here to find the <code>span</code> that gives minimal <em>SSE</em>. The <code>par</code> argument specifies the first value of the <code>span</code> at which <code>optim()</code> will begin the search.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># define function that returns the SSE</span>
+calcSSE &lt;-<span class="st"> </span>function(x){
+  loessMod &lt;-<span class="st"> </span><span class="kw">try</span>(<span class="kw">loess</span>(uempmed ~<span class="st"> </span>index, <span class="dt">data=</span>economics, <span class="dt">span=</span>x), <span class="dt">silent=</span>T)
+  res &lt;-<span class="st"> </span><span class="kw">try</span>(loessMod$residuals, <span class="dt">silent=</span>T)
+  if(<span class="kw">class</span>(res)!=<span class="st">&quot;try-error&quot;</span>){
+    if((<span class="kw">sum</span>(res, <span class="dt">na.rm=</span>T) &gt;<span class="st"> </span><span class="dv">0</span>)){
+      sse &lt;-<span class="st"> </span><span class="kw">sum</span>(res^<span class="dv">2</span>)  
+    }
+  }else{
+    sse &lt;-<span class="st"> </span><span class="dv">99999</span>
+  }
+  <span class="kw">return</span>(sse)
 }
-<span class="kw">stopCluster</span>(cl) <span class="co"># undo the parallel processing setup</span></code></pre></div>
-<p>In the above code, the main component of parallelisation is the foreach loop and the three arguments that go along with it. The first argument (rownum) here is a row counter that iterates through all the rows in ‘allRowIndices’. The second one, ‘.combine’ is a function that will be used to aggregate the results of all computations from the rows. In this case, ‘rbind’ will be used to append the results in rows. Finally, the third one ‘.packages’, states which all packages will be needed for the functions used within the ‘foreach’ block. Note that, even if you have already included the packages before calling the ‘foreach’, you need to re-specify within this block, since, new R sessions will be opened for the parallel processing. With all these defined, the computations will be done in parallel based on the number of cores you had registered earlier and the results get combined and stored in <code>output</code>.</p>
-<h2>A comparison between parallel and non-parallel process</h2>
-<p>To demonstrate the processing times, a simple math operation is performed on each row of a 4-columned matrix created below. The time taken by a parallel vs non-parallel process is compared as the number of rows in inputData is gradually increased.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">inputData &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span>:<span class="dv">800000</span>, <span class="dt">ncol=</span><span class="dv">4</span>) <span class="co"># prepare input data</span>
-<span class="kw">head</span>(inputData)
-<span class="co">#&gt;      [,1]   [,2]   [,3]   [,4]</span>
-<span class="co">#&gt; [1,]    1 200001 400001 600001</span>
-<span class="co">#&gt; [2,]    2 200002 400002 600002</span>
-<span class="co">#&gt; [3,]    3 200003 400003 600003</span>
-<span class="co">#&gt; [4,]    4 200004 400004 600004</span>
-<span class="co">#&gt; [5,]    5 200005 400005 600005</span>
-<span class="co">#&gt; [6,]    6 200006 400006 600006</span>
-<span class="co"># For each row of inputData, we&#39;ll compute the output as follows: </span>
-row output =<span class="st"> </span>col1 *<span class="st"> </span>col2 +<span class="st"> </span>col3 /<span class="st"> </span>col4</code></pre></div>
-<h3>1. Non-parallel version</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">output_serial &lt;-<span class="st"> </span><span class="kw">numeric</span>() <span class="co"># initialize output</span>
-for (rowNum in <span class="kw">c</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(inputData))) {
-  calculatedOutput &lt;-<span class="st"> </span>inputData[rowNum, <span class="dv">1</span>] *<span class="st"> </span>inputData[rowNum, <span class="dv">2</span>] +<span class="st"> </span>inputData[rowNum, <span class="dv">3</span>] /<span class="st"> </span>inputData[rowNum, <span class="dv">4</span>] <span class="co"># compute output</span>
-  output_serial &lt;-<span class="st"> </span><span class="kw">c</span>(output_serial, calculatedOutput) <span class="co"># append to output variable</span>
-}</code></pre></div>
-<h3>2. Parallel version</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(doSNOW)
-cl &lt;-<span class="st"> </span><span class="kw">makeCluster</span>(<span class="dv">4</span>, <span class="dt">type=</span><span class="st">&quot;SOCK&quot;</span>) <span class="co"># 4 – number of cores</span>
-<span class="kw">registerDoSNOW</span>(cl) <span class="co"># Register Backend Cores for Parallel Computing</span>
-allRowIndices &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>:<span class="kw">nrow</span>(inputData)) <span class="co"># row numbers of inputData, that will be processed in parallel</span>
-output_parallel &lt;-<span class="st"> </span><span class="kw">foreach</span> (<span class="dt">rowNum =</span> allRowIndices, <span class="dt">.combine =</span> c) %dopar%<span class="st"> </span>{
-  calculatedOutput &lt;-<span class="st"> </span>inputData[rowNum, <span class="dv">1</span>] *<span class="st"> </span>inputData[rowNum, <span class="dv">2</span>] +<span class="st"> </span>inputData[rowNum, <span class="dv">3</span>] /<span class="st"> </span>inputData[rowNum, <span class="dv">4</span>] <span class="co"># compute output</span>
-  <span class="kw">return</span> (calculatedOutput)
-}</code></pre></div>
+
+<span class="co"># Run optim to find span that gives min SSE, starting at 0.5</span>
+<span class="kw">optim</span>(<span class="dt">par=</span><span class="kw">c</span>(<span class="fl">0.5</span>), calcSSE, <span class="dt">method=</span><span class="st">&quot;SANN&quot;</span>)
+<span class="co">#&gt; $par</span>
+<span class="co">#&gt; [1] 0.05433545</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $value</span>
+<span class="co">#&gt; [1] 3.85753e-28</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $counts</span>
+<span class="co">#&gt; function gradient </span>
+<span class="co">#&gt;    10000       NA </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $convergence</span>
+<span class="co">#&gt; [1] 0</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $message</span>
+<span class="co">#&gt; NULL</span></code></pre></div>
+<p>For this case, the best value of <code>span</code> turns out to be <code>0.05433</code> and the minimum SSE achieved is <code>3.85e-28</code>.</p>
