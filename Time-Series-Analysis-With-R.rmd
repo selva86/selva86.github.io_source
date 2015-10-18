@@ -177,13 +177,13 @@ But if the time series appears to be seasonal, a better approach is to differenc
 nsdiffs(AirPassengers)  # number for seasonal differencing needed
 #> 1
 AirPassengers_seasdiff <- diff(AirPassengers, lag=frequency(AirPassengers), differences=1)  # seasonal differencing
-plot(ap_seasdiff, type="l", main="Seasonally Differenced")
+plot(ap_seasdiff, type="l", main="Seasonally Differenced")  # still not stationary!
 
 # Make it stationary
 ndiffs(AirPassengers_seasdiff)  # number of differences need to make it stationary
 #> 1 
 stationaryTS <- diff(AirPassengers_seasdiff, differences= 1)
-plot(stationaryTS, type="l", main="Differenced and Stationary")
+plot(stationaryTS, type="l", main="Differenced and Stationary")  # appears to be stationary
 ```
 
 ```{r, echo = FALSE}
