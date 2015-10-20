@@ -1,0 +1,7 @@
+---
+title: Clustering
+layout: default
+---
+
+1. Assessing clusterability
+- Methods such as k-Means and Hierarchical clustering would cluster any random data even if there isn't any inherent  clusters present in the data.

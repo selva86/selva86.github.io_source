@@ -2,9 +2,9 @@
 title: R Tutorial
 layout: default
 ---
-> This is a beginner, non-programmer friendly guide to learn and understand the R language from scratch, giving a brief walkthrough of the most important parts of the language in plain english, intended to get you on board fairly quick.
+> This is a beginner, non-programmer friendly guide to learn and understand the R language from scratch, giving a brief walk through of the most important parts of the language in plain English, intended to get you on board fairly quick.
 
-I assume that you have [R](https://cran.r-project.org/) or [RStudio installed](https://rstudio.com/) and are ready to follow along, typing the codes in to your R console as you learn. So without further adieu lets jump right in.
+I assume that you have [R](https://cran.r-project.org/) or [RStudio installed](https://rstudio.com/) and are ready to follow along, typing the codes in to your R console as you learn. 
 
 ##Section 1
 
@@ -85,7 +85,7 @@ The next question naturally is what are the different types of classes available
 
 ####What is a R package and how to install them?
 
-Upon your first install, R comes with a built-in set of packages which can be invoked directly from your R console. However, since R is a open-source language, anyone can contribute to its capabilities by writing packages. Over the years, these contributions have resulted in growing list of over 5k packages. Here is how you can install the packages from within R console:
+Upon your first install, R comes with a built-in set of packages which can be invoked directly from your R console. However, since R is a open-source language, anyone can contribute to its capabilities by writing packages. Over the years, these contributions have resulted in growing list of over 5K packages. Here is how you can install the packages from within R console:
 
 ```{r, eval=FALSE}
 install.packages("car")  # install car package 
@@ -93,11 +93,11 @@ install.packages("car")  # install car package
 
 The above code will prompt you to select the CRAN mirror for which you can select one that is closest to your place. The dot(.) in `install.packages` is a part of its name and not two separate commands.
 
-Now that the package is installed, you need to initialise it before you can call the functions and datasets that come with the installed package.
+Now that the package is installed, you need to initialize it before you can call the functions and datasets that come with the installed package.
 
 ```{r, eval=FALSE}
-library(car)  # initialise the pkg 'car'
-require(car)  # another way to initialise
+library(car)  # initialize the pkg 'car'
+require(car)  # another way to initialize
 library()  # see list of all installed packages
 library(help=car)  # see info about 'car' pkg
 ```
@@ -120,7 +120,7 @@ A working directory is the reference directory from which R has direct access to
 
 ```{r, eval=FALSE}
 getwd()  # gets the working directory
-setwd(dirname)  # set the working directory to dirname
+setwd(dirname)  # set the working directory to dir name
 ```
 
 ####How to import and export data?
@@ -195,11 +195,11 @@ print(vec1[1])  # 10
 print(vec1[1:3])  # 10, 20, 15
 ```
 
-At this point, I would like you to learn, how to initialise a vector to a certain length. But why initialise a vector when you can iteratively add(append) elements to it, especially in a language where you dont even need to declare variables?
+At this point, I would like you to learn, how to initialize a vector to a certain length. But why initialize a vector when you can iteratively add(append) elements to it, especially in a language where you don't even need to declare variables?
 
-The reason is: It saves processing time. When you initialise a vector to hold, say 100 elements, that much space is almost instantly reserved for the vector in your computer’s memory. You can later fill in those spots by indexing the vector, like we just saw. It simply takes more processing time to iteratively append elements to your vector, especially when your vector gets really big.
+The reason is: It saves processing time. When you initialize a vector to hold, say 100 elements, that much space is almost instantly reserved for the vector in your computer’s memory. You can later fill in those spots by indexing the vector, like we just saw. It simply takes more processing time to iteratively append elements to your vector, especially when your vector gets really big.
 
-Here is how to initialise a numeric vector:
+Here is how to initialize a numeric vector:
 
 ```{r, eval=FALSE}
 numericVector <- numeric(100) # length 100 elements
@@ -330,7 +330,7 @@ airquality[which(airquality$Day==1), -c(4)]  # same as above
 
 ####Sampling
 
-Sampling your data into training(data on which models are built) and test(known data on which models are tested) is a common activity. Lets see how this can be done by creating a randomised 70:30 training and test sample from `airquality`.
+Sampling your data into training(data on which models are built) and test(known data on which models are tested) is a common activity. Lets see how this can be done by creating a randomized 70:30 training and test sample from `airquality`.
 
 ```{r, eval=FALSE}
 set.seed(100)
@@ -339,7 +339,7 @@ airquality[trainIndex, ]  # training data
 airquality[-trainIndex, ]  # test data
 ```
 
-What was that! Here we create a 70% random sample of the row indices of the airquality data frame and use it to make the training and test samples. As you can see, the arguments that are passed to the sample() function are computed from within. For example, we needed a 70% sample, `size = nrow(airquaity) * 0.7`, will compute 70% of the number of rows in airquality for the size argument. Moreover, we are actually defining the ‘sample’(1:nrow(airquality)) itself within the function only. Though this is a ‘unclean’ method of writing code, you get the taste of flexibility and control that the language has to offer.
+What was that! Here we create a 70% random sample of the row indices of the airquality data frame and use it to make the training and test samples. As you can see, the arguments that are passed to the sample() function are computed from within. For example, we needed a 70% sample, `size = nrow(airquality) * 0.7`, will compute 70% of the number of rows in airquality for the size argument. Moreover, we are actually defining the ‘sample’(1:nrow(airquality)) itself within the function only. Though this is a ‘unclean’ method of writing code, you get the taste of flexibility and control that the language has to offer.
 
 
 #### Merging Dataframes
@@ -364,7 +364,7 @@ df2 = data.frame(StudentNum = c(2, 4, 6, 12), Sport = sample(c("Football", "Tenn
 
 ####The `paste` function
 
-`paste()` is a way to concatenate strings and customise with delimiters. With a clear understanding it comes handy to create long and complicated string patterns that can be dynamically modified. Try out these examples in your R console.
+`paste()` is a way to concatenate strings and customize with delimiters. With a clear understanding it comes handy to create long and complicated string patterns that can be dynamically modified. Try out these examples in your R console.
 
 ```{r, eval=FALSE}
 paste("a", "b")  # "a b"

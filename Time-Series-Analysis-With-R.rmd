@@ -17,7 +17,7 @@ A time series can be broken down to its components so as to systematically under
 
 Any metric that is measured over regular time intervals makes a Time Series. Example: Weather data, Stock prices, Industry forecasts, etc are some of the common ones.
 
-## How To Create A Time Series In R ?
+## How to create a Time Series in R ?
 
 Upon importing your data into R, use ts() function as follows. The inputData used here is ideally a numeric vector of the class ‘numeric’ or ‘integer’.
 
@@ -27,7 +27,7 @@ ts (1:10, frequency = 12, start = 1990) # freq 12 => Monthly data.
 ts (inputData, start=c(2009), end=c(2014), frequency=1) # Yearly Data
 ```
 
-## Understanding Your Time Series
+## Understanding your Time Series
 
 Each data point $(Yt)$ at time $t$ in a Time Series can be expressed as either a sum or a product of 3 components, namely, _Seasonality (St)_, _Trend (Tt)_ and _Error (et)_ (a.k.a White Noise).
 
@@ -45,12 +45,14 @@ A  multiplicative time series can be converted to additive by taking a log of th
 additiveTS <- log (multiplcativeTS)  # often converts multiplicative to additive time series
 ```
  
-## What Is A Stationary Time Series ?
+## What is a Stationary Time Series ?
 A time series is said to be stationary if it holds the following conditions true.
 
 1. The mean value of time-series is constant over time, which implies, the trend component is nullified.
 1. The variance does not increase over time.
 1. Seasonality effect is minimal.
+
+This means it is devoid of trend or seasonal patterns, which makes it looks like a random _white noise_ irrespective of the observed time interval. 
 
 ## How to extract the trend, seasonality and error?
 The `decompose()` and `forecast::stl()` splits the time series into _seasonality_, _trend_ and _error_ components.
@@ -103,7 +105,7 @@ head(myDf)
 ```
 
 
-## What Is Autocorrelation and Partial-Autocorrelation?
+## What is Autocorrelation and Partial-Autocorrelation?
 
 __Autocorrelation__ is the correlation of a Time Series with lags of itself. This is a significant metric because, it is used commonly to determine if the time series is stationary or not. A stationary time series will have the autocorrelation fall to zero fairly quickly but for a non-stationary series it drops gradually.
 
@@ -122,7 +124,7 @@ head(ccfRes[[1]])
 embed_png("screenshots/time-series-analysis/acf-pacf-ccf-plot.png", dpi = 220)
 ```
 
-## How To De-Trend a Time Series ?
+## How to de-trend a time series ?
 
 Use linear regression to model the Time Series data with indices. The model residuals will usually be devoid of the trend component. If some trend is left over to be seen in the residuals (like what it seems to be with ‘JohnsonJohnson’ data below), then you might wish to add few predictors to the lm() call (like a seasonal dummy, fourier transform or may be a lag of the series itself), until the trend is filtered.
 
@@ -135,7 +137,7 @@ plot(resid(trModel), type="l")  # resid(trModel) contains the de-trended series.
 embed_png("screenshots/time-series-analysis/JohnsonJohnson-Detrended.png", dpi = 220)
 ```
 
-## How To De-Seasonalize a Time Series in R?
+## How to de-seasonalize a time series in R?
 De-seasonalizing throws insight about the effects seasonal pattern in the time series and helps to model the data without the seasonal effects, which can later be customized.
 Step 1: De-compose the Time series using stl()
 Step 2: use seasadj() from ‘forecast’ package
@@ -153,10 +155,6 @@ seasonplot(ts.sa, 12, col=rainbow(12), year.labels=TRUE, main="Seasonal plot: Ai
 embed_png("screenshots/time-series-analysis/seasonal-plots.png", dpi = 220)
 ```
 
-## What is a Stationary Time Series?
-
-A _stationary time series_ is one whose mean and variance does not change with time. This means it is devoid of trend or seasonal patterns, which makes it looks like a random _white noise_ irrespective of the observed time interval. 
-
 ## How to test if a time series is stationary?
 Use Augmented Dickey-Fuller Test (adf test). A p-Value of less than 0.05 in adf.test() indicates that it is stationary.
 
@@ -166,7 +164,7 @@ adf.test(tsData) # p-value < 0.05 indicates the TS is stationary
 kpss.test(tsData)
 ```
 
-## How To Make A Time Series Stationary?
+## How to make a time series stationary?
 
 _Differencing_ a time series means, to subtract each data point in the series from its successor. It is commonly used to make a time series _stationary_. For most time series patterns, 1 or 2 differencing is necessary to make it a stationary series. 
 
