@@ -14,6 +14,14 @@ col2 <- rnorm (12^5, 0, 2)
 col3 <- rpois (12^5, 3)
 col4 <- rchisq (12^5, 2)
 df <- data.frame (col1, col2, col3, col4)
+df
+#>        col1        col2 col3       col4
+#> 1 0.6155322 -2.91525449    2 6.12523968
+#> 2 0.5153450 -5.81655916    6 2.97873584
+#> 3 1.1046449  0.80309503    2 0.07266261
+#> 4 0.1127663 -1.48824042    3 2.39918101
+#> 5 0.9370986 -1.35786823    0 7.38580513
+#> 6 0.9675415  0.05832758    2 1.17428455
 ```
 
 #### The logic we are about to optimize:
@@ -31,7 +39,17 @@ system.time({
     }
   }
 })
+head(df) 
+#>        col1        col2 col3       col4             V5
+#> 1 0.6155322 -2.91525449    2 6.12523968 greater_than_4
+#> 2 0.5153450 -5.81655916    6 2.97873584  lesser_than_4
+#> 3 1.1046449  0.80309503    2 0.07266261  lesser_than_4
+#> 4 0.1127663 -1.48824042    3 2.39918101 greater_than_4
+#> 5 0.9370986 -1.35786823    0 7.38580513 greater_than_4
+#> 6 0.9675415  0.05832758    2 1.17428455 greater_than_4
 ```
+
+All the approaches we see below re-creates the same logic but will do it more efficiently.
 
 All the computations below, for processing times, were done on a MAC OS X with 2.6 Ghz processor and 8GB RAM.
 
