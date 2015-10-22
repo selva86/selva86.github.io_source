@@ -3,11 +3,11 @@ title: Linear Regression With R
 layout: default
 ---
 
-> Linear regression is a predictive modeling technique that aims to predict the value of an outcome variable based on one or more input predictor variables. The aim is to establish a linear relationship (a mathematical formula) between the predictor variable(s) and the response variable, so we can use it to estimate the value of the response, when predictors values are known.
+> Linear regression is used to predict the value of an outcome variable $Y$ based on one or more input predictor variables $X$. The aim is to establish a linear relationship (a mathematical formula) between the predictor variable(s) and the response variable, so that, we can use this formula to estimate the value of the response $Y$, when only the predictors ($Xs$) values are known.
 
 ##Introduction
 
-The aim of linear regression is to model a continuous variable $Y$ as a mathematical function of 1 or more $X$ variable(s), so that we can use this regression model to predict the $Y$ when only the $X$ is known. This mathematical equation can be generalized as follows:
+The aim of linear regression is to model a continuous variable $Y$ as a mathematical function of one or more $X$ variable(s), so that we can use this regression model to predict the $Y$ when only the $X$ is known. This mathematical equation can be generalized as follows:
 
 $$Y = \beta_{1} + \beta_{2} X + \epsilon$$
 
@@ -19,7 +19,7 @@ embed_png("screenshots/linear-regression-small.png", dpi = 220)
 
 ## Example Problem
 
-For this analysis, we will use the ‘cars’ dataset that comes with R by default. ‘cars’ is a standard built-in dataset, that makes it convenient to demonstrate linear regression in a simple and easy to understand fashion. You can access this dataset simply by typing in ‘cars’ in your R console. You will find that it consists of 50 observations(rows) and 2 variables (columns) – Dist and Speed. Lets print out the first six observations here..
+For this analysis, we will use the _cars_ dataset that comes with R by default. ‘cars’ is a standard built-in dataset, that makes it convenient to demonstrate linear regression in a simple and easy to understand fashion. You can access this dataset simply by typing in `cars` in your R console. You will find that it consists of 50 observations(rows) and 2 variables (columns) – `dist` and `speed`. Lets print out the first six observations here..
 
 ```{r echo = TRUE, eval = FALSE}
 head(cars)  # display the first 6 observations
@@ -76,17 +76,17 @@ polygon(density(cars$dist), col="red")
 embed_png("screenshots/density-plot.png", dpi = 220)
 ```
 
-##Correlation
+## Correlation
 
 Correlation is a statistical measure that suggests the level of linear dependence between two variables, that occur in pair – just like what we have here in speed and dist. Correlation can take values between -1 to +1.
 If we observe for every instance where speed increases, the distance also increases along with it, then there is a high positive correlation between them and therefore the correlation between them will be closer to 1. The opposite is true for an inverse relationship, in which case, the correlation between the variables will be close to -1. Any value closer to 0 suggests a weak relationship between the variables.
-It is important to note that, correlation is a relative measure. You cannot reject a variable when building regression models because of low correlation. A low correlation probably suggests that there are still unexplained variance in the response variable, in which case, we should probably look for new variables.
+A low correlation (-0.2 < x < 0.2) probably suggests that much of variation of the response variable ($Y$) is unexplained by the predictor ($X$), in which case, we should probably look for new variables.
 
 ```{r, eval=TRUE}
 cor(cars$speed, cars$dist)  # calculate correlation between speed and distance 
 ```
 
-##Build Linear Model
+## Build Linear Model
 
 Now that we have seen the linear relationship pictorially in the scatter plot and by computing the correlation, lets see the syntax for building the linear model. The function used for building linear models is lm(). The lm() function takes in two main arguments, namely: 1. Formula 2. data The data is typically a data.frame and the formula is a object of class formula. But the most common convention is to write out the formula directly in place of the argument as seen below.
 ```{r, eval=TRUE}
@@ -100,7 +100,7 @@ These are also called the beta coefficients. In other words,
 **$$dist = Intercept + (β∗speed)$$**
 => dist = −17.579 + 3.932∗speed
 
-##Linear Regression Diagnostics
+## Linear Regression Diagnostics
 
 Now the linear model is built and we have a formula that we can use to predict the dist value if a corresponding speed is known. Is this enough to actually use this model? NO!
 Before using a regression model, you have to ensure that it is statistically significant. How do you ensure this? Lets begin by printing the summary statistics for linearMod.
@@ -108,7 +108,7 @@ Before using a regression model, you have to ensure that it is statistically sig
 summary(linearMod)  # model summary
 ```
 
-##The p Value: Checking for statistical significance
+## The p Value: Checking for statistical significance
 
 This summary statistics tells us a number of things. One of them is the model p-Value (bottom last line) and the p-Value of individual predictor variables (extreme right column under ‘Coefficients’). The p-Values are very important because, We can consider a linear model to be statistically significant only when both these p-Values are less that the pre-determined statistical significance level, which is ideally 0.05. This is visually interpreted by the significance stars at the end of the row. The more the stars beside the variable’s p-Value, the more significant the variable.
 
@@ -116,12 +116,12 @@ In Linear Regression, the Null Hypothesis is that the coefficients associated wi
 
 We can interpret the t-value something like this. A larger *t-value* indicates that that it is less likely that the coefficient is not equal to zero purely by chance.
 
-*Pr(>|t|)* is the probability that you get a t-value as high or higher than the observed value when the Null Hypothesis (the coefficient is equal to zero or that there is no relationship) is true. So if the *Pr(>|t|)* is low the coefficients are significant (significantly different from zero). If the *Pr(>|t|)* is high, the coefficients are not significant.
+*Pr(>|t|)* is the probability that you get a t-value as high or higher than the observed value when the Null Hypothesis (the $\beta$ coefficient is equal to zero or that there is no relationship) is true. So if the *Pr(>|t|)* is low the coefficients are significant (significantly different from zero). If the *Pr(>|t|)* is high, the coefficients are not significant.
 What this means to us is, when p Value is less that significance level, we can safely reject the null hypothesis that the co-efficient *β* of the predictor is zero. In our case, linearMod, both these p-Values are well below the 0.05 threshold, so we can conclude our model is indeed statistically significant.
 
 It is extremely important for the model to be statistically significant before we can go ahead and use it to predict (or estimate) the dependent variable, otherwise, the confidence in predicted values from that model reduces and may be construed as an event of chance.
 
-##How to calculate the t Statistic and p-Values?
+## How to calculate the t Statistic and p-Values?
 
 When the model co-efficients and standard error are known, the formula for calculating t Statistic and p-Value is as follows:
 $$t−Statistic = {β−coefficient \over Std.Error}$$
@@ -143,36 +143,69 @@ cat("Model F Statistic: ", f)
 cat("Model p-Value: ", model_p)
 ```
 
-##R-Squared and Adj R-Squared.
+## R-Squared and Adj R-Squared.
 
-The actual information in a data is the total variation it contains, remember?. What R-Squared tells us is the proportion of variation in the dependent (response) variable that has been explained by this model. Also, we don’t necessarily have discard a model based on a low R-Squared value. It’s a better practice to look at the AIC and prediction accuracy on validation sample when deciding on the efficacy of a model.
+The actual information in a data is the total variation it contains, remember?. What R-Squared tells us is the proportion of variation in the dependent (response) variable that has been explained by this model. 
 
-Now thats about R-Squared. What about adjusted R-Squared? As you add terms to your model, the R-Squared value of the new model will always be greater than that of its subset. This is because, since all the variables in the original model is also present, their contribution to explain the depend variable still remains in the super-set and therefore, whatever new variable we add can only enhance (if not significantly) what was already explained. Here is how, the adjusted R-Squared value comes to help. Adj R-Squared penalizes total value for the number of terms (read predictors) in your model. Therefore when comparing nested models, it is a good practice to look at adj-R-squared value over R-squared.
+$$ R^{2} = 1 - \frac{SSE}{SST}$$
 
-##AIC and BIC
+where, $SSE$ is the _sum of squared errors_ given by $SSE =  \sum_{i}^{n} \left( y_{i} - \hat{y_{i}} \right) ^{2}$ and $SST =  \sum_{i}^{n} \left( y_{i} - \bar{y_{i}} \right) ^{2}$ is the _sum of squared total_. 
 
-The Akaike’s information criterion AIC (Akaike, 1974) and the Bayesian information criterion BIC (Schwarz, 1978) are measures of the goodness of fit of an estimated statistical model and can also be used for model selection. Both criteria depend on the maximized value of the likelihood function L for the estimated model.
+We don’t necessarily discard a model based on a low R-Squared value. Its a better practice to look at the AIC and prediction accuracy on validation sample when deciding on the efficacy of a model.
+
+Now thats about R-Squared. What about adjusted R-Squared? As you add more $X$ variables to your model, the R-Squared value of the new bigger model will always be greater than that of the smaller subset. This is because, since all the variables in the original model is also present, their contribution to explain the dependent variable will be present in the super-set as well, therefore, whatever new variable we add can only add (if not significantly) to the variation that was already explained. It is here, the adjusted R-Squared value comes to help. Adj R-Squared penalizes total value for the number of terms (read predictors) in your model. Therefore when comparing nested models, it is a good practice to look at adj-R-squared value over R-squared.
+
+$$ R^{2}_{adj} = 1 - \frac{MSE}{MST}$$
+
+where, $MSE$ is the _mean squared error_ given by $MSE =  \frac{SSE}{\left( n-q \right)}$ and $MST = \frac{SST}{\left( n-1 \right)}$ is the _mean squared total_, where $n$ is the number of observations and $q$ is the number of coefficients in the model.
+
+Therefore, by moving around the numerators and denominators, the relationship between $R^{2}$ and $R^{2}_{adj}$ becomes:
+
+$$R^{2}_{adj} =  1 - \left( \frac{\left( 1 - R^{2}\right) \left(n-1\right)}{n-q}\right)$$
+
+## Standard Error and F-Statistic
+
+Both standard errors and F-statistic are measures of goodness of fit.
+
+$$Std. Error = \sqrt{MSE} = \sqrt{\frac{SSE}{n-q}}$$
+
+$$F-statistic = \frac{MSR}{MSE}$$
+
+where, $n$ is the number of observations, $q$ is the number of coefficients and $MSR$ is the _mean square regression_, calculated as, 
+
+$$MSR=\frac{\sum_{i}^{n}\left( \hat{y_{i} - \bar{y}}\right)}{q-1} = \frac{SST - SSE}{q - 1}$$
+
+## AIC and BIC
+
+The Akaike’s information criterion - AIC (Akaike, 1974) and the Bayesian information criterion - BIC (Schwarz, 1978) are measures of the goodness of fit of an estimated statistical model and can also be used for model selection. Both criteria depend on the maximized value of the likelihood function L for the estimated model.
 
 The AIC is defined as:
+
 $$AIC = \left( −2 \right) \times ln \left( L \right) + \left(2 \times k \right)$$
-where k is the number of model parameters and the BIC is defined as:
+
+where, k is the number of model parameters and the BIC is defined as:
 
 $$BIC = \left( −2 \right) \times ln \left( L \right) + k \times ln \left( n \right)$$
-where n is the sample size.
+
+where, n is the sample size.
+
 For model comparison, the model with the lowest AIC and BIC score is preferred.
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 AIC(linearMod)  # AIC => 419.1569
 BIC(linearMod)  # BIC => 424.8929
 ```
 
-##How to know if the model is best fit for your data?
+## How to know if the model is best fit for your data?
 
 The most common metrics to look at while selecting the model are:
 
 STATISTIC																|	CRITERION
 ----------------------------------------------------------------------- | ----------------------------------------------------
-R-Squared																| Higher the better
+R-Squared																| Higher the better _(> 0.70)_
 Adj R-Squared															| Higher the better
+F-Statistic                                                             | Higher the better
+Std. Error                                                              | Closer to zero the better
+t-statistic																| Should be greater 1.96 for p-value to be less than 0.05
 AIC																		| Lower the better
 BIC																		| Lower the better
 Mallows cp																| Should be close to the number of predictors in model
@@ -181,15 +214,15 @@ MSE (Mean squared error)												| Lower the better
 Min_Max Accuracy => mean(min(actual, predicted)/max(actual, predicted))	| Higher the better
 
 
-##Predicting Linear Models
+## Predicting Linear Models
 
 So far we have seen how to build a linear regression model using the whole dataset. If we build it that way, there is no way to tell how the model will perform with new data. So the preferred practice is to split your dataset into a 80:20 sample (training:test), then, build the model on the 80% sample and then use the model thus built to predict the dependent variable on test data.
 
 Doing it this way, we will have the model predicted values for the 20% data (test) as well as the actuals (from the original dataset). By calculating accuracy measures (like min_max accuracy) and error rates (MAPE or MSE), we can find out the prediction accuracy of the model. Now, lets see how to actually do this..
 
-####Step 1: Create the training (development) and test (validation) data samples from original data.
+#### Step 1: Create the training (development) and test (validation) data samples from original data.
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 # Create Training and Test data -
 set.seed(100)  # setting seed to reproduce results of random sampling
 trainingRowIndex <- sample(1:nrow(cars), 0.8*nrow(cars))  # row indices for training data
@@ -197,40 +230,70 @@ trainingData <- cars[trainingRowIndex, ]  # model training data
 testData  <- cars[-trainingRowIndex, ]   # test data
 ```
 
-####Step 2: Develop the model on the training data and use it to predict the distance on test data
-```{r, eval=TRUE}
+#### Step 2: Develop the model on the training data and use it to predict the distance on test data
+```{r, eval=FALSE}
 # Build the model on training data -
 lmMod <- lm(dist ~ speed, data=trainingData)  # build the model
 distPred <- predict(lmMod, testData)  # predict distance
 ```
 
-####Step 3: Review diagnostic measures.
-```{r, eval=TRUE}
+#### Step 3: Review diagnostic measures.
+```{r, eval=FALSE}
 summary (lmMod)  # model summary
+#> 
+#> Call:
+#> lm(formula = dist ~ speed, data = trainingData)
+#> 
+#> Residuals:
+#>     Min      1Q  Median      3Q     Max 
+#> -23.350 -10.771  -2.137   9.255  42.231 
+#> 
+#> Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)  -22.657      7.999  -2.833  0.00735 ** 
+#> speed          4.316      0.487   8.863 8.73e-11 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 15.84 on 38 degrees of freedom
+#> Multiple R-squared:  0.674,  Adjusted R-squared:  0.6654 
+#> F-statistic: 78.56 on 1 and 38 DF,  p-value: 8.734e-11
 AIC (lmMod)  # Calculate akaike information criterion
+#> [1] 338.4489
 ```
 
 From the model summary, the model p value and predictor’s p value are less than the significance level, so we know we have a statistically significant model. Also, the R-Sq and Adj R-Sq are comparative to the original model built on full data.
 
-###Step 4: Calculate prediction accuracy and error rates
+#### Step 4: Calculate prediction accuracy and error rates
 
 A simple correlation between the actuals and predicted values can be used as a form of accuracy measure. A higher correlation accuracy implies that the actuals and predicted values have similar directional movement, i.e. when the actuals values increase the predicteds also increase and vice-versa.
 
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 actuals_preds <- data.frame(cbind(actuals=testData$dist, predicteds=distPred))  # make actuals_predicteds dataframe.
 correlation_accuracy <- cor(actuals_preds)  # 82.7%
+head(actuals_preds)
+#>    actuals predicteds
+#> 1        2  -5.392776
+#> 4       22   7.555787
+#> 8       26  20.504349
+#> 20      26  37.769100
+#> 26      54  42.085287
+#> 31      50  50.717663
 ```
 
 Now lets calculate the Min Max accuracy and MAPE:
-**$$MinMaxAccuracy = Average(Min(Actuals, Predicteds) / Max(Actuals,Predicteds))$$**
-**$$MeanAbsolutePercentageError(MAPE) = Average(abs(Predicteds−Actuals) / Actuals))$$**
+**$$MinMaxAccuracy = mean \left( \frac{min\left(actuals, predicteds\right)}{max\left(actuals, predicteds \right)} \right)$$**
 
-```{r, eval=TRUE}
-min_max_accuracy <- mean(apply(actuals_preds, 1, min) / apply(actuals_preds, 1, max))  # => 58.42%, min_max accuracy
-mape <- mean(abs((actuals_preds$predicteds - actuals_preds$actuals))/actuals_preds$actuals)  # => 48.38%, mean absolute percentage deviation
+**$$MeanAbsolutePercentageError \ (MAPE) = mean\left( \frac{abs\left(predicteds−actuals\right)}{actuals}\right)$$**
+
+```{r, eval=FALSE}
+min_max_accuracy <- mean(apply(actuals_preds, 1, min) / apply(actuals_preds, 1, max))  
+# => 58.42%, min_max accuracy
+mape <- mean(abs((actuals_preds$predicteds - actuals_preds$actuals))/actuals_preds$actuals)  
+# => 48.38%, mean absolute percentage deviation
 ```
 
-##k- Fold Cross validation
+## k- Fold Cross validation
 
 Suppose, the model predicts satisfactorily on the 20% split (test data), is that enough to believe that your model will perform equally well all the time? It is a best practice to rigorously test the model’s performance as much as possible. One way is to ensure that the model equation you have will perform well, when it is ‘built’ on a different subset of training data and predicted on the remaining data. How to do this is, split your data into ‘k’ mutually exclusive random sample portions. Each time, we keep one of the portions as test data, we build the model on the remaining (k-1 portion) data and calculate the mean squared error of the predictions. This is done for each k random samples.
 
@@ -248,6 +311,5 @@ In the below plot, Are the dashed lines parallel? Are the small and big symbols 
 embed_png("screenshots/cv-plot.png", dpi = 220)
 ```
 
-###Where to go from here?
-If you would like to learn more about the underlying assumptions and certain nuances behind regression modeling, check out the fundamentals of linear regression.
-If you wish to learn a more advanced and robust way to build regression models, check out the reproducible numeric example for advanced linear regression.
+### Where to go from here?
+We have covered the basic concepts about linear regression. Besides these, you need to understand that linear regression is based on certain underlying [assumptions](Assumptions-of-Linear-Regression.html) that must be taken care especially when working with multiple $Xs$. Once you are familiar with that, the [advanced regression models](adv-regression-models-html) will show you around the various special cases where a different form of regression would be more suitable. 
