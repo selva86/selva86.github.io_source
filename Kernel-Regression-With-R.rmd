@@ -1,0 +1,4 @@
+---
+title: Kernel Regression With R
+layout: default
+---

@@ -19,10 +19,17 @@ embed_png("screenshots/linear-regression-small.png", dpi = 220)
 
 ## Example Problem
 
-For this analysis, we will use the _cars_ dataset that comes with R by default. ‘cars’ is a standard built-in dataset, that makes it convenient to demonstrate linear regression in a simple and easy to understand fashion. You can access this dataset simply by typing in `cars` in your R console. You will find that it consists of 50 observations(rows) and 2 variables (columns) – `dist` and `speed`. Lets print out the first six observations here..
+For this analysis, we will use the _cars_ dataset that comes with R by default. `cars` is a standard built-in dataset, that makes it convenient to demonstrate linear regression in a simple and easy to understand fashion. You can access this dataset simply by typing in `cars` in your R console. You will find that it consists of 50 observations(rows) and 2 variables (columns) – `dist` and `speed`. Lets print out the first six observations here..
 
 ```{r echo = TRUE, eval = FALSE}
 head(cars)  # display the first 6 observations
+#>   speed dist
+#> 1     4    2
+#> 2     4   10
+#> 3     7    4
+#> 4     7   22
+#> 5     8   16
+#> 6     9   10
 ```
 
 Before we begin building the regression model, it is a good practice to analyze and understand the variables. The graphical analysis and correlation study below will help with this.
@@ -51,7 +58,7 @@ The scatter plot along with the smoothing line above suggests a linearly increas
 
 ###BoxPlot – Check for outliers
 
-Generally, any datapoint that lies outside the 1.5 * ‘interquartile range’ (1.5 * IQR) is considered an outlier, where, IQR is calculated as the distance between the 25th percentile and 75th percentile values for that variable.
+Generally, any datapoint that lies outside the 1.5 * interquartile-range ($1.5 * IQR$) is considered an outlier, where, IQR is calculated as the distance between the 25th percentile and 75th percentile values for that variable.
 ```{r, eval=FALSE}
 par(mfrow=c(1, 2))  # divide graph area in 2 columns
 boxplot(cars$speed, main="Speed", sub=paste("Outlier rows: ", boxplot.stats(cars$speed)$out))  # box plot for 'speed'
@@ -79,19 +86,27 @@ embed_png("screenshots/density-plot.png", dpi = 220)
 ## Correlation
 
 Correlation is a statistical measure that suggests the level of linear dependence between two variables, that occur in pair – just like what we have here in speed and dist. Correlation can take values between -1 to +1.
-If we observe for every instance where speed increases, the distance also increases along with it, then there is a high positive correlation between them and therefore the correlation between them will be closer to 1. The opposite is true for an inverse relationship, in which case, the correlation between the variables will be close to -1. Any value closer to 0 suggests a weak relationship between the variables.
-A low correlation (-0.2 < x < 0.2) probably suggests that much of variation of the response variable ($Y$) is unexplained by the predictor ($X$), in which case, we should probably look for new variables.
+If we observe for every instance where speed increases, the distance also increases along with it, then there is a high positive correlation between them and therefore the correlation between them will be closer to 1. The opposite is true for an inverse relationship, in which case, the correlation between the variables will be close to -1. 
 
-```{r, eval=TRUE}
+A value closer to 0 suggests a weak relationship between the variables. A low correlation (-0.2 < x < 0.2) probably suggests that much of variation of the response variable ($Y$) is unexplained by the predictor ($X$), in which case, we should probably look for better explanatory variables.
+
+```{r, eval=FALSE}
 cor(cars$speed, cars$dist)  # calculate correlation between speed and distance 
+#> [1] 0.8068949
 ```
 
 ## Build Linear Model
 
 Now that we have seen the linear relationship pictorially in the scatter plot and by computing the correlation, lets see the syntax for building the linear model. The function used for building linear models is lm(). The lm() function takes in two main arguments, namely: 1. Formula 2. data The data is typically a data.frame and the formula is a object of class formula. But the most common convention is to write out the formula directly in place of the argument as seen below.
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 linearMod <- lm(dist ~ speed, data=cars)  # build linear regression model on full data
 print(linearMod)
+#> Call:
+#> lm(formula = dist ~ speed, data = cars)
+#> 
+#> Coefficients:
+#> (Intercept)        speed  
+#>     -17.579        3.932
 ```
 
 Now that we have built the linear model, we also have established the relationship between the predictor and response in the form of a mathematical formula for Distance (dist) as a function for speed.
@@ -104,8 +119,25 @@ These are also called the beta coefficients. In other words,
 
 Now the linear model is built and we have a formula that we can use to predict the dist value if a corresponding speed is known. Is this enough to actually use this model? NO!
 Before using a regression model, you have to ensure that it is statistically significant. How do you ensure this? Lets begin by printing the summary statistics for linearMod.
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 summary(linearMod)  # model summary
+#> Call:
+#> lm(formula = dist ~ speed, data = cars)
+#> 
+#> Residuals:
+#>     Min      1Q  Median      3Q     Max 
+#> -29.069  -9.525  -2.272   9.215  43.201 
+#> 
+#> Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) -17.5791     6.7584  -2.601   0.0123 *  
+#> speed         3.9324     0.4155   9.464 1.49e-12 ***
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 15.38 on 48 degrees of freedom
+#> Multiple R-squared:  0.6511, Adjusted R-squared:  0.6438 
+#> F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12
 ```
 
 ## The p Value: Checking for statistical significance
@@ -125,7 +157,7 @@ It is extremely important for the model to be statistically significant before w
 
 When the model co-efficients and standard error are known, the formula for calculating t Statistic and p-Value is as follows:
 $$t−Statistic = {β−coefficient \over Std.Error}$$
-```{r, eval=TRUE}
+```{r, eval=FALSE}
 modelSummary <- summary(linearMod)  # capture model summary as an object
 modelCoeffs <- modelSummary$coefficients  # model coefficients
 beta.estimate <- modelCoeffs["speed", "Estimate"]  # get beta estimate for speed
@@ -137,13 +169,13 @@ f <- summary(linearMod)$fstatistic  # parameters for model p-value calc
 model_p <- pf(f[1], f[2], f[3], lower=FALSE)
 ```
 ```{r, echo=FALSE}
-cat("t Value: ", t_value)
-cat("p Value: ", p_value)
-cat("Model F Statistic: ", f)
-cat("Model p-Value: ", model_p)
+cat("t Value: ", 9.46399)
+cat("p Value: ", 1.489836e-12)
+cat("Model F Statistic: ", 89.56711 1 48)
+cat("Model p-Value: ", 1.489836e-12)
 ```
 
-## R-Squared and Adj R-Squared.
+## R-Squared and Adj R-Squared
 
 The actual information in a data is the total variation it contains, remember?. What R-Squared tells us is the proportion of variation in the dependent (response) variable that has been explained by this model. 
 
