@@ -181,7 +181,7 @@ The actual information in a data is the total variation it contains, remember?. 
 
 $$ R^{2} = 1 - \frac{SSE}{SST}$$
 
-where, $SSE$ is the _sum of squared errors_ given by $SSE =  \sum_{i}^{n} \left( y_{i} - \hat{y_{i}} \right) ^{2}$ and $SST =  \sum_{i}^{n} \left( y_{i} - \bar{y_{i}} \right) ^{2}$ is the _sum of squared total_. 
+where, $SSE$ is the _sum of squared errors_ given by $SSE =  \sum_{i}^{n} \left( y_{i} - \hat{y_{i}} \right) ^{2}$ and $SST =  \sum_{i}^{n} \left( y_{i} - \bar{y_{i}} \right) ^{2}$ is the _sum of squared total_. Here, $\hat{y_{i}}$ is the fitted value for observation $i$ and $\bar{y}$ is the mean of $Y$.
 
 We don’t necessarily discard a model based on a low R-Squared value. Its a better practice to look at the AIC and prediction accuracy on validation sample when deciding on the efficacy of a model.
 
