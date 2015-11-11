@@ -171,7 +171,7 @@ model_p <- pf(f[1], f[2], f[3], lower=FALSE)
 ```{r, echo=FALSE}
 cat("t Value: ", 9.46399)
 cat("p Value: ", 1.489836e-12)
-cat("Model F Statistic: ", 89.56711 1 48)
+cat("Model F Statistic: ", 89.56711, 1, 48)
 cat("Model p-Value: ", 1.489836e-12)
 ```
 
