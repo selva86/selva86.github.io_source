@@ -1,0 +1,4 @@
+---
+title: Support Vector Machines (SVM)
+layout: default
+---
