@@ -2,6 +2,7 @@
 title: Kernel Regression With R
 layout: default
 ---
+# Kernel Regression
 
 > Kernel regression is a non-parametric method that is used to estimate the value of Y when the Xs are within the range of training data. It is used for interpolation and estimation rather than extrapolation.
 

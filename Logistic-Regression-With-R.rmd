@@ -2,6 +2,8 @@
 title: Logistic Regression
 layout: default
 ---
+# Logistic Regression
+
 > If linear regression serves to predict continuous Y variables, logistic regression is used for binary classification.
 
 If we use linear regression to model a dichotomous variable (as $Y$), the resulting model might not restrict the predicted $Ys$ within 0 and 1. Besides, other [assumptions of linear regression](Assumptions-of-Linear-Regression.html) such as normality of errors may get violated. So instead, we model the log odds of the event $ln \left( P \over 1-P \right)$, where, $P$ is the probability of event. 

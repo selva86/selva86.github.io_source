@@ -2,6 +2,8 @@
 title: Parallel Computing
 layout: default
 ---
+# Parallel Computing
+
 > R provides a number of convenient facilities for parallel computing. The following method shows you how to setup and run a parallel process on your current multi-core device, without need for additional hardware.
 
 ## Setting up for parallelization

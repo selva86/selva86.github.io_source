@@ -2,6 +2,8 @@
 title: Multi Dimensional Scaling
 layout: default
 ---
+# Multi-Dimensional Scaling
+
 > If you have multiple features for each observation (row) in a dataset and would like to reduce the number of features in the data so as to visualize which observations are similar, _Multi Dimensional Scaling (MDS)_ will help. 
 
 ## The Advantage and Disadvantage of MDS

@@ -2,6 +2,7 @@
 title: Time Series Forecasting
 layout: default
 ---
+# Time Series Forecasting
 
 > This is a follow-up to the introduction to [time series analysis](Time-Series-Analysis-With-R), but focused more on forecasting rather than analysis.
 
