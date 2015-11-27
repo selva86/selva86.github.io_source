@@ -1,342 +1,372 @@
-> Linear regression is used to predict the value of an outcome variable $Y$ based on one or more input predictor variables $X$. The aim is to establish a linear relationship (a mathematical formula) between the predictor variable(s) and the response variable, so that, we can use this formula to estimate the value of the response $Y$, when only the predictors ($Xs$) values are known.
+> It is possible to build multiple models from a given set of X variables. But building a good quality model can make all the difference. Here, we explore various approaches to build and evaluate regression models.
 
-##Introduction
+## Data Prep
+Lets prepare the data upon which the various model selection approaches will be applied. A dataframe containing only the predictors and one containing the response variable is created for use in the model seection algorithms.
 
-The aim of linear regression is to model a continuous variable $Y$ as a mathematical function of one or more $X$ variable(s), so that we can use this regression model to predict the $Y$ when only the $X$ is known. This mathematical equation can be generalized as follows:
+```{r, eval=FALSE}
+inputData <- read.csv("http://rstatistics.net/wp-content/uploads/2015/09/ozone2.csv", stringsAsFactors=F)
+response_df <- inputData['ozone_reading']  # Y variable
+predictors_df <- inputData[, !names(inputData) %in% "ozone_reading" ]  # X variables
+head(inputData)
+#=> Month Day_of_month Day_of_week ozone_reading pressure_height Wind_speed Humidity
+#=>     1            1           4          3.01            5480          8 20.00000
+#=>     1            2           5          3.20            5660          6 48.41432
+#=>     1            3           6          2.70            5710          4 28.00000
+#=>     1            4           7          5.18            5700          3 37.00000
+#=>     1            5           1          5.34            5760          3 51.00000
+#=>     1            6           2          5.77            5720          4 69.00000
+#=>
+#=> Temperature_Sandburg Temperature_ElMonte Inversion_base_height Pressure_gradient
+#=>             37.78175            35.31509              5000.000               -15
+#=>             38.00000            45.79294              4060.589               -14
+#=>             40.00000            48.48006              2693.000               -25
+#=>             45.00000            49.19898               590.000               -24
+#=>             54.00000            45.32000              1450.000                25
+#=>             35.00000            49.64000              1568.000                15
+#=>
+#=> Inversion_temperature Visibility
+#=>              30.56000        200
+#=>              46.86914        300
+#=>              47.66000        250
+#=>              55.04000        100
+#=>              57.02000         60
+#=>              53.78000         60
+```
 
-$$Y = \beta_{1} + \beta_{2} X + \epsilon$$
+## Stepwise Regression
 
-where, $\beta_{1}$ is the intercept and $\beta_{2}$ is the slope. Collectively, they are called _regression coefficients_. $\epsilon$ is the error term, the part of $Y$ the regression model is unable to explain.
+In stepwise regression, we pass the full model to `step` function. It iteratively searches the full scope of variables in `backwards` directions by default, if `scope` is not given. It performs multiple iteractions by droping one X variable at a time. In each iteration, multiple models are built by dropping each of the X variables at a time. The `AIC` of the models is also computed and the model that yields the lowest AIC is retained for the next iteration. 
+
+In simpler terms, the variable that gives the minimum AIC when dropped, is dropped for the next iteration, until there is no significant drop in AIC is noticed. 
+
+The code below shows how stepwise regression can be done. We are providing the full model here, so a backwards stepwise will be performed, which means, variables will only be removed. In forward stepwise, variables will be progressively added.
+
+```{r, eval=FALSE}
+lmMod <- lm(ozone_reading ~ . , data = inputData)
+selectedMod <- step(lmMod)
+summary(selectedMod)
+#=> Call:
+#=> lm(formula = ozone_reading ~ Month + pressure_height + Wind_speed + 
+#=>      Humidity + Temperature_Sandburg + Temperature_ElMonte + Inversion_base_height, 
+#=>    data = inputData)
+#=> 
+#=> Residuals:
+#=>      Min       1Q   Median       3Q      Max 
+#=> -13.5219  -2.6652  -0.1885   2.5702  12.7184 
+#=> 
+#=> Coefficients:
+#=> Estimate Std. Error t value Pr(>|t|)    
+#=> (Intercept)           97.9206462 27.5285900   3.557 0.000425 ***
+#=> Month                 -0.3632285  0.0752403  -4.828 2.05e-06 ***
+#=> pressure_height       -0.0218974  0.0051670  -4.238 2.87e-05 ***
+#=> Wind_speed            -0.1738621  0.1207299  -1.440 0.150715    
+#=> Humidity               0.0817383  0.0132480   6.170 1.85e-09 ***
+#=> Temperature_Sandburg   0.1532862  0.0403667   3.797 0.000172 ***
+#=> Temperature_ElMonte    0.5149553  0.0686170   7.505 4.92e-13 ***
+#=> Inversion_base_height -0.0003529  0.0001743  -2.025 0.043629 *  
+#=> ---
+#=> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#=> 
+#=> Residual standard error: 4.233 on 358 degrees of freedom
+#=> Multiple R-squared:  0.7186,	Adjusted R-squared:  0.7131 
+#=> F-statistic: 130.6 on 7 and 358 DF,  p-value: < 2.2e-16
+
+all_vifs <- car::vif(selectedMod)
+print(all_vifs)
+#=>                Month       pressure_height            Wind_speed              Humidity 
+#=>             1.377397              5.995937              1.330647              1.386716 
+#=> 
+#=> Temperature_Sandburg   Temperature_ElMonte Inversion_base_height 
+#=>             6.781597             11.616208              1.926758
+```
+
+## Multicollinearity and Statistical Significance
+Say, one of the methods discussed above or below has given us a best model based on a criteria such as Adj-Rsq. It is not guaranteed that the condition of multicollinearity (checked using `car::vif`) will be satisfied or even the model be statistically significant. To satisfy these two conditions, the below approach can be taken.
+
+#### Recursively remove variables with VIF > 4
+```{r, eval=FALSE}
+signif_all <- names(all_vifs)
+
+# Remove vars with VIF> 4 and re-build model until none of VIFs don't exceed 4.
+while(any(all_vifs > 4)){
+  var_with_max_vif <- names(which(all_vifs == max(all_vifs)))  # get the var with max vif
+  signif_all <- signif_all[!(signif_all) %in% var_with_max_vif]  # remove
+  myForm <- as.formula(paste("ozone_reading ~ ", paste (signif_all, collapse=" + "), sep=""))  # new formula
+  selectedMod <- lm(myForm, data=inputData)  # re-build model with new formula
+  all_vifs <- car::vif(selectedMod)
+}
+summary(selectedMod)
+# Call:
+#   lm(formula = myForm, data = inputData)
+# 
+# Residuals:
+#      Min       1Q   Median       3Q      Max 
+# -15.5859  -3.4922  -0.3876   3.1741  16.7640 
+# 
+# Coefficients:
+#   Estimate Std. Error t value Pr(>|t|)    
+#   (Intercept)           -2.007e+02  1.942e+01 -10.335  < 2e-16 ***
+#   Month                 -2.322e-01  8.976e-02  -2.587   0.0101 *  
+#   pressure_height        3.607e-02  3.349e-03  10.773  < 2e-16 ***
+#   Wind_speed             2.346e-01  1.423e-01   1.649   0.1001    
+#   Humidity               1.391e-01  1.492e-02   9.326  < 2e-16 ***
+#   Inversion_base_height -1.122e-03  1.975e-04  -5.682 2.76e-08 ***
+#   ---
+#   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+# 
+# Residual standard error: 5.172 on 360 degrees of freedom
+# Multiple R-squared:  0.5776,	Adjusted R-squared:  0.5717 
+# F-statistic: 98.45 on 5 and 360 DF,  p-value: < 2.2e-16
+
+car::vif(selectedMod)
+#    Month       pressure_height            Wind_speed              Humidity Inversion_base_height 
+# 1.313154              1.687105              1.238613              1.178276              1.658603 
+```
+
+The VIFs of all the X's are below 2 now. So, the condition of multicollinearity is satisfied. But the variable `wind_speed` in the model with p value > .1 is not statistically significant. For this specific case, we could just re-build the model without `wind_speed` and check all variables are statistically significant. But, what if you had a different data that selected a model with 2 or more non-significant variables. What if, you had to select models for many such data. So, lets write a generic code for this.
+
+#### Recursively remove non-significant variables
+```{r, eval=FALSE}
+all_vars <- names(selectedMod[[1]])[-1]  # names of all X variables
+# Get the non-significant vars
+summ <- summary(selectedMod)  # model summary
+pvals <- summ[[4]][, 4]  # get all p values
+not_significant <- character()  # init variables that aren't statsitically significant
+not_significant <- names(which(pvals > 0.1))
+not_significant <- not_significant[!not_significant %in% "(Intercept)"]  # remove 'intercept'. Optional!
+
+# If there are any non-significant variables, 
+while(length(not_significant) > 0){
+  all_vars <- all_vars[!all_vars %in% not_significant[1]]
+  myForm <- as.formula(paste("ozone_reading ~ ", paste (all_vars, collapse=" + "), sep=""))  # new formula
+  selectedMod <- lm(myForm, data=inputData)  # re-build model with new formula
+  
+  # Get the non-significant vars.
+  summ <- summary(selectedMod)
+  pvals <- summ[[4]][, 4]
+  not_significant <- character()
+  not_significant <- names(which(pvals > 0.1))
+  not_significant <- not_significant[!not_significant %in% "(Intercept)"]
+}
+summary(selectedMod)
+#=> Call:
+#=> lm(formula = myForm, data = inputData)
+# 
+#=> Residuals:
+#=>    Min       1Q   Median       3Q      Max 
+#=> -15.1537  -3.5541  -0.2294   3.2273  17.0106 
+#=> 
+#=> Coefficients:
+#=> Estimate Std. Error t value Pr(>|t|)    
+#=> (Intercept)           -1.989e+02  1.944e+01 -10.234  < 2e-16 ***
+#=> Month                 -2.694e-01  8.709e-02  -3.093  0.00213 ** 
+#=> pressure_height        3.589e-02  3.355e-03  10.698  < 2e-16 ***
+#=> Humidity               1.466e-01  1.426e-02  10.278  < 2e-16 ***
+#=> Inversion_base_height -1.047e-03  1.927e-04  -5.435 1.01e-07 ***
+#=> ---
+#=> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#=> 
+#=> Residual standard error: 5.184 on 361 degrees of freedom
+#=> Multiple R-squared:  0.5744,	Adjusted R-squared:  0.5697 
+#=> F-statistic: 121.8 on 4 and 361 DF,  p-value: < 2.2e-16
+
+#=> car::vif(selectedMod)
+#=>    Month       pressure_height              Humidity Inversion_base_height 
+#=> 1.230346              1.685245              1.071214              1.570431 
+```
+
+In the resulting model, both statistical significance and multicollinearity is acceptable.
+
+## Best subsets
+
+Best subsets is a technique that relies on stepwise regression to search, find and visualise regression models. But unlike stepwise regression, you have more options to see what variables were included in various shortlisted models, force-in or force-out some of the explanatory variables and also visually inspect the model's performance w.r.t Adj R-sq.
+
+```{r, eval=FALSE}
+library(leaps)
+regsubsetsObj <- regsubsets(x=predictors_df ,y=response_df, nbest = 2, really.big = T)
+plot(regsubsetsObj, scale = "adjr2")  # regsubsets plot based on R-sq
+```
 
 ```{r, echo = FALSE}
-embed_png("screenshots/linear-regression-small.png", dpi = 220)
+embed_png("screenshots/regsubsets-plot.png", dpi = 220)
 ```
 
-## Example Problem
+#### How to interpret the `regsubsets` plot?
+The `regsubsets` plot shows the adjusted R-sq along the Y-axis for many models created by combinations of variables shown on the X-axis. For instance, draw an imaginary horizontal line along the X-axis from any point along the Y-axis. That line would correspond to a linear model, where, the black boxes that line touches form the X variables. For example, the red line in the image touches the black boxes belonging to `Intercept`, `Month`, `pressure_height`, `Humidity`, `Temperature_Sandburg` and  `Temperature_Elmonte`. The Adjusted R-sq for that model is the value at which the red line touches the Y-axis.
 
-For this analysis, we will use the _cars_ dataset that comes with R by default. `cars` is a standard built-in dataset, that makes it convenient to demonstrate linear regression in a simple and easy to understand fashion. You can access this dataset simply by typing in `cars` in your R console. You will find that it consists of 50 observations(rows) and 2 variables (columns) – `dist` and `speed`. Lets print out the first six observations here..
+The caveat however is that it is not guaranteed that these models will be statistically significant.
 
-```{r echo = TRUE, eval = FALSE}
-head(cars)  # display the first 6 observations
-#>   speed dist
-#> 1     4    2
-#> 2     4   10
-#> 3     7    4
-#> 4     7   22
-#> 5     8   16
-#> 6     9   10
-```
+##Leaps
 
-Before we begin building the regression model, it is a good practice to analyze and understand the variables. The graphical analysis and correlation study below will help with this.
-
-##Graphical Analysis
-
-The aim of this exercise is to build a simple regression model that we can use to predict Distance (dist) by establishing a statistically significant linear relationship with Speed (speed). But before jumping in to the syntax, lets try to understand these variables graphically.
-Typically, for each of the independent variables (predictors), the following plots are drawn to visualize the following behavior:
-
-1. **Scatter plot**: Visualize the linear relationship between the predictor and response
-1. **Box plot**: To spot any outlier observations in the variable. Having outliers in your predictor can drastically affect the predictions as they can easily affect the direction/slope of the line of best fit.
-1. **Density plot**: To see the distribution of the predictor variable. Ideally, a close to normal distribution (a bell shaped curve), without being skewed to the left or right is preferred.
-Let us see how to make each one of them.
-
-###Scatter Plot
-
-Scatter plots can help visualize any linear relationships between the dependent (response) variable and independent (predictor) variables. Ideally, if you are having multiple predictor variables, a scatter plot is drawn for each one of them against the response, along with the line of best as seen below.
-```{r echo=TRUE, eval=FALSE}
-scatter.smooth(x=cars$speed, y=cars$dist, main="Dist ~ Speed")  # scatterplot
-```
-```{r, echo = FALSE}
-embed_png("screenshots/dist-speed-scatterplot.png", dpi = 220)
-```
-
-The scatter plot along with the smoothing line above suggests a linearly increasing relationship between the ‘dist’ and ‘speed’ variables. This is a good thing, because, one of the underlying assumptions in linear regression is that the relationship between the response and predictor variables is linear and additive. 
-
-###BoxPlot – Check for outliers
-
-Generally, any datapoint that lies outside the 1.5 * interquartile-range ($1.5 * IQR$) is considered an outlier, where, IQR is calculated as the distance between the 25th percentile and 75th percentile values for that variable.
-```{r, eval=FALSE}
-par(mfrow=c(1, 2))  # divide graph area in 2 columns
-boxplot(cars$speed, main="Speed", sub=paste("Outlier rows: ", boxplot.stats(cars$speed)$out))  # box plot for 'speed'
-boxplot(cars$dist, main="Distance", sub=paste("Outlier rows: ", boxplot.stats(cars$dist)$out))  # box plot for 'distance'
-```
-```{r, echo = FALSE}
-embed_png("screenshots/boxplot.png", dpi = 220)
-```
-
-###Density plot – Check if the response variable is close to normality
+Leaps is similar to best subsets but is known to use a better algorithm to shortlist the models.
 
 ```{r, eval=FALSE}
-library(e1071)
-par(mfrow=c(1, 2))  # divide graph area in 2 columns
-plot(density(cars$speed), main="Density Plot: Speed", ylab="Frequency", sub=paste("Skewness:", round(e1071::skewness(cars$speed), 2)))  # density plot for 'speed'
-polygon(density(cars$speed), col="red")
-plot(density(cars$dist), main="Density Plot: Distance", ylab="Frequency", sub=paste("Skewness:", round(e1071::skewness(cars$dist), 2)))  # density plot for 'dist'
-polygon(density(cars$dist), col="red")
+library(leaps)
+leapSet <- leaps(x=predictors_df, y=inputData$ozone_reading, nbest = 1, method = "adjr2") # criterion could be one of "Cp", "adjr2", "r2". Works for max of 32 predictors.
+#=> $which
+#=>        1     2     3     4     5     6     7     8     9     A     B     C
+#=> 1  FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE
+#=> 2  FALSE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE
+#=> 3   TRUE FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE
+#=> 4   TRUE FALSE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE
+#=> 5   TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE
+#=> 6   TRUE FALSE FALSE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE
+#=> 7   TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE
+#=> 8   TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE
+#=> 9   TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE
+#=> 10  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE
+#=> 11  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE
+#=> 12  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+#=> 
+#=> $adjr2
+#=> [1] 0.5945612 0.6544828 0.6899196 0.6998209 0.7079506 0.7122214 0.7130796 0.7134627 0.7130404 0.7125416
+#=> [11] 0.7119148 0.7112852
+
+# Suppose, we want to choose a model with 4 variables.
+selectVarsIndex <- leapSet$which[4, ]  # pick selected vars
+newData <- cbind(response_df, predictors_df[, selectVarsIndex])  # new data for building selected model
+selectedMod <- lm(ozone_reading ~ ., data=newData)  # build model
+summary(selectedMod)
+#=> Call:
+#=>  lm(formula = ozone_reading ~ ., data = newData)
+#=> 
+#=> Residuals:
+#=>     Min       1Q   Median       3Q      Max 
+#=> -13.9636  -2.8928  -0.0581   2.8549  12.6286 
+#=> 
+#=> Coefficients:
+#=>  Estimate Std. Error t value Pr(>|t|)    
+#=>  (Intercept)         74.611786  27.188323   2.744 0.006368 ** 
+#=>  Month               -0.426133   0.069892  -6.097 2.78e-09 ***
+#=>  pressure_height     -0.018478   0.005137  -3.597 0.000366 ***
+#=>  Humidity             0.096978   0.012529   7.740 1.01e-13 ***
+#=>  Temperature_ElMonte  0.704866   0.049984  14.102  < 2e-16 ***
+#=>  ---
+#=>  Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#=> 
+#=> Residual standard error: 4.33 on 361 degrees of freedom
+#=> Multiple R-squared:  0.7031,	Adjusted R-squared:  0.6998 
+#=> F-statistic: 213.7 on 4 and 361 DF,  p-value: < 2.2e-16
 ```
 
-```{r, echo = FALSE}
-embed_png("screenshots/density-plot.png", dpi = 220)
-```
-
-## Correlation
-
-Correlation is a statistical measure that suggests the level of linear dependence between two variables, that occur in pair – just like what we have here in speed and dist. Correlation can take values between -1 to +1.
-If we observe for every instance where speed increases, the distance also increases along with it, then there is a high positive correlation between them and therefore the correlation between them will be closer to 1. The opposite is true for an inverse relationship, in which case, the correlation between the variables will be close to -1. 
-
-A value closer to 0 suggests a weak relationship between the variables. A low correlation (-0.2 < x < 0.2) probably suggests that much of variation of the response variable ($Y$) is unexplained by the predictor ($X$), in which case, we should probably look for better explanatory variables.
+##RegBest() from FactoMineR
 
 ```{r, eval=FALSE}
-cor(cars$speed, cars$dist)  # calculate correlation between speed and distance 
-#> [1] 0.8068949
+library(FactoMineR)
+regMod <- RegBest(y=inputData$ozone_reading, x = predictors_df)
+regMod$all  # summary of best model of all sizes based on Adj A-sq
+regMod$best  # best model
+#=> Call:
+#=>  lm(formula = as.formula(as.character(formul)), data = don)
+#=> 
+#=> Residuals:
+#=>  Min       1Q   Median       3Q      Max 
+#=> -13.6805  -2.6589  -0.1952   2.6045  12.6521 
+#=> 
+#=> Coefficients:
+#=>                          Estimate Std. Error t value Pr(>|t|)    
+#=>  (Intercept)           88.8519747 26.8386969   3.311 0.001025 ** 
+#=>  Month                 -0.3354044  0.0728259  -4.606 5.72e-06 ***
+#=>  pressure_height       -0.0202670  0.0050489  -4.014 7.27e-05 ***
+#=>  Humidity               0.0784813  0.0130730   6.003 4.73e-09 ***
+#=>  Temperature_Sandburg   0.1450456  0.0400188   3.624 0.000331 ***
+#=>  Temperature_ElMonte    0.5069526  0.0684938   7.401 9.65e-13 ***
+#=>  Inversion_base_height -0.0004224  0.0001677  -2.518 0.012221 *  
+#=>  ---
+#=>  Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#=> 
+#=> Residual standard error: 4.239 on 359 degrees of freedom
+#=> Multiple R-squared:  0.717,	Adjusted R-squared:  0.7122 
+#=> F-statistic: 151.6 on 6 and 359 DF,  p-value: < 2.2e-16
 ```
 
-## Build Linear Model
-
-Now that we have seen the linear relationship pictorially in the scatter plot and by computing the correlation, lets see the syntax for building the linear model. The function used for building linear models is lm(). The lm() function takes in two main arguments, namely: 1. Formula 2. data The data is typically a data.frame and the formula is a object of class formula. But the most common convention is to write out the formula directly in place of the argument as seen below.
-```{r, eval=FALSE}
-linearMod <- lm(dist ~ speed, data=cars)  # build linear regression model on full data
-print(linearMod)
-#> Call:
-#> lm(formula = dist ~ speed, data = cars)
-#> 
-#> Coefficients:
-#> (Intercept)        speed  
-#>     -17.579        3.932
-```
-
-Now that we have built the linear model, we also have established the relationship between the predictor and response in the form of a mathematical formula for Distance (dist) as a function for speed.
-For the above output, you can notice the ‘Coefficients’ part having two components: *Intercept*: -17.579, *speed*: 3.932
-These are also called the beta coefficients. In other words,
-**$$dist = Intercept + (β∗speed)$$**
-=> dist = −17.579 + 3.932∗speed
-
-## Linear Regression Diagnostics
-
-Now the linear model is built and we have a formula that we can use to predict the dist value if a corresponding speed is known. Is this enough to actually use this model? NO!
-Before using a regression model, you have to ensure that it is statistically significant. How do you ensure this? Lets begin by printing the summary statistics for linearMod.
-```{r, eval=FALSE}
-summary(linearMod)  # model summary
-#> Call:
-#> lm(formula = dist ~ speed, data = cars)
-#> 
-#> Residuals:
-#>     Min      1Q  Median      3Q     Max 
-#> -29.069  -9.525  -2.272   9.215  43.201 
-#> 
-#> Coefficients:
-#>             Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept) -17.5791     6.7584  -2.601   0.0123 *  
-#> speed         3.9324     0.4155   9.464 1.49e-12 ***
-#> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> 
-#> Residual standard error: 15.38 on 48 degrees of freedom
-#> Multiple R-squared:  0.6511, Adjusted R-squared:  0.6438 
-#> F-statistic: 89.57 on 1 and 48 DF,  p-value: 1.49e-12
-```
-
-## The p Value: Checking for statistical significance
-
-This summary statistics tells us a number of things. One of them is the model p-Value (bottom last line) and the p-Value of individual predictor variables (extreme right column under ‘Coefficients’). The p-Values are very important because, We can consider a linear model to be statistically significant only when both these p-Values are less that the pre-determined statistical significance level, which is ideally 0.05. This is visually interpreted by the significance stars at the end of the row. The more the stars beside the variable’s p-Value, the more significant the variable.
-
-In Linear Regression, the Null Hypothesis is that the coefficients associated with the variables is equal to zero. The alternate hypothesis is that the coefficients are not equal to zero (i.e. there exists a relationship between the independent variable in question and the dependent variable).
-
-We can interpret the t-value something like this. A larger *t-value* indicates that that it is less likely that the coefficient is not equal to zero purely by chance.
-
-*Pr(>|t|)* is the probability that you get a t-value as high or higher than the observed value when the Null Hypothesis (the $\beta$ coefficient is equal to zero or that there is no relationship) is true. So if the *Pr(>|t|)* is low the coefficients are significant (significantly different from zero). If the *Pr(>|t|)* is high, the coefficients are not significant.
-What this means to us is, when p Value is less that significance level, we can safely reject the null hypothesis that the co-efficient *β* of the predictor is zero. In our case, linearMod, both these p-Values are well below the 0.05 threshold, so we can conclude our model is indeed statistically significant.
-
-It is extremely important for the model to be statistically significant before we can go ahead and use it to predict (or estimate) the dependent variable, otherwise, the confidence in predicted values from that model reduces and may be construed as an event of chance.
-
-## How to calculate the t Statistic and p-Values?
-
-When the model co-efficients and standard error are known, the formula for calculating t Statistic and p-Value is as follows:
-$$t−Statistic = {β−coefficient \over Std.Error}$$
-```{r, eval=FALSE}
-modelSummary <- summary(linearMod)  # capture model summary as an object
-modelCoeffs <- modelSummary$coefficients  # model coefficients
-beta.estimate <- modelCoeffs["speed", "Estimate"]  # get beta estimate for speed
-std.error <- modelCoeffs["speed", "Std. Error"]  # get std.error for speed
-t_value <- beta.estimate/std.error  # calc t statistic
-p_value <- 2*pt(-abs(t_value), df=nrow(cars)-ncol(cars))  # calc p Value
-f_statistic <- linearMod$fstatistic[1]  # fstatistic
-f <- summary(linearMod)$fstatistic  # parameters for model p-value calc
-model_p <- pf(f[1], f[2], f[3], lower=FALSE)
-```
-```{r, echo=FALSE}
-cat("t Value: ", 9.46399)
-cat("p Value: ", 1.489836e-12)
-cat("Model F Statistic: ", 89.56711, 1, 48)
-cat("Model p-Value: ", 1.489836e-12)
-```
-
-## R-Squared and Adj R-Squared
-
-The actual information in a data is the total variation it contains, remember?. What R-Squared tells us is the proportion of variation in the dependent (response) variable that has been explained by this model. 
-
-$$ R^{2} = 1 - \frac{SSE}{SST}$$
-
-where, $SSE$ is the _sum of squared errors_ given by $SSE =  \sum_{i}^{n} \left( y_{i} - \hat{y_{i}} \right) ^{2}$ and $SST =  \sum_{i}^{n} \left( y_{i} - \bar{y_{i}} \right) ^{2}$ is the _sum of squared total_. Here, $\hat{y_{i}}$ is the fitted value for observation $i$ and $\bar{y}$ is the mean of $Y$.
-
-We don’t necessarily discard a model based on a low R-Squared value. Its a better practice to look at the AIC and prediction accuracy on validation sample when deciding on the efficacy of a model.
-
-Now thats about R-Squared. What about adjusted R-Squared? As you add more $X$ variables to your model, the R-Squared value of the new bigger model will always be greater than that of the smaller subset. This is because, since all the variables in the original model is also present, their contribution to explain the dependent variable will be present in the super-set as well, therefore, whatever new variable we add can only add (if not significantly) to the variation that was already explained. It is here, the adjusted R-Squared value comes to help. Adj R-Squared penalizes total value for the number of terms (read predictors) in your model. Therefore when comparing nested models, it is a good practice to look at adj-R-squared value over R-squared.
-
-$$ R^{2}_{adj} = 1 - \frac{MSE}{MST}$$
-
-where, $MSE$ is the _mean squared error_ given by $MSE =  \frac{SSE}{\left( n-q \right)}$ and $MST = \frac{SST}{\left( n-1 \right)}$ is the _mean squared total_, where $n$ is the number of observations and $q$ is the number of coefficients in the model.
-
-Therefore, by moving around the numerators and denominators, the relationship between $R^{2}$ and $R^{2}_{adj}$ becomes:
-
-$$R^{2}_{adj} =  1 - \left( \frac{\left( 1 - R^{2}\right) \left(n-1\right)}{n-q}\right)$$
-
-## Standard Error and F-Statistic
-
-Both standard errors and F-statistic are measures of goodness of fit.
-
-$$Std. Error = \sqrt{MSE} = \sqrt{\frac{SSE}{n-q}}$$
-
-$$F-statistic = \frac{MSR}{MSE}$$
-
-where, $n$ is the number of observations, $q$ is the number of coefficients and $MSR$ is the _mean square regression_, calculated as, 
-
-$$MSR=\frac{\sum_{i}^{n}\left( \hat{y_{i} - \bar{y}}\right)}{q-1} = \frac{SST - SSE}{q - 1}$$
-
-## AIC and BIC
-
-The Akaike’s information criterion - AIC (Akaike, 1974) and the Bayesian information criterion - BIC (Schwarz, 1978) are measures of the goodness of fit of an estimated statistical model and can also be used for model selection. Both criteria depend on the maximized value of the likelihood function L for the estimated model.
-
-The AIC is defined as:
-
-$$AIC = \left( −2 \right) \times ln \left( L \right) + \left(2 \times k \right)$$
-
-where, k is the number of model parameters and the BIC is defined as:
-
-$$BIC = \left( −2 \right) \times ln \left( L \right) + k \times ln \left( n \right)$$
-
-where, n is the sample size.
-
-For model comparison, the model with the lowest AIC and BIC score is preferred.
-```{r, eval=FALSE}
-AIC(linearMod)  # AIC => 419.1569
-BIC(linearMod)  # BIC => 424.8929
-```
-
-## How to know if the model is best fit for your data?
-
-The most common metrics to look at while selecting the model are:
-
-STATISTIC																|	CRITERION
------------------------------------------------------------------------ | ----------------------------------------------------
-R-Squared																| Higher the better _(> 0.70)_
-Adj R-Squared															| Higher the better
-F-Statistic                                                             | Higher the better
-Std. Error                                                              | Closer to zero the better
-t-statistic																| Should be greater 1.96 for p-value to be less than 0.05
-AIC																		| Lower the better
-BIC																		| Lower the better
-Mallows cp																| Should be close to the number of predictors in model
-MAPE (Mean absolute percentage error)									| Lower the better
-MSE (Mean squared error)												| Lower the better
-Min_Max Accuracy => mean(min(actual, predicted)/max(actual, predicted))	| Higher the better
-
-
-## Predicting Linear Models
-
-So far we have seen how to build a linear regression model using the whole dataset. If we build it that way, there is no way to tell how the model will perform with new data. So the preferred practice is to split your dataset into a 80:20 sample (training:test), then, build the model on the 80% sample and then use the model thus built to predict the dependent variable on test data.
-
-Doing it this way, we will have the model predicted values for the 20% data (test) as well as the actuals (from the original dataset). By calculating accuracy measures (like min_max accuracy) and error rates (MAPE or MSE), we can find out the prediction accuracy of the model. Now, lets see how to actually do this..
-
-#### Step 1: Create the training (development) and test (validation) data samples from original data.
+## Simulated Annealing
+Given a set of variables, a simulated annealing algorithm seeks a k-variable subset which is optimal, as a surrogate for the whole set, with respect to a given criterion. Annealing offers a method of finding the best subsets of predictor variables. Since the correlation or covariance matrix is a input to the `anneal()` function, only continuous variables are used to compute the best subsets.
 
 ```{r, eval=FALSE}
-# Create Training and Test data -
-set.seed(100)  # setting seed to reproduce results of random sampling
-trainingRowIndex <- sample(1:nrow(cars), 0.8*nrow(cars))  # row indices for training data
-trainingData <- cars[trainingRowIndex, ]  # model training data
-testData  <- cars[-trainingRowIndex, ]   # test data
+library(subselect)
+results <- anneal(cor(predictors_df), kmin=1, kmax=ncol(predictors_df)-1, nsol=4, niter=10, setseed=TRUE)  # perform annealing<
+print(results$bestsets)
+#=>         Var.1 Var.2 Var.3 Var.4 Var.5 Var.6 Var.7 Var.8 Var.9 Var.10 Var.11
+#=> Card.1     11     0     0     0     0     0     0     0     0      0      0
+#=> Card.2      7    10     0     0     0     0     0     0     0      0      0
+#=> Card.3      5     6     8     0     0     0     0     0     0      0      0
+#=> Card.4      1     2     6    11     0     0     0     0     0      0      0
+#=> Card.5      1     3     5     6    11     0     0     0     0      0      0
+#=> Card.6      2     3     5     6     9    11     0     0     0      0      0
+#=> Card.7      1     2     3     5    10    11    12     0     0      0      0
+#=> Card.8      1     2     3     4     5     6     8    12     0      0      0
+#=> Card.9      1     2     3     4     5     6     9    10    12      0      0
+#=> Card.10     1     2     3     4     5     6     8     9    10     12      0
+#=> Card.11     1     2     3     4     5     6     7     8     9     10     12
 ```
 
-#### Step 2: Develop the model on the training data and use it to predict the distance on test data
-```{r, eval=FALSE}
-# Build the model on training data -
-lmMod <- lm(dist ~ speed, data=trainingData)  # build the model
-distPred <- predict(lmMod, testData)  # predict distance
-```
-
-#### Step 3: Review diagnostic measures.
-```{r, eval=FALSE}
-summary (lmMod)  # model summary
-#> 
-#> Call:
-#> lm(formula = dist ~ speed, data = trainingData)
-#> 
-#> Residuals:
-#>     Min      1Q  Median      3Q     Max 
-#> -23.350 -10.771  -2.137   9.255  42.231 
-#> 
-#> Coefficients:
-#>             Estimate Std. Error t value Pr(>|t|)    
-#> (Intercept)  -22.657      7.999  -2.833  0.00735 ** 
-#> speed          4.316      0.487   8.863 8.73e-11 ***
-#> ---
-#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-#> 
-#> Residual standard error: 15.84 on 38 degrees of freedom
-#> Multiple R-squared:  0.674,  Adjusted R-squared:  0.6654 
-#> F-statistic: 78.56 on 1 and 38 DF,  p-value: 8.734e-11
-AIC (lmMod)  # Calculate akaike information criterion
-#> [1] 338.4489
-```
-
-From the model summary, the model p value and predictor’s p value are less than the significance level, so we know we have a statistically significant model. Also, the R-Sq and Adj R-Sq are comparative to the original model built on full data.
-
-#### Step 4: Calculate prediction accuracy and error rates
-
-A simple correlation between the actuals and predicted values can be used as a form of accuracy measure. A higher correlation accuracy implies that the actuals and predicted values have similar directional movement, i.e. when the actuals values increase the predicteds also increase and vice-versa.
+The bestsets value in the output reveal the best variables to select for each cardinality (number of predictors). The values inside `results$bestsets` correspond to the column index position of `predicted_df`, that is, which variables are selected for each cardinality.
 
 ```{r, eval=FALSE}
-actuals_preds <- data.frame(cbind(actuals=testData$dist, predicteds=distPred))  # make actuals_predicteds dataframe.
-correlation_accuracy <- cor(actuals_preds)  # 82.7%
-head(actuals_preds)
-#>    actuals predicteds
-#> 1        2  -5.392776
-#> 4       22   7.555787
-#> 8       26  20.504349
-#> 20      26  37.769100
-#> 26      54  42.085287
-#> 31      50  50.717663
+num_vars <- 3
+selectVarsIndex <- results$bestsets[num_vars, 1:num_vars]
+newData <- cbind(response_df, predictors_df[, selectVarsIndex])  # new data for building selected model
+selectedMod <- lm(ozone_reading ~ ., data=newData)  # build model
+summary(selectedMod)
+#=> Call:
+#=>   lm(formula = ozone_reading ~ ., data = newData)
+#=> 
+#=> Residuals:
+#=>   Min       1Q   Median       3Q      Max 
+#=> -14.6948  -2.7279  -0.3532   2.9004  13.4161 
+#=> 
+#=> Coefficients:
+#=>   Estimate Std. Error t value Pr(>|t|)    
+#=>   (Intercept)         -23.98819    1.50057 -15.986  < 2e-16 ***
+#=>   Wind_speed            0.08796    0.11989   0.734    0.464    
+#=>   Humidity              0.11169    0.01319   8.468 6.34e-16 ***
+#=>   Temperature_ElMonte   0.49985    0.02324  21.506  < 2e-16 ***
+#=>   ---
+#=>   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+# 
+# Residual standard error: 4.648 on 362 degrees of freedom
+# Multiple R-squared:  0.6569,	Adjusted R-squared:  0.654 
+# F-statistic:   231 on 3 and 362 DF,  p-value: < 2.2e-16
 ```
 
-Now lets calculate the Min Max accuracy and MAPE:
-**$$MinMaxAccuracy = mean \left( \frac{min\left(actuals, predicteds\right)}{max\left(actuals, predicteds \right)} \right)$$**
+Like other methods, `anneal()` does not guarantee that the model be statistically significant.
 
-**$$MeanAbsolutePercentageError \ (MAPE) = mean\left( \frac{abs\left(predicteds−actuals\right)}{actuals}\right)$$**
+
+## Comparing Models Using ANOVA
+If you have two or more models that are subsets of a larger model, you can use `anova()` to check if the additional variable(s) contribute to the predictive ability of the model. In below example, the `baseMod` is a model built with 7 explanatory variables, while, `mod1` through `mod5` contain one predictor less than the previous model.
 
 ```{r, eval=FALSE}
-min_max_accuracy <- mean(apply(actuals_preds, 1, min) / apply(actuals_preds, 1, max))  
-# => 58.42%, min_max accuracy
-mape <- mean(abs((actuals_preds$predicteds - actuals_preds$actuals))/actuals_preds$actuals)  
-# => 48.38%, mean absolute percentage deviation
+# ANOVA
+baseMod <- lm(ozone_reading ~ Month + pressure_height + Humidity + Temperature_Sandburg + Temperature_ElMonte + Inversion_base_height + Wind_speed, data=inputData)
+mod1 <- lm(ozone_reading ~ Month + pressure_height + Humidity + Temperature_Sandburg + Temperature_ElMonte + Inversion_base_height, data=inputData)
+mod2 <- lm(ozone_reading ~ Month + pressure_height + Humidity + Temperature_Sandburg + Temperature_ElMonte, data=inputData)
+mod3 <- lm(ozone_reading ~ Month + pressure_height + Humidity + Temperature_ElMonte, data=inputData)
+mod4 <- lm(ozone_reading ~ Month + pressure_height + Temperature_ElMonte, data=inputData)
+anova(baseMod, mod1, mod2, mod3, mod4)
+#=> Model 1: ozone_reading ~ Month + pressure_height + Humidity + Temperature_Sandburg + 
+#=> Temperature_ElMonte + Inversion_base_height + Wind_speed
+#=> Model 2: ozone_reading ~ Month + pressure_height + Humidity + Temperature_Sandburg + 
+#=> Temperature_ElMonte + Inversion_base_height
+#=> Model 3: ozone_reading ~ Month + pressure_height + Humidity + Temperature_Sandburg + 
+#=> Temperature_ElMonte
+#=> Model 4: ozone_reading ~ Month + pressure_height + Humidity + Temperature_ElMonte
+#=> Model 5: ozone_reading ~ Month + pressure_height + Temperature_ElMonte
+#=>
+#=>       Res.Df    RSS Df Sum of Sq       F    Pr(>F)    
+#=> row 1    358 6414.4                                   
+#=> row 2    359 6451.5 -1    -37.16  2.0739  0.150715    
+#=> row 3    360 6565.5 -1   -113.98  6.3616  0.012095 *  
+#=> row 4    361 6767.0 -1   -201.51 11.2465  0.000883 ***
+#=> row 5    362 7890.0 -1  -1123.00 62.6772 3.088e-14 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
-## k- Fold Cross validation
+For each row in the output, the `anova()` tests a hypothesis comparing two models. For instance, `row 2` compares `baseMod` (Model 1) and `mod1` (Model 2) in the output. The null hypothesis is that the two models are equal in fitting the data (i.e. the Y variable), while, the alternative hypothesis is that the full model is better (i.e. the additional X variable improves the model).  
 
-Suppose, the model predicts satisfactorily on the 20% split (test data), is that enough to believe that your model will perform equally well all the time? It is a best practice to rigorously test the model’s performance as much as possible. One way is to ensure that the model equation you have will perform well, when it is ‘built’ on a different subset of training data and predicted on the remaining data. How to do this is, split your data into ‘k’ mutually exclusive random sample portions. Each time, we keep one of the portions as test data, we build the model on the remaining (k-1 portion) data and calculate the mean squared error of the predictions. This is done for each k random samples.
+So what's the inference? Except for row 2, all other rows have significant p values. This means all the additional variables in models 1, 2 and 3 are contributing to respective models. From row 1 output, the `Wind_speed` is not making the `baseMod` (Model 1) any better. So the best model we have amongst this set is `mod1` (Model1). 
 
-By doing this, we can check if the model’s prediction accuracy isn’t varying too much for any one particular sample and if the lines of best fit don't vary too much with respect the the slope and level, or, in other words, they should be parallel and as close to each other as possible. You can find a more detailed explanation for interpreting the cross validation charts when you learn about advanced linear model building.
 
-```{r, eval=FALSE}
-library(DAAG)
-cvResults <- suppressWarnings(CVlm(df=cars, form.lm=dist ~ speed, m=5, dots=FALSE, seed=29, legend.pos="topleft",  printit=FALSE, main="Small symbols are predicted values while bigger ones are actuals."));  # performs the CV
-attr(cvResults, 'ms')  # => 251.2783 mean squared error
-```
 
-In the below plot, Are the dashed lines parallel? Are the small and big symbols are not over dispersed for one particular color?
 
-```{r, echo = FALSE}
-embed_png("screenshots/cv-plot.png", dpi = 220)
-```
-
-### Where to go from here?
-We have covered the basic concepts about linear regression. Besides these, you need to understand that linear regression is based on certain underlying [assumptions](Assumptions-of-Linear-Regression.html) that must be taken care especially when working with multiple $Xs$. Once you are familiar with that, the [advanced regression models](adv-regression-models-html) will show you around the various special cases where a different form of regression would be more suitable. 
