@@ -4,23 +4,23 @@ layout: default
 ---
 # Association Mining (Market Basket Analysis)
 
-> Association mining is commonly used to make product recommendations by identifying products that are frequently bought together. But, if you are not careful, in certain cases the rules can give misleading results. Read on to find out. 
+> Association mining is commonly used to make product recommendations by identifying products that are frequently bought together. But, if you are not careful, the rules can give misleading results in certain cases . Lets find out how.. 
 
 Association mining is usually done on transactions data from a retail market or from an online e-commerce store. Since most transactions data is large, the `apriori` algorithm makes it easier to find these patterns or _rules_ quickly.
 
 So, What is a _rule_? 
 
-A rule has an _LHS_ and an _RHS_ part. It could look like this:
+A rule is a notation that represents which item/s is frequently bought with what item/s. It has an _LHS_ and an _RHS_ part and can be represented as follows:
 
-__item A => item B__
+__itemset A => itemset B__
 
-Meaning, the item/s on the right were frequently purchased along with items on the left. 
+This means, the item/s on the right were frequently purchased along with items on the left. 
 
 ## How to measure the strength of a rule?
 
-Once the `apriori()` generates all the rules from a given transaction data, it also shows the _support_, _confidence_ and _lift_ of these rules. These three measure can be used to decide which rules are strength enough. So what do these terms mean?
+The `apriori()` generates the most relevent set of rules from a given transaction data. It also shows the _support_, _confidence_ and _lift_ of those rules. These three measure can be used to decide the relative strength of the rules. So what do these terms mean?
 
-Lets consider the rule _A => B_ in order to compute these metrics. 
+Lets consider the rule __A => B__ in order to compute these metrics. 
 
 $$Support = \frac{Number\ of\ transactions\ with\ both\ A\ and\ B}{Total\ number\ of\ transactions} = P\left(A \cap B\right)$$
 
@@ -33,39 +33,41 @@ $$Lift = \frac{Confidence}{Expected\ Confidence} = \frac{P\left(A \cap B\right)}
 
 ## Caveat with using Lift
 
-#### A -> B
+The directionality of the rule is lost when _lift_ is used. That is, the lift of any rule, _A => B_ and the rule _B => A_ will be the same. See the calculation below:
 
-Support: P(A^B)
+#### _A -> B_
 
-Confidence: P(A^B)/P(A)
+* Support: $P\left( A \cap B \right)$
 
-Expected Confidence: P(B)
+* Confidence: $\frac{P\left( A \cap B \right)}{P\left( A \right)}$
 
-Lift: Confidence/Expected Confidence = P(A^B)/P(A).P(B)
+* Expected Confidence: $P\left( B \right)$
 
-#### B -> A
+* Lift: $\frac{Confidence}{Expected\ Confidence}$ = $\frac{P\left( A \cap B \right)}{P\left( A \right).P\left( B \right)}$
 
-Support: P(A^B)
+#### _B -> A_
 
-Confidence: P(A^B)/P(B)
+* Support: $P\left( A \cap B \right)$
 
-Expected Confidence: P(A)
+* Confidence: $\frac{P\left( A \cap B \right)}{P\left( B \right)}$
 
-Lift: Confidence/Expected Confidence = P(A^B)/P(A).P(B)
+* Expected Confidence: $P\left( B \right)$
+
+* Lift: $\frac{Confidence}{Expected\ Confidence}$ = $\frac{P\left( A \cap B \right)}{P\left( A \right).P\left( B \right)}$
 
 #### Important Note
-For both rules A -> B and B -> A, the value of lift turns out to be the same. This means we cannot use lift to make recommendation for a particular ‘rule’. It can merely be used to club frequently bought items into groups.
+For both rules _A -> B_ and _B -> A_, the value of _lift_ and support turns out to be the same. This means we cannot use lift to make recommendation for a particular _directional_ ‘rule’. It can merely be used to club frequently bought items into groups.
 
 ## Caveat with using Confidence
 
-The _confidence_ of a rule can be a misleading measure while making product recommendations in real world problems, especially while making add-ons recommendations. Lets consider the following example transactions, where A: IPhone and B:Headset.
+The _confidence_ of a rule can be a misleading measure while making product recommendations in real world problems, especially while making _add-ons_ product recommendations. Lets consider the following data with 4 transactions, involving IPhones and Headsets:
 
 1. Iphone, Headset
 2. Iphone, Headset
 3. Iphone 
 4. Iphone 
 
-Lets consider the following rules: 
+We can create 2 rules for these transactions as shown below: 
 
 1. _Iphone -> Headset_
 1. _Headset -> IPhone_ 
@@ -75,13 +77,10 @@ In real world, it would be realistic to recommend _headphones_ to a person who j
 While selecting rules from the `apriori` output, you might guess that higher the confidence a rule has, better is the rule. But for cases like this, the headset -> iPhone rule will have a higher confidence (2 times) over iPhone -> headset. Can you see why? The calculation below show how.
 
 #### Confidence Calculation:
-__iPhone -> Headset__: P(iPhone ^ Headset)/P(iPhone) = 0.5 / 1 = __0.5__
+__iPhone -> Headset__: $\frac{P(iPhone\ \cap\ Headset)}{P(iPhone)}$ = 0.5 / 1 = __0.5__
 
-__Headset -> iPhone__: P(iPhone ^ Headset)/P(Headset) = 0.5 / 0.5 = __1.0__
+__Headset -> iPhone__: $\frac{P(iPhone\ \cap\ Headset)}{P(Headset)}$ = 0.5 / 0.5 = __1.0__
 
-As, you can see, the $headset -> iPhone$ recommendation has a higher confidence, which is misleading. So, confidence should not be the only measure you can use to make product recommendations.
+As, you can see, the _headset -> iPhone_ recommendation has a higher confidence, which is misleading and unrealistic. So, confidence should not be the _only measure_ you should use to make product recommendations.
 
-So, you probably need to check more criteria such as the price of products before recommending items, especially in cross selling cases.
-
-
-
+So, you probably need to check more criteria such as the price of products, product types etc before recommending items, especially in cross selling cases.
