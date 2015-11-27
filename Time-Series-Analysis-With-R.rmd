@@ -2,6 +2,7 @@
 title: Time Series Analysis
 layout: default
 ---
+# Time Series Analysis
 
 > Any metric that is measured over regular time intervals forms a time series. Analysis of time series is commercially importance because of industrial need and relevance especially w.r.t forecasting (demand, sales, supply etc). 
 

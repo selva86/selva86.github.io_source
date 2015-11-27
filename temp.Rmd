@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 > It is possible to build multiple models from a given set of X variables. But building a good quality model can make all the difference. Here, we explore various approaches to build and evaluate regression models.
 
 ## Data Prep
@@ -370,3 +371,48 @@ So what's the inference? Except for row 2, all other rows have significant p val
 
 
 
+=======
+# Welcome to r-statistics.co
+
+An educational resource for those seeking knowledge related to machine learning and statistical computing in R.
+Here, you will find quality articles, with working R code and examples, where, the goal is to make the [#rstats](https://twitter.com/hashtag/rstats) concepts clear and as simple as possible. 
+
+This is built by keeping in mind, statisticians who are new to R programming language, R programmers without a stats background, analysts who work in SAS or python, college grads and developers who are relatively new to both R and stats/ML. If you are completely new to R, this [R tutorial](R-Tutorial.html) is a good place it start.
+
+```{r, echo = FALSE}
+embed_png("screenshots/corrplot2.png", dpi=220)
+```
+
+<!--
+<ul class="toc">
+  <li class="dropdown-header"></li>
+<li class="dropdown-header">Tutorial</li>
+<li><a href="R-Tutorial.html">R Tutorial</a></li>
+<li class="dropdown-header">Foundations</li>
+<li><a href="Linear-Regression.html">Linear Regression</a></li>
+<li><a href="Assumptions-of-Linear-Regression.html">Assumptions of Linear Regression</a></li>
+<li><a href="Statistical-Tests-in-R.html">Statistical Tests</a></li>
+<li><a href="Variable-Selection-and-Importance-With-R.html">Feature Selection</a></li>
+<li><a href="Model-Selection-in-R.html">Model Selection</a></li>
+<li><a href="Logistic-Regression-With-R.html">Logistic Regression</a></li>
+<li><a href="Environments.html">Advanced Linear Regression</a></li>
+
+<li class="dropdown-header">Advanced Regression Models</li>
+<li><a href="adv-regression-models.html">Advanced Regression Models</a></li>
+
+<li class="dropdown-header">Time Series</li>
+<li><a href="Time-Series-Analysis-With-R.html">Time Series Analysis</a></li>
+<li><a href="Time-Series-Forecasting-With-R.html">Time Series Forecasting </a></li>
+<li><a href="Time-Series-Forecasting-With-R-part2.html">More Time Series Forecasting</a></li>
+
+<li class="dropdown-header">High Performance Computing</li>
+<li><a href="Parallel-Computing-With-R.html">Parallel computing</a></li>
+<li><a href="Strategies-To-Improve-And-Speedup-R-Code.html">Strategies to Speedup R code</a></li>
+
+<li class="dropdown-header">Useful Techniques</li>
+<li><a href="Multi-Dimensional-Scaling-With-R.html">Multi Dimensional Scaling</a></li>
+<li><a href="Profiling.html">Optimization</a></li>
+
+</ul>
+-->
+>>>>>>> d580e59b45ca8b8cc19f30fd888eab3b8c3e9b1b

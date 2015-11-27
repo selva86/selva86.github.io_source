@@ -2,6 +2,8 @@
 title: Strategies To Speedup R Code
 layout: default
 ---
+# Strategies to Speed-up R Code
+
 > The for-loop in R, can be very slow in its raw un-optimized form, especially when dealing with larger data sets. There are a number of ways you can make your logics run fast, but you will be really surprised how fast you can actually go. 
 This chapter shows a number of approaches including simple tweaks to logic design, parallel processing and Rcpp, increasing the speed by orders of several magnitudes, so you can comfortably process data as large as 100 Million rows and more.
 

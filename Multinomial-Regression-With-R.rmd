@@ -2,6 +2,8 @@
 title: Multinomial Regression
 layout: default
 ---
+# Multinomial Regression
+
 > Multinomial regression is much similar to logistic regression but is applicable when the response variable is a nominal categorical variable with more than 2 levels.
 
 ## Introduction

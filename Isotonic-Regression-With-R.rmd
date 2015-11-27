@@ -2,6 +2,8 @@
 title: Isotonic Regression
 layout: default
 ---
+# Isotonic Regression
+
 > If you know that your data should be strictly increasing, but the real data shows otherwise, use _Isotonic regression_ to get a suitable strictly increasing approximation.
 
 Applying isotonic regression is quite straight forward in R. The `isoreg()` function comes handy for this, as it can be used on numeric data without supplying special arguments.

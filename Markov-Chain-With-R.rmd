@@ -2,5 +2,6 @@
 title: Markov Chain With R
 layout: default
 ---
+Markov Chain
 > Markov chain is a process where the next state of the system depends only on the current state and not on any of the previous states.
 

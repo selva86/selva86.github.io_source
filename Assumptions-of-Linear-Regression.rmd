@@ -2,6 +2,7 @@
 title: Assumptions of Linear Regression
 layout: default
 ---
+# Assumptions of Linear Regression
 
 ```{r, echo=FALSE}
 knitr::opts_chunk$set(error=FALSE, message=FALSE, warning=FALSE)

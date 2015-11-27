@@ -2,6 +2,8 @@
 title: Robust Regression
 layout: default
 ---
+# Robust Regression
+
 > Robust regression can be used in any situation where OLS regression can be applied. It generally gives better accuracies over OLS because it uses a weighting mechanism to weigh down the influential observations. It is particularly resourceful when there are no compelling reasons to exclude outliers in your data.
 
 Robust regression can be implemented using the `rlm()` function in MASS package. The outliers can be weighted down differently based on `psi.huber`, `psi.hampel` and `psi.bisquare` methods specified by the `psi` argument.

@@ -2,6 +2,7 @@
 title: Ridge Regression
 layout: default
 ---
+# Ridge Regression
 
 > Ridge Regression is a commonly used technique to address the problem of multi-collinearity. The effectiveness of the application is however debatable.
 

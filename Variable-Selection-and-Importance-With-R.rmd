@@ -2,6 +2,8 @@
 title: Feature Selection
 layout: default
 ---
+# Feature Selection Approaches
+
 > Finding the most important predictor variables (of features) that explains major part of variance of the response variable is key to identify and build high performing models.
 
 ```{r, echo=FALSE}

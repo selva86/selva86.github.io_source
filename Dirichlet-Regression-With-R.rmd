@@ -2,6 +2,8 @@
 title: Dirichlet Regression
 layout: default
 ---
+# Dirichlet Regression
+
 > Dirichlet regression can be used to model _compositional data_, when the dependent-Y variable is practically a sum total of contribution from multiple components.
 
 ## Introduction

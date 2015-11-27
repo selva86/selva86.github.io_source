@@ -2,6 +2,8 @@
 title: Statistical Tests
 layout: default
 ---
+# Statistical Tests
+
 > This chapter explains the purpose of some of the most commonly used statistical tests and how to implement them in R
 
 ## 1. One Sample t-Test
