@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Multinomial Regression
 
 > Multinomial regression is much similar to logistic regression but is applicable when the response variable is a nominal categorical variable with more than 2 levels.
@@ -114,3 +115,49 @@ mean(as.character(predicted_class) != as.character(test$cmc))
 
 A misclassification error of 49.3% is probably too high. May be it can be improved by improving the model terms or may be the variables are not as good in explaining the contraceptive method used. Either ways, I would encourage the investigator to try other ML approaches as well for this problem.
 
+=======
+# Welcome to r-statistics.co
+
+An educational resource for those seeking knowledge related to machine learning and statistical computing in R.
+Here, you will find quality articles, with working R code and examples, where, the goal is to make the [#rstats](https://twitter.com/hashtag/rstats) concepts clear and as simple as possible. 
+
+This is built by keeping in mind, statisticians who are new to R programming language, R programmers without a stats background, analysts who work in SAS or python, college grads and developers who are relatively new to both R and stats/ML. If you are completely new to R, this [R tutorial](R-Tutorial.html) is a good place it start.
+
+```{r, echo = FALSE}
+embed_png("screenshots/corrplot2.png", dpi=220)
+```
+
+<!--
+<ul class="toc">
+  <li class="dropdown-header"></li>
+<li class="dropdown-header">Tutorial</li>
+<li><a href="R-Tutorial.html">R Tutorial</a></li>
+<li class="dropdown-header">Foundations</li>
+<li><a href="Linear-Regression.html">Linear Regression</a></li>
+<li><a href="Assumptions-of-Linear-Regression.html">Assumptions of Linear Regression</a></li>
+<li><a href="Statistical-Tests-in-R.html">Statistical Tests</a></li>
+<li><a href="Variable-Selection-and-Importance-With-R.html">Feature Selection</a></li>
+<li><a href="Model-Selection-in-R.html">Model Selection</a></li>
+<li><a href="Logistic-Regression-With-R.html">Logistic Regression</a></li>
+<li><a href="Environments.html">Advanced Linear Regression</a></li>
+
+<li class="dropdown-header">Advanced Regression Models</li>
+<li><a href="adv-regression-models.html">Advanced Regression Models</a></li>
+
+<li class="dropdown-header">Time Series</li>
+<li><a href="Time-Series-Analysis-With-R.html">Time Series Analysis</a></li>
+<li><a href="Time-Series-Forecasting-With-R.html">Time Series Forecasting </a></li>
+<li><a href="Time-Series-Forecasting-With-R-part2.html">More Time Series Forecasting</a></li>
+
+<li class="dropdown-header">High Performance Computing</li>
+<li><a href="Parallel-Computing-With-R.html">Parallel computing</a></li>
+<li><a href="Strategies-To-Improve-And-Speedup-R-Code.html">Strategies to Speedup R code</a></li>
+
+<li class="dropdown-header">Useful Techniques</li>
+<li><a href="Association-Mining-With-R.html">Association Mining</a></li>
+<li><a href="Multi-Dimensional-Scaling-With-R.html">Multi Dimensional Scaling</a></li>
+<li><a href="Profiling.html">Optimization</a></li>
+
+</ul>
+-->
+>>>>>>> e59b2c1d1841508c0850780c9d8d9e77c7b67c66
