@@ -1,9 +1,0 @@
----
-title: Information Value
-layout: default
----
-> Information value used to measure the intrinsic value of a categorical variable in explaining another binary categorical variable.
-
-Here is a sample .xlsx file that shows how to [calculate WOE and Information Value](./IVCalc.xlsx).
-
-## How to calculate WOE

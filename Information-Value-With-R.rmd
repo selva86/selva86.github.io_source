@@ -78,11 +78,14 @@ The plotROC uses the `ggplot2` framework to create the ROC curve and prints the 
 library(InformationValue)
 ```
 
-```{r, results='asis', fig.show='hold', fig.height=5, fig.width=8, prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE}
+```{r, results='asis', fig.show='hold', fig.height=5, fig.width=8, prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, eval=FALSE}
 data('ActualsAndScores')
 plotROC(actuals=ActualsAndScores$Actuals, predictedScores=ActualsAndScores$PredictedScores)
 ```
 
+```{r, echo = FALSE}
+embed_png("screenshots/ROC-Curve.png", dpi = 220)
+```
 
 You can also get the sensitivity matrix used to make the plot by turning on `returnSensitivityMat = TRUE`.
 
@@ -203,8 +206,12 @@ ks_stat(actuals=ActualsAndScores$Actuals, predictedScores=ActualsAndScores$Predi
 ## 2.5. `ks_plot`
 `ks_plot` plots the lift is capturing the responders (Ones) against the the random case where we don't use the model. The more curvier (higher) the model curve, the better is your model. 
 
-```{r, , results='asis', fig.show='hold', fig.height=5, fig.width=8, prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE}
+```{r, , results='asis', fig.show='hold', fig.height=5, fig.width=8, prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, eval=F}
 ks_plot(actuals=ActualsAndScores$Actuals, predictedScores=ActualsAndScores$PredictedScores)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/KS_statistic_plot.png", dpi = 220)
 ```
 
 
@@ -215,17 +222,18 @@ ks_plot(actuals=ActualsAndScores$Actuals, predictedScores=ActualsAndScores$Predi
 3. `Both`: control both *false positive rate* and *false negative rate* by maximizing the Youden's J Index.
 4. `misclasserror`: minimizes misclassification error (default)
 
-```{r, results='asis', prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, tidy=TRUE}
+```{r, results='asis', prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, eval=FALSE}
 optimalCutoff(actuals=ActualsAndScores$Actuals, predictedScores=ActualsAndScores$PredictedScores)  # returns cutoff that gives minimum misclassification error.
 ```
 
-```{r, results='asis', prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, tidy=TRUE}
+```{r, results='asis', prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, eval=FALSE}
 optimalCutoff(actuals=ActualsAndScores$Actuals, predictedScores=ActualsAndScores$PredictedScores, optimiseFor="Both")  # returns cutoff that gives maximum of Youden's J Index
+#> [1] 0.6431893
 ```
 
 By setting the `returnDiagnostics=TRUE` you can get the `sensitivityTable` that shows the `FPR`, `TPR`, `YOUDENSINDEX`, `SPECIFICITY`, `MISCLASSERROR` for various values of cutoff.
 
-```{r, results='asis', prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, tidy=TRUE}
+```{r, results='asis', prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, eval=FALSE}
 sens_table <- optimalCutoff(actuals=ActualsAndScores$Actuals, predictedScores=ActualsAndScores$PredictedScores, optimiseFor="Both", returnDiagnostics=TRUE)$sensitivityTable
 ```
 
@@ -241,7 +249,7 @@ WOE(X=SimData$X.Cat, Y=SimData$Y.Binary)
 Generates the WOE table showing the percentage goods, bads, WOE and IV for each category of `X`. WOE for a given category of `X` is computed as:
 
 $$WOE = ln(\frac{perc.Good}{perc.Bad}) $$ 
-```{r, results='hide', prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, tidy=TRUE}
+```{r, results='hide', prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, eval=FALSE}
 options(scipen = 999, digits = 2)
 WOETable(X=SimData$X.Cat, Y=SimData$Y.Binary)
 ```
@@ -251,9 +259,12 @@ WOETable(X=SimData$X.Cat, Y=SimData$Y.Binary)
 Compute the information value of a given categorical `X` (Factor) and binary `Y` (numeric) response. The information value of a category of `X` is calculated as:
 $$IV = (perc.Good - perc.Bad) * WOE $$ 
 The `IV` of the categorical variables is the sum of information value of its individual categories.
-```{r, results='asis', prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, tidy=TRUE}
+```{r, eval=FALSE}
 options(scipen = 999, digits = 4)
 IV(X=SimData$X.Cat, Y=SimData$Y.Binary)
+#> 1] 0.162 
+#> attr(,“howgood”)
+#> [1] “Highly Predictive”
 ```
 
 > "He who gives up code safety for code speed deserves neither."
