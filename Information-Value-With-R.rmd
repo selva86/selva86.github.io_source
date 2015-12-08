@@ -214,6 +214,11 @@ ks_plot(actuals=ActualsAndScores$Actuals, predictedScores=ActualsAndScores$Predi
 embed_png("screenshots/KS_statistic_plot.png", dpi = 220)
 ```
 
+#### How to interpret this plot?
+
+After computing the prediction probability scores, the datapoints are sorted in descending order of prediction probability scores. This set of data points is split into 10 groups (or ranks) as marked in the X-axis. The 'random' line corresponds to the case where you capture the responders ('Ones') when you don't have the model at disposal. While the 'model' line corresponds to the proportion of total responders you will be able to capture as you keep targeting the data point starting from the bucket rank 1 through 10.
+
+So, from the above chart for instance, by targeting first 40% of the population, the model will be able to capture 70.59% of total responders, while without the model, you can expect to capture only 40% of responders by random targeting.
 
 ## 3.1. `optimalCutoff`
 `optimalCutoff` determines the optimal threshold for prediction probability score based on your specific problem objectives.  By adjusting the argument `optimiseFor` as follows, you can find the optimal cutoff that:
