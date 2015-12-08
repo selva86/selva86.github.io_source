@@ -69,7 +69,7 @@ The total IV of a variable is the sum of IV's of its categories. Here is what th
 
 Here is a sample MS Excel file that shows how to [calculate WOE and Information Value](./IVCalc.xlsx).
 
-**KS Statistic** is the maximum difference between the cumulative true positive and cumulative false positive rate. It is often used as the deciding metric to jusdge the efficacy of models in credit scoring. It can be computed using the `ks_stat` function
+**KS Statistic** or _Kolmogorov-Smirnov statistic_ is the maximum difference between the cumulative true positive and cumulative false positive rate. It is often used as the deciding metric to judge the efficacy of models in credit scoring. The higher the `ks_stat`, the more efficient is the model at capturing the responders (Ones). This should not be confused with the `ks.test` function.
 
 ## 1.1 `plotROC`
 The plotROC uses the `ggplot2` framework to create the ROC curve and prints the `AUROC` inside. It comes with an option to display the change points of the prediction probability scores on the graph if you set the `Show.labels = T`.
@@ -195,8 +195,9 @@ somersD(actuals=ActualsAndScores$Actuals, predictedScores=ActualsAndScores$Predi
 ```
 
 ## 2.4. `ks_stat`
-`ks_stat` computes the kolmogorov-smirnov statistic that is widely used in credit scoring to determine the efficacy of binary classification models.
-
+`ks_stat` computes the kolmogorov-smirnov statistic that is widely used in credit scoring to determine the efficacy of binary classification models. The higher the `ks_stat`
+ more effective is the model at capturing the responders.
+ 
 ```{r, results='asis', prompt=TRUE, highlight=TRUE, collapse=TRUE, message=FALSE, warning=FALSE, tidy=TRUE, eval=FALSE}
 ks_stat(actuals=ActualsAndScores$Actuals, predictedScores=ActualsAndScores$PredictedScores)
 #> [1] 0.6118
@@ -216,9 +217,11 @@ embed_png("screenshots/KS_statistic_plot.png", dpi = 220)
 
 #### How to interpret this plot?
 
-After computing the prediction probability scores, the datapoints are sorted in descending order of prediction probability scores. This set of data points is split into 10 groups (or ranks) as marked in the X-axis. The 'random' line corresponds to the case where you capture the responders ('Ones') when you don't have the model at disposal. While the 'model' line corresponds to the proportion of total responders you will be able to capture as you keep targeting the data point starting from the bucket rank 1 through 10.
+After computing the prediction probability scores, the datapoints are sorted in descending order of prediction probability scores. This set of data points is split into 10 groups (or ranks) as marked in the X-axis. 
 
-So, from the above chart for instance, by targeting first 40% of the population, the model will be able to capture 70.59% of total responders, while without the model, you can expect to capture only 40% of responders by random targeting.
+The __'random'__ line corresponds to the case where you capture the responders ('Ones') when you don't have the model(that generated the probability scores) at disposal. While the __'model'__ line corresponds to the proportion of total responders you will be able to capture as you keep targeting the data point starting from the bucket rank 1 through 10.
+
+So, from the above chart for instance, by targeting first 40% of the population, the model will be able to capture 70.59% of total responders(Ones), while without the model, you can expect to capture only 40% of responders by random targeting.
 
 ## 3.1. `optimalCutoff`
 `optimalCutoff` determines the optimal threshold for prediction probability score based on your specific problem objectives.  By adjusting the argument `optimiseFor` as follows, you can find the optimal cutoff that:
