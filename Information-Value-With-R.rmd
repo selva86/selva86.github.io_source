@@ -217,11 +217,13 @@ embed_png("screenshots/KS_statistic_plot.png", dpi = 220)
 
 #### How to interpret this plot?
 
-After computing the prediction probability scores, the datapoints are sorted in descending order of prediction probability scores. This set of data points is split into 10 groups (or ranks) as marked in the X-axis. 
+This plot aims to answer the question: _Which part of the population should I target for my marketing campaign and what conversion rate can I expect?_ Now, lets understand how it is computed and what those numbers mean.
 
-The __'random'__ line corresponds to the case where you capture the responders ('Ones') when you don't have the model(that generated the probability scores) at disposal. While the __'model'__ line corresponds to the proportion of total responders you will be able to capture as you keep targeting the data point starting from the bucket rank 1 through 10.
+After computing the prediction probability scores, the datapoints are sorted in descending order of prediction probability scores. This set of data points is split into 10 groups (or ranks) as marked on the X-axis, such that, the group ranked 1 contains the top 10% of datapoints with highest prediction probability scores, group ranked 2 containing the next 10% and so on.
 
-So, from the above chart for instance, by targeting first 40% of the population, the model will be able to capture 70.59% of total responders(Ones), while without the model, you can expect to capture only 40% of responders by random targeting.
+The __'random'__ line in above chart corresponds to the case of capturing the responders ('Ones') by random selection, i.e., when you don't have any model (generated probability scores) at disposal. While the __'model'__ line represents the case of capturing the responders if you go by the model generated probability scores, where you begin by targeting datapoint with highest probability scores. In simpler terms, it represents the proportion of total responders you can expect to capture as you keep targeting the data point starting from the bucket rank 1 through 10, in that order. So, now you know which part of the population to target and what is the expected conversion rate.
+
+For example, from the above chart for instance, by targeting first 40% of the population, the model will be able to capture 70.59% of total responders(Ones), while without the model, you can expect to capture only 40% of responders by random targeting.
 
 ## 3.1. `optimalCutoff`
 `optimalCutoff` determines the optimal threshold for prediction probability score based on your specific problem objectives.  By adjusting the argument `optimiseFor` as follows, you can find the optimal cutoff that:
