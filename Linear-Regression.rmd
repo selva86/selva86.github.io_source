@@ -98,7 +98,7 @@ cor(cars$speed, cars$dist)  # calculate correlation between speed and distance
 
 ## Build Linear Model
 
-Now that we have seen the linear relationship pictorially in the scatter plot and by computing the correlation, lets see the syntax for building the linear model. The function used for building linear models is lm(). The lm() function takes in two main arguments, namely: 1. Formula 2. data The data is typically a data.frame and the formula is a object of class formula. But the most common convention is to write out the formula directly in place of the argument as seen below.
+Now that we have seen the linear relationship pictorially in the scatter plot and by computing the correlation, lets see the syntax for building the linear model. The function used for building linear models is `lm()`. The `lm()` function takes in two main arguments, namely: 1. Formula  2. Data. The data is typically a data.frame and the formula is a object of class `formula`. But the most common convention is to write out the formula directly in place of the argument as written below.
 ```{r, eval=FALSE}
 linearMod <- lm(dist ~ speed, data=cars)  # build linear regression model on full data
 print(linearMod)
@@ -143,16 +143,19 @@ summary(linearMod)  # model summary
 
 ## The p Value: Checking for statistical significance
 
-This summary statistics tells us a number of things. One of them is the model p-Value (bottom last line) and the p-Value of individual predictor variables (extreme right column under ‘Coefficients’). The p-Values are very important because, We can consider a linear model to be statistically significant only when both these p-Values are less that the pre-determined statistical significance level, which is ideally 0.05. This is visually interpreted by the significance stars at the end of the row. The more the stars beside the variable’s p-Value, the more significant the variable.
+The summary statistics above tells us a number of things. One of them is the model p-Value (bottom last line) and the p-Value of individual predictor variables (extreme right column under ‘Coefficients’). The p-Values are very important because, We can consider a linear model to be statistically significant only when both these p-Values are less that the pre-determined statistical significance level, which is ideally 0.05. This is visually interpreted by the significance stars at the end of the row. The more the stars beside the variable’s p-Value, the more significant the variable.
 
-In Linear Regression, the Null Hypothesis is that the coefficients associated with the variables is equal to zero. The alternate hypothesis is that the coefficients are not equal to zero (i.e. there exists a relationship between the independent variable in question and the dependent variable).
+#### Null and alternate hypothesis
+When there is a p-value, there is a hull and alternative hypothesis associated with it. In Linear Regression, the Null Hypothesis is that the coefficients associated with the variables is equal to zero. The alternate hypothesis is that the coefficients are not equal to zero (i.e. there exists a relationship between the independent variable in question and the dependent variable).
 
-We can interpret the t-value something like this. A larger *t-value* indicates that that it is less likely that the coefficient is not equal to zero purely by chance.
+#### t-value
+We can interpret the t-value something like this. A larger *t-value* indicates that it is less likely that the coefficient is not equal to zero purely by chance. So, higher the t-value, the better.
 
-*Pr(>|t|)* is the probability that you get a t-value as high or higher than the observed value when the Null Hypothesis (the $\beta$ coefficient is equal to zero or that there is no relationship) is true. So if the *Pr(>|t|)* is low the coefficients are significant (significantly different from zero). If the *Pr(>|t|)* is high, the coefficients are not significant.
-What this means to us is, when p Value is less that significance level, we can safely reject the null hypothesis that the co-efficient *β* of the predictor is zero. In our case, linearMod, both these p-Values are well below the 0.05 threshold, so we can conclude our model is indeed statistically significant.
+*Pr(>|t|)* or _p-value_ is the probability that you get a t-value as high or higher than the observed value when the Null Hypothesis (the $\beta$ coefficient is equal to zero or that there is no relationship) is true. So if the *Pr(>|t|)* is low, the coefficients are significant (significantly different from zero). If the *Pr(>|t|)* is high, the coefficients are not significant.
 
-It is extremely important for the model to be statistically significant before we can go ahead and use it to predict (or estimate) the dependent variable, otherwise, the confidence in predicted values from that model reduces and may be construed as an event of chance.
+What this means to us? when p Value is less than significance level (< 0.05), we can safely reject the null hypothesis that the co-efficient *β* of the predictor is zero. In our case, `linearMod`, both these p-Values are well below the 0.05 threshold, so we can conclude our model is indeed statistically significant.
+
+It is absolutely important for the model to be statistically significant before we can go ahead and use it to predict (or estimate) the dependent variable, otherwise, the confidence in predicted values from that model reduces and may be construed as an event of chance.
 
 ## How to calculate the t Statistic and p-Values?
 
@@ -186,7 +189,8 @@ where, $SSE$ is the _sum of squared errors_ given by $SSE =  \sum_{i}^{n} \left(
 
 We don’t necessarily discard a model based on a low R-Squared value. Its a better practice to look at the AIC and prediction accuracy on validation sample when deciding on the efficacy of a model.
 
-Now thats about R-Squared. What about adjusted R-Squared? As you add more $X$ variables to your model, the R-Squared value of the new bigger model will always be greater than that of the smaller subset. This is because, since all the variables in the original model is also present, their contribution to explain the dependent variable will be present in the super-set as well, therefore, whatever new variable we add can only add (if not significantly) to the variation that was already explained. It is here, the adjusted R-Squared value comes to help. Adj R-Squared penalizes total value for the number of terms (read predictors) in your model. Therefore when comparing nested models, it is a good practice to look at adj-R-squared value over R-squared.
+__Now thats about R-Squared. What about adjusted R-Squared?__ 
+As you add more $X$ variables to your model, the R-Squared value of the new bigger model will always be greater than that of the smaller subset. This is because, since all the variables in the original model is also present, their contribution to explain the dependent variable will be present in the super-set as well, therefore, whatever new variable we add can only add (if not significantly) to the variation that was already explained. It is here, the adjusted R-Squared value comes to help. Adj R-Squared penalizes total value for the number of terms (read predictors) in your model. Therefore when comparing nested models, it is a good practice to look at adj-R-squared value over R-squared.
 
 $$ R^{2}_{adj} = 1 - \frac{MSE}{MST}$$
 
@@ -328,9 +332,16 @@ mape <- mean(abs((actuals_preds$predicteds - actuals_preds$actuals))/actuals_pre
 
 ## k- Fold Cross validation
 
-Suppose, the model predicts satisfactorily on the 20% split (test data), is that enough to believe that your model will perform equally well all the time? It is a best practice to rigorously test the model’s performance as much as possible. One way is to ensure that the model equation you have will perform well, when it is ‘built’ on a different subset of training data and predicted on the remaining data. How to do this is, split your data into ‘k’ mutually exclusive random sample portions. Each time, we keep one of the portions as test data, we build the model on the remaining (k-1 portion) data and calculate the mean squared error of the predictions. This is done for each k random samples.
+Suppose, the model predicts satisfactorily on the 20% split (test data), is that enough to believe that your model will perform equally well all the time? It is important to rigorously test the model’s performance as much as possible. One way is to ensure that the model equation you have will perform well, when it is ‘built’ on a different subset of training data and predicted on the remaining data. 
 
-By doing this, we can check if the model’s prediction accuracy isn’t varying too much for any one particular sample and if the lines of best fit don't vary too much with respect the the slope and level, or, in other words, they should be parallel and as close to each other as possible. You can find a more detailed explanation for interpreting the cross validation charts when you learn about advanced linear model building.
+How to do this is? Split your data into ‘k’ mutually exclusive random sample portions. Keeping each portion as test data, we build the model on the remaining (k-1 portion) data and calculate the mean squared error of the predictions. This is done for each of the 'k' random sample portions. Then finally, the average of these mean squared errors (for 'k' portions) is computed. We can use this metric to compare different linear models.
+
+By doing this, we need to check two things: 
+
+1. If the model’s prediction accuracy isn’t varying too much for any one particular sample, and
+2. If the lines of best fit don't vary too much with respect the the slope and level.
+
+In other words, they should be parallel and as close to each other as possible. You can find a more detailed explanation for interpreting the cross validation charts when you learn about advanced linear model building.
 
 ```{r, eval=FALSE}
 library(DAAG)
