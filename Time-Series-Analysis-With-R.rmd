@@ -108,7 +108,11 @@ head(myDf)
 
 ## What is Autocorrelation and Partial-Autocorrelation?
 
-__Autocorrelation__ is the correlation of a Time Series with lags of itself. This is a significant metric because, it is used commonly to determine if the time series is stationary or not. A stationary time series will have the autocorrelation fall to zero fairly quickly but for a non-stationary series it drops gradually.
+__Autocorrelation__ is the correlation of a Time Series with lags of itself. This is a significant metric because, 
+
+1. Is shows if the previous states (lagged observations) of the time series has an influence on the current state. In the autocorrelation chart below, if the autocorrelation crosses the dashed blue line, it means that specific lag is significantly correlated with current series. For example, in the top-left chart (below), there is significant autocorrelation for all the lags shown in x-axis.
+
+2. It is used commonly to determine if the time series is stationary or not. A stationary time series will have the autocorrelation fall to zero fairly quickly but for a non-stationary series it drops gradually.
 
 __Partial Autocorrelation__ is the correlation of the time series with a lag of itself, with the linear dependence of all the lags between them removed.
 
@@ -127,7 +131,7 @@ embed_png("screenshots/time-series-analysis/acf-pacf-ccf-plot.png", dpi = 220)
 
 ## How to de-trend a time series ?
 
-Use linear regression to model the Time Series data with indices. The model residuals will usually be devoid of the trend component. If some trend is left over to be seen in the residuals (like what it seems to be with ‘JohnsonJohnson’ data below), then you might wish to add few predictors to the lm() call (like a seasonal dummy, fourier transform or may be a lag of the series itself), until the trend is filtered.
+Use linear regression to model the Time Series data with linear indices (Ex: 1, 2, .. n). The resulting model's residuals is a representation of the time series devoid of the trend. In case, if some trend is left over to be seen in the residuals (like what it seems to be with ‘JohnsonJohnson’ data below), then you might wish to add few predictors to the `lm()` call (like a `forecast::seasonaldummy`, `forecast::fourier` or may be a lag of the series itself), until the trend is filtered.
 
 ```{r, eval=FALSE}
 trModel <- lm(JohnsonJohnson ~ c(1:length(JohnsonJohnson)))
@@ -139,9 +143,9 @@ embed_png("screenshots/time-series-analysis/JohnsonJohnson-Detrended.png", dpi =
 ```
 
 ## How to de-seasonalize a time series in R?
-De-seasonalizing throws insight about the effects seasonal pattern in the time series and helps to model the data without the seasonal effects, which can later be customized.
-Step 1: De-compose the Time series using stl()
-Step 2: use seasadj() from ‘forecast’ package
+De-seasonalizing throws insight about the seasonal pattern in the time series and helps to model the data without the seasonal effects. So how to de-seasonalize?
+Step 1: De-compose the Time series using `forecast::stl()`
+Step 2: use `seasadj()` from ‘forecast’ package
 
 ```{r, eval=FALSE}
 library(forecast)
@@ -157,7 +161,7 @@ embed_png("screenshots/time-series-analysis/seasonal-plots.png", dpi = 220)
 ```
 
 ## How to test if a time series is stationary?
-Use Augmented Dickey-Fuller Test (adf test). A p-Value of less than 0.05 in adf.test() indicates that it is stationary.
+Use _Augmented Dickey-Fuller Test_ (adf test). A p-Value of less than 0.05 in adf.test() indicates that it is stationary.
 
 ```{r, eval=FALSE}
 library(tseries)
