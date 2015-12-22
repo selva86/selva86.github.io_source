@@ -110,7 +110,7 @@ head(myDf)
 
 __Autocorrelation__ is the correlation of a Time Series with lags of itself. This is a significant metric because, 
 
-1. Is shows if the previous states (lagged observations) of the time series has an influence on the current state. In the autocorrelation chart below, if the autocorrelation crosses the dashed blue line, it means that specific lag is significantly correlated with current series. For example, in the top-left chart (below), there is significant autocorrelation for all the lags shown in x-axis.
+1. It shows if the previous states (lagged observations) of the time series has an influence on the current state. In the autocorrelation chart, if the autocorrelation crosses the dashed blue line, it means that specific lag is significantly correlated with current series. For example, in autocorrelation chart of `AirPassengers` - the top-left chart (below), there is significant autocorrelation for all the lags shown on x-axis.
 
 2. It is used commonly to determine if the time series is stationary or not. A stationary time series will have the autocorrelation fall to zero fairly quickly but for a non-stationary series it drops gradually.
 
