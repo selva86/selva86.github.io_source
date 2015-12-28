@@ -136,11 +136,11 @@ print(gg1)  # print the plot
 embed_png("screenshots/ggplot_3.png", dpi = 220)  
 ```
 
-If the legend shows a shape attribute based on a factor variable, you need to change it using `scale_shape_discrete()`. Had it been a continuous variable, use `scale_shape_continuous()` instead.
+If the legend shows a shape attribute based on a factor variable, you need to change it using `scale_shape_discrete(name="legend title")`. Had it been a continuous variable, use `scale_shape_continuous(name="legend title")` instead.
 
 So now, Can you guess the function to use if your legend is based on a `fill` attribute on a continuous variable? 
 
-The answer is `scale_fill_continuous()`.
+The answer is `scale_fill_continuous(name="legend title")`.
 
 ## 5. The Facets
 In the previous chart, you had the scatterplot for all different values of `cut` plotted in the same chart. What if you want one chart for one `cut`? 
@@ -398,3 +398,5 @@ ggsave("myggplot.png")  # saves the last plot.
 ggsave("myggplot.png", plot=plot1)  # save a stored ggplot
 ```
 
+
+For a quicker reference, refer to this [ggplot2 cheatsheet](ggplot2-cheatsheet.html).
