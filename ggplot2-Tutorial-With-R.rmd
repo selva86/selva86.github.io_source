@@ -4,16 +4,17 @@ layout: default
 ---
 # How to make any plot in ggplot2?
 
-> ggplot2 is the most elegant and aesthetically pleasing graphics framework available in R.  
+> ggplot2 is the most elegant and aesthetically pleasing graphics framework available in R. It has a nicely planned structure to it. But the way you make plots in ggplot2 is very different from base graphics making the learning curve even steeper. So leave what you know about base graphics behind and follow along. You are just 5 steps away from cracking the ggplot puzzle.
 
 ## Topics
-
 1. [The Setup](ggplot2-Tutorial-With-R.html#1. The Setup)
 2. [The Layers](ggplot2-Tutorial-With-R.html#2. The Layers)
 3. [The Labels](ggplot2-Tutorial-With-R.html#3. The Labels)
 4. [The Theme](ggplot2-Tutorial-With-R.html#4. The Theme)
 5. [The Facets](ggplot2-Tutorial-With-R.html#5. The Facets)
 6. [Commonly Used Features](ggplot2-Tutorial-With-R.html#6. Commonly Used Features)
+
+##### Quick Ref
 * [Make a time series plot (using ggfortify)](ggplot2-Tutorial-With-R.html#6.1 Make a time series plot (using ggfortify))
 * [Plot multiple timeseries](ggplot2-Tutorial-With-R.html#6.2 Plot multiple timeseries on same ggplot)
 * [Make bar charts](ggplot2-Tutorial-With-R.html#6.3 Bar charts)
@@ -23,7 +24,7 @@ layout: default
 * [Equal coordinates](ggplot2-Tutorial-With-R.html#6.7 Equal coordinates)
 * [Change themes](ggplot2-Tutorial-With-R.html#6.8 Change themes)
 * [Legend](ggplot2-Tutorial-With-R.html#6.9 Legend - Deleting and Changing Position)
-* [Grid lines](ggplot2-Tutorial-With-R.html#6.10 Grid lines)
+* [Grid lines and panel background](ggplot2-Tutorial-With-R.html#6.10 Grid lines)
 * [Plot margin and background](ggplot2-Tutorial-With-R.html#6.11 Plot margin and background)
 * [Annotation](ggplot2-Tutorial-With-R.html#6.12 Annotation)
 * [Saving ggplot](ggplot2-Tutorial-With-R.html#6.13 Saving ggplot)
@@ -58,7 +59,7 @@ ggplot(diamonds, aes(x=carat), color="steelblue")
 See this [color palette](http://research.stowers-institute.org/efg/R/Color/Chart/) for more colors.
 
 ## 2. The Layers
-The layers in ggplot2 are also called '_geoms_'. Once the base setup is done, you can append the geoms one on top of the another. The [documentation](http://docs.ggplot2.org/current/) provides a compehensive list of all available _geoms_.
+The layers in ggplot2 are also called '_geoms_'. Once the base setup is done, you can append the geoms one on top of the other. The [documentation](http://docs.ggplot2.org/current/) provides a compehensive list of all available _geoms_.
 
 ```{r, eval=FALSE}
 library(ggplot2)
@@ -100,7 +101,7 @@ ggplot(diamonds, aes(x=carat, y=price, color=cut, shape=color)) + geom_point()
 
 
 ## 3. The Labels
-Now that you have drawn the main parts of the graph. You might want to add the plot's main title and perhaps change the X and Y axis titles. This can be accomplished using the `labs` layer, meant for specifying the labels. However, manipulating the size, color of the labels is the job of the 'Theme'.
+Now that you have drawn the main parts of the graph. You might want to add the plot's main title and perhaps change the X and Y axis titles. This can be accomplished using the `labs` layer, meant for specifying the labels. However, manipulating the size, color of the labels is the job of the ['Theme'](http://r-statistics.co/ggplot2-Tutorial-With-R.html#4. The Theme).
 
 ```{r, eval=FALSE}
 library(ggplot2)
@@ -327,7 +328,7 @@ Apart from the basic ggplot2 theme, you can change the look and feel of your plo
 6. theme_classic()
 7. theme_void()
 
-The `ggthemes` package provides [additional ggplot](https://github.com/jrnold/ggthemes) themes that imitates famous magazines and softwares. Here is an example of how to change the theme.
+The `ggthemes` package provides [additional ggplot themes](https://github.com/jrnold/ggthemes) that imitates famous magazines and softwares. Here is an example of how to change the theme.
 
 ```{r, eval=FALSE}
 ggplot(diamonds, aes(x=carat, y=price, color=cut)) + geom_point() + geom_smooth() +theme_bw() + labs(title="bw Theme")
