@@ -1,9 +1,9 @@
 ---
-title: Ggplot2 Cheatsheet
+title: Ggplot2 quickref
 layout: default
 ---
 
-# Ggplot2 Cheatsheet
+# Ggplot2 Quickref
 
 #### Basics tasks
 * [Basic plot setup](ggplot2-cheatsheet.html#Basic plot setup)
@@ -15,12 +15,14 @@ layout: default
 * [Change title, X and Y axis label size](ggplot2-cheatsheet.html#Change title, X and Y axis label size)
 * [Change title font, face, color, line height](ggplot2-cheatsheet.html#Change title font, face, color, line height)
 * [Adjust X and Y axis limits](ggplot2-cheatsheet.html#Adjust X and Y axis limits)
+* [Change X and Y axis labels](ggplot2-cheatsheet.html#Change X and Y axis labels)
 * [Flip X and Y axis](ggplot2-cheatsheet.html#Flip X and Y Axis)
 * [Rotate axis text](ggplot2-cheatsheet.html#Rotate axis text)
 
 #### Legend
 * [Hide legend](ggplot2-cheatsheet.html#Hide legend)
 * [Change legend position](ggplot2-cheatsheet.html#Change legend position)
+* [Change order of legend items](ggplot2-cheatsheet.html#Change order of legend items)
 * [Change legend title](ggplot2-cheatsheet.html#Change legend title)
 * [Change legend text](ggplot2-cheatsheet.html#Change legend text)
 * [Legend title and text size](ggplot2-cheatsheet.html#Legend title and text size)
@@ -41,13 +43,15 @@ layout: default
 * [Add horizontal / vertical line](ggplot2-cheatsheet.html#Add horizontal / vertical line)
 * [Add bar chart](ggplot2-cheatsheet.html#Add bar chart)
 * [Grouped bar chart](ggplot2-cheatsheet.html#Grouped bar chart)
-* [Distinct color for bars]((ggplot2-cheatsheet.html#Distinct color for bars)
+* [Distinct color for bars](ggplot2-cheatsheet.html#Distinct color for bars)
 * [Change color of bars](ggplot2-cheatsheet.html#Change color of bars)
 * [Change color palette](ggplot2-cheatsheet.html#Change color palette)
 * [Make line chart](ggplot2-cheatsheet.html#Make line chart)
 * [Add multiple lines](ggplot2-cheatsheet.html#Add multiple lines)
 * [Line chart from timeseries](ggplot2-cheatsheet.html#Line chart from timeseries)
 
+
+Not finding what you were looking for? [Let me know!](https://docs.google.com/forms/d/13GrkCFcNa-TOIllQghsz2SIEbc-YqY9eJX02B19l5Ow/viewform)
 
 ## Basic tasks
 
@@ -95,6 +99,11 @@ layout: default
     Method 3: Deletes the points outside limits
     gg1 + scale_x_continuous(limits=c(x1,x2)) + scale_y_continuous(limits=c(y1,y2))
     
+##### Change X and Y axis labels
+
+    gg1 + scale_x_discrete(labels=mylabels)  # if X is a factor
+    gg1 + scale_y_continuous(breaks=mybreaks)  # if Y is continuous
+
 ##### Flip X and Y Axis
 
     gg1 + coord_flip()
@@ -125,6 +134,11 @@ layout: default
     Method 2: Inside plot
     gg1 + theme(legend.justification=c(1,0), legend.position=c(1,0))
   
+##### Change order of legend items
+
+    df$newLegendColumn <- factor(df$legendcolumn, levels=c(my_order_of_legend_items), ordered = TRUE) 
+    Create a new factor variable used in the legend, ordered as you need. Then use this variable instead in the plot.
+
 ##### Legend title and text size
   
     gg1 + theme(legend.title = element_text(size=20), legend.text = element_text(size=15))

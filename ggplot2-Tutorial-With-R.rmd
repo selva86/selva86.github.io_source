@@ -4,7 +4,7 @@ layout: default
 ---
 # How to make any plot in ggplot2?
 
-> ggplot2 is the most elegant and aesthetically pleasing graphics framework available in R. It has a nicely planned structure to it. But the way you make plots in ggplot2 is very different from base graphics making the learning curve even steeper. So leave what you know about base graphics behind and follow along. You are just 5 steps away from cracking the ggplot puzzle.
+> ggplot2 is the most elegant and aesthetically pleasing graphics framework available in R. It has a nicely planned structure to it. This tutorial focusses on exposing this underlying structure you can use to make any ggplot. But, the way you make plots in ggplot2 is very different from base graphics making the learning curve steep. So leave what you know about base graphics behind and follow along. You are just 5 steps away from cracking the ggplot puzzle.
 
 ## Topics
 1. [The Setup](ggplot2-Tutorial-With-R.html#1. The Setup)
@@ -29,6 +29,8 @@ layout: default
 * [Annotation](ggplot2-Tutorial-With-R.html#6.12 Annotation)
 * [Saving ggplot](ggplot2-Tutorial-With-R.html#6.13 Saving ggplot)
 
+__Cheatsheets:__ Lookup code to accomplish common tasks from this [ggplot2 quickref](ggplot2-cheatsheet.html)
+and [this cheatsheet](http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf)
 
 The distinctive feature of the ggplot2 framework is the way you make plots through adding 'layers'. The process of making any ggplot is as follows.
 
