@@ -5,8 +5,6 @@ layout: default
 
 # Ggplot2 Quickref
 
-(Add Symbols list, Add more geoms)
-
 #### Basics tasks
 * [Basic plot setup](ggplot2-cheatsheet.html#Basic plot setup)
 * [Scatterplot](ggplot2-cheatsheet.html#Scatterplot)
@@ -53,6 +51,10 @@ layout: default
 * [Line chart](ggplot2-cheatsheet.html#Line chart)
 * [Line chart from timeseries](ggplot2-cheatsheet.html#Line chart from timeseries)
 * [Ribbons](ggplot2-cheatsheet.html#Ribbons)
+* [Area](ggplot2-cheatsheet.html#Area)
+* [Boxplot and Violin](ggplot2-cheatsheet.html#Boxplot and Violin)
+* [Density](ggplot2-cheatsheet.html#Density)
+* [Tiles](ggplot2-cheatsheet.html#Tiles)
 
 Not finding what you were looking for? [Let me know!](https://docs.google.com/forms/d/13GrkCFcNa-TOIllQghsz2SIEbc-YqY9eJX02B19l5Ow/viewform)
 
@@ -232,7 +234,7 @@ embed_png("screenshots/gg_cs_36.png", dpi = 220)
 
 #### Plot margin and background
 ```{r, eval=FALSE}
-gg3 + theme(plot.background=element_rect(fill="slateblue"), plot.margin = unit(c(2, 4, 1, 3), "cm")) # top, right, bottom, left
+gg3 + theme(plot.background=element_rect(fill="yellowgreen"), plot.margin = unit(c(2, 4, 1, 3), "cm")) # top, right, bottom, left
 ```
 
 ```{r, echo = FALSE}
@@ -343,12 +345,17 @@ Create a new factor variable used in the legend, ordered as you need. Then use t
 * `guides` - Change legend symbols
 
 ```{r, eval=FALSE}  
-gg3 + theme(legend.title = element_text(size=20, color = "firebrick"), legend.text = element_text(size=15), legend.key=element_rect(fill='steelblue')) + guides(colour = guide_legend(override.aes = list(size=2, shape=4, stroke=2)))
+gg3 + theme(legend.title = element_text(size=20, color = "firebrick"), legend.text = element_text(size=15), legend.key=element_rect(fill='steelblue')) + guides(colour = guide_legend(override.aes = list(size=2, shape=4, stroke=2)))  # legend title color and size, box color, symbol color, size and shape.
 ```
 
 ```{r, echo = FALSE}
-embed_png("screenshots/gg_cs_18.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+embed_png("screenshots/gg_cs_18.png", dpi = 220)  
 ```
+
+```{r, echo = FALSE}
+embed_png("screenshots/symbols.png", dpi = 220)  
+```
+
 
 ## Plot text and annotation
 
@@ -559,4 +566,71 @@ gg + geom_ribbon(aes(ymin=AirPassengers-20, ymax=AirPassengers+20)) + geom_ribbo
 
 ```{r, echo = FALSE}
 embed_png("screenshots/gg_cs_34.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+
+#### Area
+`geom_area` is similar to `geom_ribbon`, except that the `ymin` is set to 0. If you want to make overlapping area plot, use the `alpha` aesthetic to make the top layer translucent.
+```{r, eval=FALSE} 
+# Method1: Non-Overlapping Area
+df <- reshape2::melt(economics[, c("date", "psavert", "uempmed")], id="date")
+head(df, 3)
+#>         date variable value
+#> 1 1967-07-01  psavert  12.5
+#> 2 1967-08-01  psavert  12.5
+#> 3 1967-09-01  psavert  11.7
+p1 <- ggplot(df, aes(x=date)) + geom_area(aes(y=value, fill=variable)) + labs(title="Non-Overlapping - psavert and uempmed")
+
+# Method2: Overlapping Area
+p2 <- ggplot(economics, aes(x=date)) + geom_area(aes(y=psavert), fill="yellowgreen", color="yellowgreen") + geom_area(aes(y=uempmed), fill="dodgerblue", alpha=0.7, linetype="dotted") + labs(title="Overlapping - psavert and uempmed")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_35.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Boxplot and Violin
+The oulier points are controlled by the following aesthetics:
+* outlier.shape
+* outlier.stroke
+* outlier.size
+* outlier.colour
+
+If the `notch` is turned on (by setting it TRUE), the below boxplot is produced. Else, you would get the standard rectangular boxplots.
+
+```{r, eval=FALSE} 
+p1 <- ggplot(mtcars, aes(factor(cyl), mpg)) + geom_boxplot(aes(fill = factor(cyl)), width=0.5, outlier.colour = "dodgerblue", outlier.size = 4, outlier.shape = 16, outlier.stroke = 2, notch=T) + labs(title="Box plot")  # boxplot
+p2 <- ggplot(mtcars, aes(factor(cyl), mpg)) + geom_violin(aes(fill = factor(cyl)), width=0.5, trim=F) + labs(title="Violin plot (untrimmed)")  # violin plot
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_38.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Density
+
+```{r, eval=FALSE} 
+ggplot(mtcars, aes(mpg)) + geom_density(aes(fill = factor(cyl)), size=2) + labs(title="Density plot")  # Density plot
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_39.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Tiles
+```{r, eval=FALSE}
+corr <- round(cor(mtcars), 2)
+df <- reshape2::melt(corr)
+gg <- ggplot(df, aes(x=Var1, y=Var2, fill=value, label=value)) + geom_tile() + theme_bw() + geom_text(aes(label=value, size=value), color="white") + labs(title="mtcars - Correlogram") + theme(text=element_text(size=20), legend.position="none")
+
+library(RColorBrewer)
+p2 <- gg + scale_fill_distiller(palette="Reds")
+p3 <- gg + scale_fill_gradient2()
+gridExtra::grid.arrange(gg, p2, p3, ncol=3)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_40.png", dpi = 220)
 ```
