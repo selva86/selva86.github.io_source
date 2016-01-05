@@ -401,5 +401,4 @@ ggsave("myggplot.png")  # saves the last plot.
 ggsave("myggplot.png", plot=plot1)  # save a stored ggplot
 ```
 
-
 For a quicker reference, refer to this [ggplot2 cheatsheet](ggplot2-cheatsheet.html).

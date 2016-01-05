@@ -623,7 +623,7 @@ embed_png("screenshots/gg_cs_39.png", dpi = 220)  # legend title color and size,
 ```{r, eval=FALSE}
 corr <- round(cor(mtcars), 2)
 df <- reshape2::melt(corr)
-gg <- ggplot(df, aes(x=Var1, y=Var2, fill=value, label=value)) + geom_tile() + theme_bw() + geom_text(aes(label=value, size=value), color="white") + labs(title="mtcars - Correlogram") + theme(text=element_text(size=20), legend.position="none")
+gg <- ggplot(df, aes(x=Var1, y=Var2, fill=value, label=value)) + geom_tile() + theme_bw() + geom_text(aes(label=value, size=value), color="white") + labs(title="mtcars - Correlation plot") + theme(text=element_text(size=20), legend.position="none")
 
 library(RColorBrewer)
 p2 <- gg + scale_fill_distiller(palette="Reds")
