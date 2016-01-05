@@ -389,6 +389,9 @@ p1 <- gg1 + facet_grid(color ~ cut)  # arrange in a grid. More space for plots.
 ```
 
 #### Free X and Y axis scales
+
+By setting `scales='free'`, the scales of both X and Y axis is freed. Use `scales='free_x'` to free only X-axis and `scales='free_y'` to free only Y-axis.
+
 ```{r, eval=FALSE}  
 p2 <- gg1 + facet_wrap(color ~ cut, scales="free")  # free the x and y axis scales.
 ```
