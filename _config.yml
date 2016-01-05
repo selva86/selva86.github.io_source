@@ -14,3 +14,4 @@ markdown: redcarpet
 highlighter: pygments
 exclude: ["pandoc", "reviews", "CONTRIBUTING.md", "README.md", "book", "extras"]
 
+

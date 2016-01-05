@@ -1,6 +1,10 @@
 ---
 title: Loess Regression
 layout: default
+sitemap:
+    priority: 1
+    changefreq: 'monthly'
+    lastmod: 2015-10-29T12:49:30-05:00
 ---
 > Loess Regression is the most common method used to smoothen a volatile time series. It is a non-parametric methods where least squares regression is performed in localized subsets, which makes it a suitable candidate for smoothing any numerical vector.
 

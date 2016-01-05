@@ -1,6 +1,10 @@
 ---
 title: Time Series Analysis
 layout: default
+sitemap:
+    priority: 1
+    changefreq: 'monthly'
+    lastmod: 2015-10-29T12:49:30-05:00
 ---
 # Time Series Analysis
 
