@@ -64,14 +64,12 @@ See this [color palette](http://research.stowers-institute.org/efg/R/Color/Chart
 The layers in ggplot2 are also called '_geoms_'. Once the base setup is done, you can append the geoms one on top of the other. The [documentation](http://docs.ggplot2.org/current/) provides a compehensive list of all available _geoms_.
 
 ```{r, eval=FALSE}
-library(ggplot2)
 ggplot(diamonds, aes(x=carat, y=price, color=cut)) + geom_point() + geom_smooth() # Adding scatterplot geom (layer1) and smoothing geom (layer2).
 ```
 
 We have added two layers (geoms) to this plot - the `geom_point()` and `geom_smooth()`. Since the X axis Y axis and the color were defined in `ggplot()` setup itself, these two layers inherited those aesthetics. Alternatively, you can specify those aesthetics inside the geom layer also as shown below.
 
 ```{r, eval=FALSE}
-library(ggplot2)
 ggplot(diamonds) + geom_point(aes(x=carat, y=price, color=cut)) + geom_smooth(aes(x=carat, y=price, color=cut)) # Same as above but specifying the aesthetics inside the geoms.
 ```
 
