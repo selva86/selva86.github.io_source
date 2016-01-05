@@ -1,6 +1,10 @@
 ---
 title: ggplot2 Tutorial
 layout: default
+sitemap:
+    priority: 1
+    changefreq: 'monthly'
+    lastmod: 2015-10-29T12:49:30-05:00
 ---
 # How to make any plot in ggplot2?
 
@@ -398,6 +402,5 @@ plot1 <- ggplot(mtcars, aes(x=cyl)) + geom_bar()
 ggsave("myggplot.png")  # saves the last plot.
 ggsave("myggplot.png", plot=plot1)  # save a stored ggplot
 ```
-
 
 For a quicker reference, refer to this [ggplot2 cheatsheet](ggplot2-cheatsheet.html).

@@ -1,6 +1,10 @@
 ---
 title: Missing Value Treatment
 layout: default
+sitemap:
+    priority: 1
+    changefreq: 'monthly'
+    lastmod: 2015-12-29T12:49:30-05:00
 ---
 # Missing Value Treatment
 
@@ -106,7 +110,7 @@ regr.eval(actuals, predicteds)
 The mean absolute percentage error (mape) has improved by ~ 39% compared to the imputation by mean. Good.
 
 ## 4.2 rpart
-The limitation with `DMwR::knnImputation` is that it sometimes may not be appropriate to use when the missing value comes from a factor variable. Both `rpart` and `mice` has flexibility to handle that scenario.
+The limitation with `DMwR::knnImputation` is that it sometimes may not be appropriate to use when the missing value comes from a factor variable. Both `rpart` and `mice` has flexibility to handle that scenario. The advantage with `rpart` is that you just need only one of the variables to be non NA in the predictor fields.
 
 The idea here is we are going to use `rpart` to predict the missing values instead of `kNN`. To handle factor variable, we can set the `method=class` while calling `rpart()`. For numerics, we use, `method=anova`. Here again, we need to make sure not to train `rpart` on response variable (`medv`).
 
@@ -140,7 +144,7 @@ This yields a mis-classification error of 25%. Not bad for a factor variable!
 
 
 ## 4.3 mice
-`mice` short for [Multivariate Imputation by Chained Equations](www.jstatsoft.org/article/view/v045i03/v45i03.pdf) is an R package that provides advanced features for missing value treatment. It uses a slightly uncommon way of implementing the imputation in 2-steps, using `mice()` to build the model and `complete()` to generate the completed data. Lets see how to impute 'rad' and 'ptratio':
+`mice` short for [Multivariate Imputation by Chained Equations](www.jstatsoft.org/article/view/v045i03/v45i03.pdf) is an R package that provides advanced features for missing value treatment. It uses a slightly uncommon way of implementing the imputation in 2-steps, using `mice()` to build the model and `complete()` to generate the completed data. The `mice(df)` function produces multiple complete copies of `df`, each with different imputations of the missing data. The [`complete()`](http://www.inside-r.org/packages/cran/mice/docs/complete) function returns one or several of these data sets, with the default being the first. Lets see how to impute 'rad' and 'ptratio':
 
 ```{r, eval=FALSE}
 library(mice)

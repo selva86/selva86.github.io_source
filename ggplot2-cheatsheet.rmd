@@ -1,6 +1,10 @@
 ---
 title: Ggplot2 quickref
 layout: default
+sitemap:
+    priority: 1
+    changefreq: 'monthly'
+    lastmod: 2015-10-29T12:49:30-05:00
 ---
 
 # Ggplot2 Quickref
@@ -13,25 +17,28 @@ layout: default
 * [Add title, X and Y axis labels](ggplot2-cheatsheet.html#Add Title, X and Y axis labels)
 * [Change color of all text](ggplot2-cheatsheet.html#Change color of all text)
 * [Change title, X and Y axis label size](ggplot2-cheatsheet.html#Change title, X and Y axis label size)
-* [Change title font, face, color, line height](ggplot2-cheatsheet.html#Change title font, face, color, line height)
+* [Change title face, color, line height](ggplot2-cheatsheet.html#Change title face, color, line height)
+* [Change point color](ggplot2-cheatsheet.html#Change point color)
 * [Adjust X and Y axis limits](ggplot2-cheatsheet.html#Adjust X and Y axis limits)
 * [Change X and Y axis labels](ggplot2-cheatsheet.html#Change X and Y axis labels)
-* [Flip X and Y axis](ggplot2-cheatsheet.html#Flip X and Y Axis)
 * [Rotate axis text](ggplot2-cheatsheet.html#Rotate axis text)
+* [Flip X and Y axis](ggplot2-cheatsheet.html#Flip X and Y Axis)
+* [Grid lines and panel background](ggplot2-cheatsheet.html#Grid lines and panel background)
+* [Plot margin and background](ggplot2-cheatsheet.html#Plot margin and background)
+* [Colors](ggplot2-cheatsheet.html#Colors)
 
 #### Legend
 * [Hide legend](ggplot2-cheatsheet.html#Hide legend)
+* [Change legend title](ggplot2-cheatsheet.html#Change legend title)
+* [Change legend and point color](ggplot2-cheatsheet.html#Change legend and point color)
 * [Change legend position](ggplot2-cheatsheet.html#Change legend position)
 * [Change order of legend items](ggplot2-cheatsheet.html#Change order of legend items)
-* [Change legend title](ggplot2-cheatsheet.html#Change legend title)
-* [Change legend text](ggplot2-cheatsheet.html#Change legend text)
-* [Legend title and text size](ggplot2-cheatsheet.html#Legend title and text size)
-* [Legend box color](ggplot2-cheatsheet.html#Legend box color)
-* [Legend symbol size](ggplot2-cheatsheet.html#Legend symbol size)
+* [Change legend title, text, box, symbol](ggplot2-cheatsheet.html#Legend title, text, box, symbol)
 
 #### Plot text and annotation
-* [Annotation](ggplot2-cheatsheet.html#Annotation)
 * [Add text in chart](ggplot2-cheatsheet.html#Add text in chart)
+* [Annotation](ggplot2-cheatsheet.html#Annotation)
+
 
 #### Multiple plots
 * [Multiple chart panels](ggplot2-cheatsheet.html#Multiple chart panels)
@@ -42,199 +49,595 @@ layout: default
 * [Add smoothing line](ggplot2-cheatsheet.html#Add smoothing line)
 * [Add horizontal / vertical line](ggplot2-cheatsheet.html#Add horizontal / vertical line)
 * [Add bar chart](ggplot2-cheatsheet.html#Add bar chart)
-* [Grouped bar chart](ggplot2-cheatsheet.html#Grouped bar chart)
 * [Distinct color for bars](ggplot2-cheatsheet.html#Distinct color for bars)
-* [Change color of bars](ggplot2-cheatsheet.html#Change color of bars)
+* [Change color and width of bars](ggplot2-cheatsheet.html#Change color and width of bars)
 * [Change color palette](ggplot2-cheatsheet.html#Change color palette)
-* [Make line chart](ggplot2-cheatsheet.html#Make line chart)
-* [Add multiple lines](ggplot2-cheatsheet.html#Add multiple lines)
+* [Line chart](ggplot2-cheatsheet.html#Line chart)
 * [Line chart from timeseries](ggplot2-cheatsheet.html#Line chart from timeseries)
-
+* [Ribbons](ggplot2-cheatsheet.html#Ribbons)
+* [Area](ggplot2-cheatsheet.html#Area)
+* [Boxplot and Violin](ggplot2-cheatsheet.html#Boxplot and Violin)
+* [Density](ggplot2-cheatsheet.html#Density)
+* [Tiles](ggplot2-cheatsheet.html#Tiles)
 
 Not finding what you were looking for? [Let me know!](https://docs.google.com/forms/d/13GrkCFcNa-TOIllQghsz2SIEbc-YqY9eJX02B19l5Ow/viewform)
 
 ## Basic tasks
 
-##### Basic plot setup
-  
-	gg <- ggplot(df, aes(x=xcol, y=ycol)) 
-	`df` must be a dataframe that contains all information to make the ggplot. Plot will show up only after adding the geom layers.
+#### Basic plot setup
 
-##### Scatterplot
-  
-  	gg + geom_point()
+```{r, eval=FALSE}
+gg <- ggplot(df, aes(x=xcol, y=ycol)) 
+```
 
-##### Static - point size, shape, color and boundary thickness
-  
-    gg + geom_point(size=1, shape=1, color="steelblue", stroke=2)
+`df` must be a dataframe that contains all information to make the ggplot. Plot will show up only after adding the geom layers.
 
-##### Dynamic - point size, shape, color and boundary thickness
-  
-    gg + geom_point(aes(size=1, shape=1, color="steelblue", stroke=2))            
+#### Scatterplot
 
-##### Add Title, X and Y axis labels
-  
-    gg1 <- gg + geom_point() + labs(title="Plot Title", x="X-Axis", y="Y-Axis")
+```{r, eval=FALSE}
+library(ggplot2)
+gg <- ggplot(diamonds, aes(x=carat, y=price)) 
+gg + geom_point()
+```
 
-##### Change color of all text
-  
-    gg1 + theme(text=element_text(color="blue"))
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_1.png", dpi = 220)  
+```
 
-##### Change title, X and Y axis label size
-  
-    gg1 + theme(plot.title=element_text(size=25), axis.title.x=element_text(size=20), axis.title.y=element_text(size=20))
+#### Static - point size, shape, color and boundary thickness
 
-##### Change title font, face, color, line height
+```{r, eval=FALSE}  
+gg + geom_point(size=1, shape=1, color="steelblue", stroke=2)  # 'stroke' controls the thickness of point boundary
+```
 
-    gg1 + theme(plot.title=element_text(family="calibri", face="bold", color="steelblue", lineheight=1.5)
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_2.png", dpi = 220)  
+```
 
-##### Adjust X and Y axis limits
+#### Dynamic - point size, shape, color and boundary thickness
 
-    Method 1: Zoom in
-    gg1 + coord_cartesian(xlim=c(x1,x2), ylim=c(y1, y2))
+Make the aesthetics vary based on a variable in `df`.
+```{r, eval=FALSE}    
+gg + geom_point(aes(size=carat, shape=cut, color=color, stroke=carat))  # carat, cut and color are variables in `diamonds`       
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_3.png", dpi = 220)  
+```
+
+#### Add Title, X and Y axis labels
+
+```{r, eval=FALSE}    
+gg1 <- gg + geom_point(aes(color=color))
+gg2 <- gg1 + labs(title="Diamonds", x="Carat", y="Price")  # ggtitle("title") also changes the title.
+print(gg2)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_4.png", dpi = 220)  
+```
+
+#### Change color of all text
+
+```{r, eval=FALSE}  
+gg2 + theme(text=element_text(color="blue"))  # all text turns blue.
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_5.png", dpi = 220)  
+```
+
+#### Change title, X and Y axis label and text size
+
+`plot.title`: Controls plot title.
+`axis.title.x`: Controls X axis title
+`axis.title.y`: Controls Y axis title
+`axis.text.x`: Controls X axis text
+`axis.text.y`: Controls y axis text
+
+```{r, eval=FALSE}
+gg3 <- gg2 + theme(plot.title=element_text(size=25), axis.title.x=element_text(size=20), axis.title.y=element_text(size=20), axis.text.x=element_text(size=15), axis.text.y=element_text(size=15))
+print(gg3)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_6.png", dpi = 220)  
+```
+
+#### Change title face, color, line height
+
+```{r, eval=FALSE}
+gg3 + labs(title="Plot Title\nSecond Line of Plot Title") + theme(plot.title=element_text(face="bold", color="steelblue", lineheight=1.2))
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_7.png", dpi = 220)  
+```
+
+#### Change point color
+```{r, eval=FALSE}  
+gg3 + scale_colour_manual(name='Legend', values=c('D'='grey', 'E'='red', 'F'='blue', 'G'='yellow', 'H'='black', 'I'='green', 'J'='firebrick'))
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_8.png", dpi = 220)  
+```
+
+#### Adjust X and Y axis limits
+
+Method 1: Zoom in
+```{r, eval=FALSE}
+gg3 + coord_cartesian(xlim=c(0,3), ylim=c(0, 5000)) + geom_smooth()  # zoom in
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_9.png", dpi = 220)  
+```
+
+Method 2: Deletes the points outside limits
+```{r, eval=FALSE}
+gg3 + xlim(c(0,3)) + ylim(c(0, 5000)) + geom_smooth()  # deletes the points 
+#> Warning messages:
+#> 1: Removed 14714 rows containing non-finite values (stat_smooth). 
+#> 2: Removed 14714 rows containing missing values (geom_point). 
+```    
     
-    Method 2: Deletes the points outside limits
-    gg1 + xlim(c(x1,x2)) + ylim(c(y1,y2)))
-    
-    Method 3: Deletes the points outside limits
-    gg1 + scale_x_continuous(limits=c(x1,x2)) + scale_y_continuous(limits=c(y1,y2))
-    
-##### Change X and Y axis labels
+Method 3: Deletes the points outside limits
+```{r, eval=FALSE}
+gg3 + scale_x_continuous(limits=c(0,3)) + scale_y_continuous(limits=c(0, 5000)) + geom_smooth()  # deletes the points outside limits
+#> Warning message:
+#> Removed 14714 rows containing missing values (geom_point). 
+```
 
-    gg1 + scale_x_discrete(labels=mylabels)  # if X is a factor
-    gg1 + scale_y_continuous(breaks=mybreaks)  # if Y is continuous
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_11.png", dpi = 220)  
+```
 
-##### Flip X and Y Axis
+Notice the change in smoothing line because of deleted points. This could sometimes be misleading in your analysis.
 
-    gg1 + coord_flip()
+#### Change X and Y axis labels
+```{r, eval=FALSE}
+gg3 + scale_x_continuous(labels=c("zero", "one", "two", "three", "four", "five")) + scale_y_continuous(breaks=seq(0, 20000, 4000))  # if Y is continuous, if X is a factor
+```
 
-##### Rotate axis text
+Use `scale_x_discrete` instead, if X variable is a factor.
 
-    gg1 + theme(axis.text.x=element_text(angle=45), axis.text.y=element_text(angle=45))
-  
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_12.png", dpi = 220)  
+```
+
+#### Rotate axis text
+
+```{r, eval=FALSE}
+gg3 + theme(axis.text.x=element_text(angle=45), axis.text.y=element_text(angle=45))
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_13.png", dpi = 220)  
+```
+
+#### Flip X and Y Axis
+```{r, eval=FALSE}
+gg3 + coord_flip()  # flips X and Y axis.
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_14.png", dpi = 220)  
+```
+
+#### Grid lines and panel background
+```{r, eval=FALSE}
+gg3 + theme(panel.background = element_rect(fill = 'springgreen'),
+  panel.grid.major = element_line(colour = "firebrick", size=3),
+  panel.grid.minor = element_line(colour = "blue", size=1))
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_36.png", dpi = 220)  
+```
+
+#### Plot margin and background
+```{r, eval=FALSE}
+gg3 + theme(plot.background=element_rect(fill="yellowgreen"), plot.margin = unit(c(2, 4, 1, 3), "cm")) # top, right, bottom, left
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_37.png", dpi = 220)  
+```
+
+#### Colors
+
+The whole list of colors are displayed at your R console in the `color()` function. Here are few of my suggestions for nice looking colors and backgrounds:
+
+* steelblue  (points and lines)
+* firebrick (point and lines)
+* springgreen (fills)
+* violetred (fills)
+* tomato (fills)
+* skyblue (bg)
+* sienna (points, lines)
+* slateblue (fills)
+* seagreen (points, lines, fills)
+* sandybrown (fills)
+* salmon (fills)
+* saddlebrown (lines)
+* royalblue (fills)
+* orangered (point, lines, fills)
+* olivedrab (points, lines, fills)
+* midnightblue (lines)
+* mediumvioletred (points, lines, fills)
+* maroon (points, lines, fills)
+* limegreen (fills)
+* lawngreen (fills)
+* forestgreen (lines, fills)
+* dodgerblue (fills, bg)
+* dimgray (grids, secondary bg)
+* deeppink (fills)
+* darkred (lines, points)
+
+If you are looking for consistent colors, the `RColorBrewer` package has predefined [color palettes](http://127.0.0.1:4000/ggplot2-cheatsheet.html#Change%20color%20palette)
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_sp37.png", dpi = 220)  
+```
+
+```{r, eval=FALSE, echo=FALSE}
+colors <- c("whitesmoke", "steelblue", "firebrick", "springgreen", "violetred", "tomato", "thistle", "skyblue", 
+            "sienna", "slateblue", "seashell", "seagreen", "sandybrown", "salmon", "saddlebrown", "royalblue", "rosybrown", "powderblue", "plum", "palegoldenrod", "orangered", "olivedrab", "navyblue",
+            "navajowhite", "midnightblue", "mediumvioletred", "maroon", "limegreen", "lightgoldenrod",
+            "lawngreen", "forestgreen", "dodgerblue", "dimgray", "deeppink", "darkred", "darkkhaki", "azure")
+df <- data.frame(num=rep(10, 37), cols=factor(colors, ordered=T))
+gg_bar <- ggplot(df, aes(x=cols, y=num)) + geom_bar(stat = "identity", width = 0.5, fill=df$cols) + theme_bw() + theme(axis.text.x=element_text(angle=65, size=15), plot.title=element_text(size=30)) + scale_x_discrete(labels=df$cols) + labs(title="Special 37 Colors", x="", y="")
+print(gg_bar)
+```
+
 ## Legend
 
-##### Hide legend
-  
-    gg1 + theme(legend.postion="none")
+#### Hide legend
+```{r, eval=FALSE}  
+gg3 + theme(legend.position="none")  # hides the legend
+```
 
-##### Change legend title
-  
-    gg1 + scale_color_discrete(name="Cut of diamonds")
+#### Change legend title
+```{r, eval=FALSE}  
+gg3 + scale_color_discrete(name="")  # Remove legend title (method1)
+p1 <- gg3 + theme(legend.title=element_blank())  # Remove legend title (method)
+p2 <- gg3 + scale_color_discrete(name="Diamonds")  # Change legend title
+library(gridExtra)
+grid.arrange(p1, p2, ncol=2)  # arrange
+```
 
-##### Change legend text
-  
-    scale_colour_manual(name='', values=c('Important line'='grey', 'Point values'='red'))
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_15.png", dpi = 220)  
+```
 
-##### Change legend position
-  
-    Method 1: Outside plot
-    gg1 + theme(legend.postion="top")  # top / bottom / left / right
-    
-    Method 2: Inside plot
-    gg1 + theme(legend.justification=c(1,0), legend.position=c(1,0))
-  
-##### Change order of legend items
+#### Change legend and point color
+```{r, eval=FALSE}  
+gg3 + scale_colour_manual(name='Legend', values=c('D'='grey', 'E'='red', 'F'='blue', 'G'='yellow', 'H'='black', 'I'='green', 'J'='firebrick'))
+```
 
-    df$newLegendColumn <- factor(df$legendcolumn, levels=c(my_order_of_legend_items), ordered = TRUE) 
-    Create a new factor variable used in the legend, ordered as you need. Then use this variable instead in the plot.
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_16.png", dpi = 220)  
+```
 
-##### Legend title and text size
-  
-    gg1 + theme(legend.title = element_text(size=20), legend.text = element_text(size=15))
-  
-##### Legend box color
-  
-    gg1 + theme(legend.key=element_rect(fill='steelblue'))
-    
-##### Legend symbol size
-    
-    gg1 + guides(colour = guide_legend(override.aes = list(size=4)))
+#### Change legend position
+__Outside plot__
+```{r, eval=FALSE}
+p1 <- gg3 + theme(legend.position="top")  # top / bottom / left / right
+```    
+
+__Inside plot__
+```{r, eval=FALSE}
+p2 <- gg3 + theme(legend.justification=c(1,0), legend.position=c(1,0))  # legend justification is the anchor point on the legend, considering the bottom left of legend as (0,0)
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_17.png", dpi = 220)  
+```
+
+#### Change order of legend items
+```{r, eval=FALSE}
+df$newLegendColumn <- factor(df$legendcolumn, levels=c(new_order_of_legend_items), ordered = TRUE) 
+```
+Create a new factor variable used in the legend, ordered as you need. Then use this variable instead in the plot.
+
+#### Legend title, text, box, symbol
+* `legend.title` - Change legend title
+* `legend.text` - Change legend text
+* `legend.key` - Change legend box
+* `guides` - Change legend symbols
+
+```{r, eval=FALSE}  
+gg3 + theme(legend.title = element_text(size=20, color = "firebrick"), legend.text = element_text(size=15), legend.key=element_rect(fill='steelblue')) + guides(colour = guide_legend(override.aes = list(size=2, shape=4, stroke=2)))  # legend title color and size, box color, symbol color, size and shape.
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_18.png", dpi = 220)  
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/symbols.png", dpi = 220)  
+```
+
 
 ## Plot text and annotation
 
-##### Annotation
-  
-    gg1 + geom_text(aes(xcol, ycol, label=round(labelCol), size=3)
-  
-##### Add text in chart
-  
-    gg1 + annotate("mytext", x=xpos, y=ypos, label="My text")
+#### Add text in chart
+```{r, eval=FALSE}  
+#> Not Run: gg + geom_text(aes(xcol, ycol, label=round(labelCol), size=3))  # general format
+gg + geom_text(aes(label=color, color=color), size=4) 
+```
 
-    library(grid)
-    my_grob = grobTree(textGrob("My Custom Text", x=0.1, y=0.9, gp=gpar(col="firebrick", fontsize=25, fontface="bold")))
-    GG1 + annotation_custom(my_grob)
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_19.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
 
+#### Annotation
+```{r, eval=FALSE}  
+#> gg3 + annotate("mytext", x=xpos, y=ypos, label="My text")  # Not run: General Format
+library(grid)
+my_grob = grobTree(textGrob("My Custom Text", x=0.8, y=0.2, gp=gpar(col="firebrick", fontsize=25, fontface="bold")))
+gg3 + annotation_custom(my_grob)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_20.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
 
 ## Multiple plots
 
-##### Multiple chart panels
-  
-    gg1 + facet_wrap(rowVariable ~ columnVariable, ncol=2)  # multiple plots 
-    gg1 + facet_grid(rowVariable ~ columnVariable)  # arrange in a grid. More space for plots.
-  
-##### Free X and Y axis scales
-  
-    gg1 + facet_wrap(rowVariable ~ columnVariable, ncol=2, scales="free")  # free the x and y axis scales.
-  
-##### Arrange multiple plots
-    
-    library(gridExtra)
-    grid.arrange(gg1, gg2, gg3, ncol=2)
+#### Multiple chart panels
+```{r, eval=FALSE}  
+p1 <- gg1 + facet_grid(color ~ cut)  # arrange in a grid. More space for plots.
+```
 
+#### Free X and Y axis scales
+
+By setting `scales='free'`, the scales of both X and Y axis is freed. Use `scales='free_x'` to free only X-axis and `scales='free_y'` to free only Y-axis.
+
+```{r, eval=FALSE}  
+p2 <- gg1 + facet_wrap(color ~ cut, scales="free")  # free the x and y axis scales.
+```
+
+#### Arrange multiple plots
+```{r, eval=FALSE}    
+library(gridExtra)
+grid.arrange(p1, p2, ncol=2)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_21.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
 
 ## Geom layers
 
-##### Add smoothing line
-  
-    gg + geom_smooth(method="lm")  # method could be - 'lm', 'loess', 'gam'
-  
-##### Add horizontal / vertical line
+#### Add smoothing line
+```{r, eval=FALSE}
+gg3 + geom_smooth(aes(color=color))  # method could be - 'lm', 'loess', 'gam'
+```
 
-    gg + geom_hline(yintercept=10)
-    gg + geom_vline(xintercept=10)
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_22.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
 
-##### Add bar chart
-    gg <- ggplot(df, aes(x=xcol))
-    gg1 <- ggplot(df, aes(x=xcol, y=ycol))  
-    gg + geom_bar()  # frequency table
-    gg1 + geom_bar(stat="identity")  # static bar chart
-    
-##### Grouped bar chart 
+#### Add horizontal / vertical line
+```{r, eval=FALSE}
+p1 <- gg3 + geom_hline(yintercept=5000, size=2, linetype="dotted", color="blue") # linetypes: solid, dashed, dotted, dotdash, longdash and twodash
+p2 <- gg3 + geom_vline(xintercept=4, size=2, color="firebrick")
+p3 <- gg3 + geom_segment(aes(x=4, y=5000, xend=4, yend=10000, size=2, lineend="round"))
+p4 <- gg3 + geom_segment(aes(x=carat, y=price, xend=carat, yend=price-500, color=color), size=2) + coord_cartesian(xlim=c(3, 5))  # x, y: start points. xend, yend: end points
+gridExtra::grid.arrange(p1,p2,p3,p4, ncol=2)
+```
 
-    gg1 + geom_bar(stat="identity", position="dodge", fill=groupcol)  # without 'dodge', bars will be stacked.
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_23.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
 
-##### Distinct color for bars
-    
-    gg1 + geom_bar(stat="identity", aes(fill=colorVariable))
+#### Add bar chart
+```{r, eval=FALSE}
+# Frequency bar chart: Specify only X axis.
+gg <- ggplot(mtcars, aes(x=cyl))
+gg + geom_bar()  # frequency table
+```
 
-##### Change color of bars
-    
-    gg1 + geom_bar(stat="identity") + scale_fill_manual(values=c("color1", "color2", "color3"))
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_24.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
 
-##### Change color palette
-    
-    library(RColorBrewer)
-    display.brewer.all(n=20, exact.n=FALSE)  # display available color palettes
-    ggplot(mtcars, aes(x=cyl, y=carb, fill=factor(cyl))) + geom_bar(stat="identity") + scale_fill_brewer(palette="Reds")  # "Reds" is palette name
+```{r, eval=FALSE}
+gg <- ggplot(mtcars, aes(x=cyl))
+p1 <- gg + geom_bar(position="dodge", aes(fill=factor(vs)))  # side-by-side
+p2 <- gg + geom_bar(aes(fill=factor(vs)))  # stacked
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
 
-##### Make line chart
-  
-    gg + geom_line(linetype='dotted', size=1, color="firebrick")  # linetypes: solid, dashed, dotted, dotdash, longdash and twodash
-    gg + geom_line(linetype='dotted', aes(size=sizeVar, color=colorVar))  # dynamic size and color.
-  
-##### Add multiple lines
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_25.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
 
-    Method 1:
-    gg + geom_line(aes(x=date, y=yVar, color=colorVar)) + geom_line(aes(x=date, y=yVar2, col=colorVar2)) + scale_color_discrete(name="Legend") 
-    
-    Method 2:
-    library(reshape2)
-    df <- melt(economics[, c("date", "pce", "unemploy")], id="date")
-    ggplot(df) + geom_line(aes(x=date, y=value, color=variable)) + labs(title="Economics")# plot multiple time series by melting
+```{r, eval=FALSE}
+# Absolute bar chart: Specify both X adn Y axis. Set stat="identity"
+df <- aggregate(mtcars$mpg, by=list(mtcars$cyl), FUN=mean)  # mean of mpg for every 'cyl'
+names(df) <- c("cyl", "mpg")
+head(df)
+#>   cyl    mpg
+#> 1   4  26.66
+#> 2   6  19.74
+#> 3   8  15.10
 
-##### Line chart from timeseries
-  
-    library(ggfortify)
-    autoplot(tsobject)
+gg_bar <- ggplot(df, aes(x=cyl, y=mpg)) + geom_bar(stat = "identity")  # Y axis is explicit. 'stat=identity'
+print(gg_bar)
+```
 
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_26.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Distinct color for bars
+```{r, eval=FALSE}    
+gg_bar <- ggplot(df, aes(x=cyl, y=mpg)) + geom_bar(stat = "identity", aes(fill=cyl))
+print(gg_bar)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_27.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Change color and width of bars
+```{r, eval=FALSE}    
+df$cyl <- as.factor(df$cyl)
+gg_bar <- ggplot(df, aes(x=cyl, y=mpg)) + geom_bar(stat = "identity", aes(fill=cyl), width = 0.25)
+gg_bar + scale_fill_manual(values=c("4"="steelblue", "6"="firebrick", "8"="darkgreen"))
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_28.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Change color palette
+```{r, eval=FALSE}    
+library(RColorBrewer)
+display.brewer.all(n=20, exact.n=FALSE)  # display available color palettes
+ggplot(mtcars, aes(x=cyl, y=carb, fill=factor(cyl))) + geom_bar(stat="identity") + scale_fill_brewer(palette="Reds")  # "Reds" is palette name
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_29.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Line chart
+```{r, eval=FALSE}  
+# Method 1:
+gg <- ggplot(economics, aes(x=date))  # setup
+gg + geom_line(aes(y=psavert), size=2, color="firebrick") + geom_line(aes(y=uempmed), size=1, color="steelblue", linetype="twodash")  # No legend
+# available linetypes: solid, dashed, dotted, dotdash, longdash and twodash
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_30.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+```{r, eval=FALSE}  
+# Method 2:
+library(reshape2)
+df_melt <- melt(economics[, c("date", "psavert", "uempmed")], id="date")  # melt by date. 
+gg <- ggplot(df_melt, aes(x=date))  # setup
+gg + geom_line(aes(y=value, color=variable), size=1) + scale_color_discrete(name="Legend")  # gets legend.
+```  
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_31.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Line chart from timeseries
+```{r, eval=FALSE}
+# One step method.
+library(ggfortify)
+autoplot(AirPassengers, size=2) + labs(title="AirPassengers")
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_32.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Ribbons
+Filled time series can be plotted using `geom_ribbon()`. It takes two compulsory arguments `ymin` and `ymax`.
+```{r, eval=FALSE} 
+# Prepare the dataframe
+st_year <- start(AirPassengers)[1]
+st_month <- "01"
+st_date <- as.Date(paste(st_year, st_month, "01", sep="-"))
+dates <- seq.Date(st_date, length=length(AirPassengers), by="month")
+df <- data.frame(dates, AirPassengers, AirPassengers/2)
+head(df)
+#>        dates AirPassengers AirPassengers.2
+#> 1 1949-01-01           112            56.0
+#> 2 1949-02-01           118            59.0
+#> 3 1949-03-01           132            66.0
+#> 4 1949-04-01           129            64.5
+#> 5 1949-05-01           121            60.5
+#> 6 1949-06-01           135            67.5
+# Plot ribbon with ymin=0
+gg <- ggplot(df, aes(x=dates)) + labs(title="AirPassengers") + theme(plot.title=element_text(size=30), axis.title.x=element_text(size=20), axis.text.x=element_text(size=15))
+gg + geom_ribbon(aes(ymin=0, ymax=AirPassengers)) + geom_ribbon(aes(ymin=0, ymax=AirPassengers.2), fill="green")
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_33.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+```{r, eval=FALSE} 
+gg + geom_ribbon(aes(ymin=AirPassengers-20, ymax=AirPassengers+20)) + geom_ribbon(aes(ymin=AirPassengers.2-20, ymax=AirPassengers.2+20), fill="green")
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_34.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+
+#### Area
+`geom_area` is similar to `geom_ribbon`, except that the `ymin` is set to 0. If you want to make overlapping area plot, use the `alpha` aesthetic to make the top layer translucent.
+```{r, eval=FALSE} 
+# Method1: Non-Overlapping Area
+df <- reshape2::melt(economics[, c("date", "psavert", "uempmed")], id="date")
+head(df, 3)
+#>         date variable value
+#> 1 1967-07-01  psavert  12.5
+#> 2 1967-08-01  psavert  12.5
+#> 3 1967-09-01  psavert  11.7
+p1 <- ggplot(df, aes(x=date)) + geom_area(aes(y=value, fill=variable)) + labs(title="Non-Overlapping - psavert and uempmed")
+
+# Method2: Overlapping Area
+p2 <- ggplot(economics, aes(x=date)) + geom_area(aes(y=psavert), fill="yellowgreen", color="yellowgreen") + geom_area(aes(y=uempmed), fill="dodgerblue", alpha=0.7, linetype="dotted") + labs(title="Overlapping - psavert and uempmed")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_35.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Boxplot and Violin
+The oulier points are controlled by the following aesthetics:
+* outlier.shape
+* outlier.stroke
+* outlier.size
+* outlier.colour
+
+If the `notch` is turned on (by setting it TRUE), the below boxplot is produced. Else, you would get the standard rectangular boxplots.
+
+```{r, eval=FALSE} 
+p1 <- ggplot(mtcars, aes(factor(cyl), mpg)) + geom_boxplot(aes(fill = factor(cyl)), width=0.5, outlier.colour = "dodgerblue", outlier.size = 4, outlier.shape = 16, outlier.stroke = 2, notch=T) + labs(title="Box plot")  # boxplot
+p2 <- ggplot(mtcars, aes(factor(cyl), mpg)) + geom_violin(aes(fill = factor(cyl)), width=0.5, trim=F) + labs(title="Violin plot (untrimmed)")  # violin plot
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_38.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Density
+
+```{r, eval=FALSE} 
+ggplot(mtcars, aes(mpg)) + geom_density(aes(fill = factor(cyl)), size=2) + labs(title="Density plot")  # Density plot
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_39.png", dpi = 220)  # legend title color and size, box color, symbol color, size and shape.
+```
+
+#### Tiles
+```{r, eval=FALSE}
+corr <- round(cor(mtcars), 2)
+df <- reshape2::melt(corr)
+gg <- ggplot(df, aes(x=Var1, y=Var2, fill=value, label=value)) + geom_tile() + theme_bw() + geom_text(aes(label=value, size=value), color="white") + labs(title="mtcars - Correlation plot") + theme(text=element_text(size=20), legend.position="none")
+
+library(RColorBrewer)
+p2 <- gg + scale_fill_distiller(palette="Reds")
+p3 <- gg + scale_fill_gradient2()
+gridExtra::grid.arrange(gg, p2, p3, ncol=3)
+```
+
+```{r, echo = FALSE}
+embed_png("screenshots/gg_cs_40.png", dpi = 220)
+```

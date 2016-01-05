@@ -15,6 +15,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
   %\SweaveUTF8
   %\VignetteIndexEntry{Information Value: Usage Examples}
+sitemap:
+  priority: 1
+  changefreq: 'monthly'
+  lastmod: 2015-10-29T12:49:30-05:00
 ---
 
 # InformationValue

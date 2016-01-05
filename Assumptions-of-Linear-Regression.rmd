@@ -1,6 +1,10 @@
 ---
 title: Assumptions of Linear Regression
 layout: default
+sitemap:
+    priority: 1
+    changefreq: 'monthly'
+    lastmod: 2015-10-29T12:49:30-05:00
 ---
 # Assumptions of Linear Regression
 
@@ -18,16 +22,11 @@ $$Y = a + \left( \beta1 * X1 \right) + \left( \beta2 * X2^2 \right)$$
 
 Though, the `X2` is raised to power 2, the equation is still linear in beta parameters. So the assumption is satisfied in this case.
 
-An example of _linear in variables_ but _non-linear in parameters_. This will violate the assumption.
-$$Y = a + \left( \beta1 * X1 \right) + \left( \beta2^2 * X2 \right)$$
-
-Here, the beta parameter is raised to power 2, which is not linear. So the assumption is violated by this equation.
-
-##Assumption 2
->####_The mean of errors is zero_
+## Assumption 2
+>####_The mean of residuals is zero_
 
 ####How to check?
-Check the mean of the residuals. If it approximately zero, then this assumption is held true for that model.
+Check the mean of the residuals. If it zero (or very close), then this assumption is held true for that model. This is default unless you explicitly make amends, such as setting the intercept term to zero.
 
 ```{r, eval=FALSE}
 mod <- lm(dist ~ speed, data=cars)
@@ -36,12 +35,12 @@ mean(mod$residuals)
 ```
 Since the mean of residuals is approximately zero, this assumption holds true for this model.
 
-##Assumption 3
->####_Homoscedasticity of errors or equal variance_
+## Assumption 3
+>#### _Homoscedasticity of residuals or equal variance_
 
-####How to check?
+#### How to check?
 
-Once the regression model is built, set `par(mfrow=c(2, 2))`, then, plot the model using `plot(lm.mod)`. This produces four plots. The _top-left_ and _bottom-left_ plots shows how the _errors_ vary as the _fitted_ values increase.
+Once the regression model is built, set `par(mfrow=c(2, 2))`, then, plot the model using `plot(lm.mod)`. This produces four plots. The _top-left_ and _bottom-left_ plots shows how the _residuals_ vary as the _fitted_ values increase.
 
 ```{r, eval=FALSE}
 par(mfrow=c(2,2))  # set 2 rows and 2 column plot layout
@@ -53,7 +52,7 @@ plot(mod_1)
 embed_png("screenshots/regression-plot-mtcars.png", dpi = 220)
 ```
 
-From the first plot (top-left), as the fitted values along x increase, the residuals decrease and then increase. This pattern is indicated by the red line, which should be approximately flat if the errors are homoscedastic. The plot on the bottom left also checks this, and is more convenient as the error term in Y axis is standardized. 
+From the first plot (top-left), as the fitted values along x increase, the residuals decrease and then increase. This pattern is indicated by the red line, which should be approximately flat if the disturbances are homoscedastic. The plot on the bottom left also checks this, and is more convenient as the disturbance term in Y axis is standardized. 
 
 In this case, there is a definite pattern noticed. So, there is heteroscedasticity. Lets check this on a different model. 
 
@@ -68,12 +67,12 @@ embed_png("screenshots/regression-plot-cars-20rows.png", dpi = 220)
 
 Now, the points appear random and the line looks pretty flat, with no increasing or decreasing trend. So, the condition of homoscedasticity can be accepted.
 
-##Assumption 4
->####_No autocorrelation of errors_
-This is applicable especially for time series data. Autocorrelation is the correlation of a time Series with lags of itself. When the error is autocorrelated, it means that the current value is dependent of the previous (historic) values and that there is a definite unexplained pattern in the Y variable that shows up in the error term.
+## Assumption 4
+>#### _No autocorrelation of residuals_
+This is applicable especially for time series data. Autocorrelation is the correlation of a time Series with lags of itself. When the residuals are autocorrelated, it means that the current value is dependent of the previous (historic) values and that there is a definite unexplained pattern in the Y variable that shows up in the disturbances.
 
 ####How to check for autocorrelation?
-Below, are 3 ways you could check for autocorrelation of errors.
+Below, are 3 ways you could check for autocorrelation of residuals.
 
 ##### Using acf plot
 ```{r, eval=FALSE}
@@ -89,7 +88,7 @@ embed_png("screenshots/acf-plot.png", dpi = 220)
 
 The X axis corresponds to the lags of the residual, increasing in steps of 1. The very first line (to the left) shows the correlation of residual with itself (Lag0), therefore, it will always be equal to 1.
 
-If the errors were not autocorrelated, the correlation (Y-axis) from the immediate next line onwards will drop to a near zero value below the dashed blue line (significance level). Clearly, this is not the case here. So we can conclude that the residuals are autocorrelated.
+If the residuals were not autocorrelated, the correlation (Y-axis) from the immediate next line onwards will drop to a near zero value below the dashed blue line (significance level). Clearly, this is not the case here. So we can conclude that the residuals are autocorrelated.
 
 ##### Using runs test
 ```{r, eval=FALSE}
@@ -127,7 +126,7 @@ econ_data_2 <- na.omit(econ_data_1)
 lmMod2 <- lm(pce ~ pop + lag1, data=econ_data_2)
 ```
 
-Lets check if the problem of autocorrelation of error is taken care of using this method.
+Lets check if the problem of autocorrelation of residuals is taken care of using this method.
 
 **Check 1**
 ```{r, eval=FALSE}
@@ -162,12 +161,12 @@ lmtest::dwtest(lmMod2)
 #=> alternative hypothesis: true autocorrelation is greater than 0
 ```        
 
-With a high p value of 0.667, we cannot reject the null hypothesis that true autocorrelation is zero. So the assumption that errors should not be autocorrelated is satisfied by this model.
+With a high p value of 0.667, we cannot reject the null hypothesis that true autocorrelation is zero. So the assumption that residuals should not be autocorrelated is satisfied by this model.
 
-If, even after adding lag1 as an X variable, does not satisfy the assumption of autocorrelation of errors, you might want to try adding lag2, or be creative in making meaningful derived explanatory variables or interaction terms. This is more like art than an algorithm.
+If, even after adding lag1 as an X variable, does not satisfy the assumption of autocorrelation of residuals, you might want to try adding lag2, or be creative in making meaningful derived explanatory variables or interaction terms. This is more like art than an algorithm.
 
 ##Assumption 5
->####_The X variables and Errors are uncorrelated_
+>####_The X variables and residuals are uncorrelated_
           
 #### How to check?
 Do a correlation test on the X variable and the residuals.
@@ -214,12 +213,12 @@ This means that if the Y and X variable has an inverse relationship, the model e
 
 $$Y = \beta1 + \beta2 * \left( 1 \over X \right)$$
 
-##Assumption 9
+## Assumption 9
 >####_No perfect multicollinearity_
 
 There is no perfect linear relationship between explanatory variables.
           
-####How to check? 
+#### How to check? 
 Using Variance Inflation factor (VIF). But, What is VIF? 
 
 VIF is a metric computed for every $X$ variable that goes into a linear model. If the VIF of a variable is high, it means the information in that variable is already explained by other $X$ variables present in the given model, which means, more redundant is that variable. So, lower the VIF (<2) the better. VIF for a $X$ var is calculated as: 
@@ -268,9 +267,9 @@ The convention is, the VIF should not go more than 4 for any of the X variables.
 That means we are not letting the $R_{Sq}$ of any of the $Xs$ (the model that was built with that X as a response variable and the remaining $Xs$ are predictors) to go more than 75%. => 1/(1-0.75) => 1/0.25 => 4.
             
 ## Assumption 10
->####_Normality of Errors_
+>####_Normality of residuals_
 
-The residuals should be normally distributed. This also implies the $Y$ and the $Xs$ are also normally distributed. It is an essential assumption if the maximum likelihood method is used to commute the estimates. 
+The residuals should be normally distributed. If the maximum likelihood method (not OLS) is used to compute the estimates, this also implies the $Y$ and the $Xs$ are also normally distributed. 
 
 This can be visually checked using the `qqnorm()` plot (top right plot).
 

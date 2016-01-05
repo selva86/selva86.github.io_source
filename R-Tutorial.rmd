@@ -1,6 +1,10 @@
 ---
 title: R Tutorial
 layout: default
+sitemap:
+    priority: 1
+    changefreq: 'monthly'
+    lastmod: 2015-10-29T12:49:30-05:00
 ---
 > This is a beginner, non-programmer friendly guide to learn and understand the R language from scratch, giving a brief walk through of the most important parts of the language in plain English, intended to get you on board fairly quick.
 
