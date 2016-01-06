@@ -144,7 +144,7 @@ This yields a mis-classification error of 25%. Not bad for a factor variable!
 
 
 ## 4.3 mice
-`mice` short for [Multivariate Imputation by Chained Equations](www.jstatsoft.org/article/view/v045i03/v45i03.pdf) is an R package that provides advanced features for missing value treatment. It uses a slightly uncommon way of implementing the imputation in 2-steps, using `mice()` to build the model and `complete()` to generate the completed data. The `mice(df)` function produces multiple complete copies of `df`, each with different imputations of the missing data. The [`complete()`](http://www.inside-r.org/packages/cran/mice/docs/complete) function returns one or several of these data sets, with the default being the first. Lets see how to impute 'rad' and 'ptratio':
+`mice` short for [Multivariate Imputation by Chained Equations](http://www.jstatsoft.org/article/view/v045i03/v45i03.pdf) is an R package that provides advanced features for missing value treatment. It uses a slightly uncommon way of implementing the imputation in 2-steps, using `mice()` to build the model and `complete()` to generate the completed data. The `mice(df)` function produces multiple complete copies of `df`, each with different imputations of the missing data. The [`complete()`](http://www.inside-r.org/packages/cran/mice/docs/complete) function returns one or several of these data sets, with the default being the first. Lets see how to impute 'rad' and 'ptratio':
 
 ```{r, eval=FALSE}
 library(mice)
@@ -172,6 +172,8 @@ mean(actuals != predicteds)  # compute misclass error.
 #> 0.15
 ```
 
-The mis-classification error reduced to 15%, which is 6 out of 40 observations. This is a good improvement compared to rpart's 25%.
+The mis-classification error reduced to 15%, which is 6 out of 40 observations. This is a good improvement compared to rpart's 25%. 
+
+If you'd like to dig in deeper, here is the [manual](http://www.stefvanbuuren.nl/publications/MICE%20V1.0%20Manual%20TNO00038%202000.pdf).
 
 Though we have an idea of how each method performs, there is not enough evidence to conclude which method is better or worse. But these are definitely worth testing out the next time you impute missing values.
