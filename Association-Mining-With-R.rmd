@@ -1,5 +1,5 @@
 ---
-title: Association Mining
+title: Association Mining With R | arules
 layout: default
 sitemap:
     priority: 1

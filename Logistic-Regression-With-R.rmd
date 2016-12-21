@@ -1,5 +1,5 @@
 ---
-title: Logistic Regression
+title: Logistic Regression With R
 layout: default
 sitemap:
     priority: 1

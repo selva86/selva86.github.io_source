@@ -1,5 +1,5 @@
 ---
-title: Feature Selection
+title: Feature Selection With R | Boruta
 layout: default
 sitemap:
     priority: 1

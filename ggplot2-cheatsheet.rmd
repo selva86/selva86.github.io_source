@@ -1,5 +1,5 @@
 ---
-title: Ggplot2 quickref
+title: Ggplot2 Quick Reference
 layout: default
 sitemap:
     priority: 1

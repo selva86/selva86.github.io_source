@@ -1,5 +1,5 @@
 ---
-title: "InformationValue"
+title: InformationValue R Package
 layout: default
 subtitle: "Performance Analysis and Companion Functions for Binary Classification Models"
 author: "Selva Prabhakaran"

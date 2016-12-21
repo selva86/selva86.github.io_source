@@ -1,5 +1,5 @@
 ---
-title: Outliers
+title: Outlier Treatment With R | Multivariate Outliers
 layout: default
 sitemap:
     priority: 1
@@ -11,10 +11,12 @@ sitemap:
 
 > Outliers in data can distort predictions and affect the accuracy, if you don't detect and handle them appropriately especially in regression models.
 
-## Why outliers treatment is important?
-Because, it can drastically bias/change the fit estimates and predictions. Let me illustrate this using the `cars` dataset. 
+## Why outliers detection is important?
+Treating or altering the outlier/extreme values in genuine observations is not a standard operating procedure. However, it is essential to understand their impact on your predictive models. It is left to the best judgement of the investigator to decide whether treating outliers is necessary and how to go about it.
 
-To better understand the implications of outliers better, I am going to compare the fit of a simple linear regression model on `cars` dataset _with_ and _without outliers_. In order to distinguish the effect clearly, I manually introduce extreme values to the original `cars` dataset. Then, I predict on both the datasets.
+So, why identifying the extreme values is important? Because, it can drastically bias/change the fit estimates and predictions. Let me illustrate this using the cars dataset.
+
+To better understand the implications of outliers better, I am going to compare the fit of a simple linear regression model on cars dataset _with_ and _without_ outliers. In order to distinguish the effect clearly, I manually introduce extreme values to the original cars dataset. Then, I predict on both the datasets.
 
 ```{r, eval=FALSE}
 # Inject outliers into data.
@@ -47,6 +49,10 @@ Notice the change in slope of the best fit line after removing the outliers. Had
 For a given continuous variable, outliers are those observations that lie outside $1.5 * IQR$, where IQR, the 'Inter Quartile Range' is the difference between 75th and 25th quartiles. Look at the points outside the whiskers in below box plot. 
 
 ```{r, eval=FALSE}
+url <- "http://rstatistics.net/wp-content/uploads/2015/09/ozone.csv"  
+# alternate source:  https://raw.githubusercontent.com/selva86/datasets/master/ozone.csv
+inputData <- read.csv(url)  # import data
+
 outlier_values <- boxplot.stats(inputData$pressure_height)$out  # outlier values.
 boxplot(inputData$pressure_height, main="Pressure Height", boxwex=0.1)
 mtext(paste("Outliers: ", paste(outlier_values, collapse=", ")), cex=0.6)
@@ -85,8 +91,9 @@ embed_png("screenshots/boxplot_continuous.png", dpi = 220)
 You can see few outliers in the box plot and how the `ozone_reading` increases with `pressure_height`. Thats clear.
 
 ## Multivariate Model Approach
+Declaring an observation as an outlier based on a just one (rather unimportant) feature could lead to unrealistic inferences. When you have to decide if an individual entity (represented by row or observation) is an extreme value or not, it better to collectively consider the features (X’s) that matter. Enter Cook’s Distance.
 
-##### Cooks Distance
+#### Cooks Distance
 Cook's distance is a measure computed with respect to a given regression model and therefore is impacted only by the X variables included in the model. But, what does cook's distance mean? It computes the influence exerted by each data point (row) on the predicted outcome. 
 
 The cook's distance for each observation $i$ measures the change in $\hat{Y}$ (fitted Y) for all observations with and without the presence of observation $i$, so we know how much the observation _i_ impacted the fitted values. Mathematically, cook's distance $D_{i}$ for observation _i_ is computed as:
@@ -152,7 +159,7 @@ Lets examine the first 6 rows from above output to find out why these rows could
 * Row 19 has very low `Pressure_gradient`.
 
 ## Outliers Test
-The function `outlierTest` from `car` package gives the most extreme observation based on the given model.
+The function `outlierTest` from `car` package gives the most extreme observation based on the given model. Here's an example based on the `mod` linear model object we'd just created.
 
 ```{r, eval=FALSE}
 car::outlierTest(mod)
@@ -185,7 +192,7 @@ outlier(y,opposite=TRUE)
 
 
 ##### `scores`
-There are two aspects the the `scores()` function. 
+There are two aspects to the `scores()` function. 
 
 1. Compute the normalised scores based on "z", "t", "chisq" etc
 2. Find out observations that lie beyond a given percentile based on a given score.
@@ -207,8 +214,8 @@ scores(x, type="z", prob=0.95)  # beyond 95th %ile based on z-scores
 scores(x, type="t", prob=0.95)  # beyond 95th %ile based on t-scores
 ```
 
-## Treatment
-Once the outliers are identified, you may rectify it by using one of the following approaches.
+## Treating the outliers
+Once the outliers are identified and you have decided to make amends as per the nature of the problem, you may consider one of the following approaches.
 
 #### 1. Imputation
 Imputation with mean / median / mode. This method has been dealt with in detail in the discussion about [treating missing values](http://r-statistics.co/Missing-Value-Treatment-With-R.html#3. Imputation with mean / median / mode).
@@ -228,3 +235,8 @@ x[x > (qnt[2] + H)] <- caps[2]
 #### 3. Prediction
 In yet another approach, the outliers can be replaced with missing values (NA) and then can be predicted by considering them as a response variable. We already discussed [how to predict missing values](http://r-statistics.co/Missing-Value-Treatment-With-R.html#4. Prediction).
 
+___________________________________________________
+
+Have a suggestion or found a bug? Notify [here.](https://docs.google.com/forms/d/e/1FAIpQLSeIJmlvwe562R7JVpi5J2ydLyhk5-7OrGRMFGYrMJvjPal8eA/viewform)
+
+_**Editors Note:** If you liked this article, you might want to check out, [Introduction to R Programming](https://www.packtpub.com/big-data-and-business-intelligence/introduction-r-programming-video) video course if you are a beginner, new to the R programming language and the [Mastering R programming](https://www.packtpub.com/big-data-and-business-intelligence/mastering-r-programming-video) video course for Data scientists and Machine learning engineers._

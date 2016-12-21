@@ -1,5 +1,5 @@
 ---
-title: Time Series Analysis
+title: Time Series Analysis With R
 layout: default
 sitemap:
     priority: 1

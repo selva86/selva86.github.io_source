@@ -1,5 +1,5 @@
 ---
-title: Loess Regression
+title: Loess Regression and Smoothing With R
 layout: default
 sitemap:
     priority: 1
