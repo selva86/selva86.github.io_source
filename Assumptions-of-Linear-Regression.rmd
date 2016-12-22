@@ -1,5 +1,5 @@
 ---
-title: Assumptions of Linear Regression
+title: 10 Assumptions of Linear Regression - Full List with Examples and Code
 layout: default
 sitemap:
     priority: 1

@@ -1,5 +1,5 @@
 ---
-title: GGplot2 3-Part Tutorial With R | Part 1
+title: GGplot2 3-Part Tutorial in R (with examples and code) - Part 1
 layout: default
 sitemap:
     priority: 1
@@ -15,20 +15,20 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, fig.asp = 0.618, fig.width = 6,
 
 > Previously we saw a brief [tutorial](ggplot2-Tutorial-With-R.html) of making charts with ggplot2 package. It quickly touched upon the various aspects of making ggplot. In this and the following two parts, I discuss the individual steps and nuances required for constructing effective and visually appealing ggplots. So, for practical purposes I hope this tutorial serves well as a bookmark reference that will be useful for your day-to-day plotmaking.
 
-This is part 1 of a three part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having a some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot. 
+This is part 1 of a three part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot. 
 
- * [Part 1: Introduction to Ggplot](ggplot2-Tutorial-Part1.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
+ * [Part 1: Introduction to Ggplot](ggplot2-r-Tutorial-Part1.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
  
- * [Part 2: Advanced customizations](ggplot2-Tutorial-Part2.html), is about more advanced customizations like manipulating legend, annotations, multiplots with faceting and custom layouts
+ * [Part 2: Advanced customizations](ggplot2-r-Tutorial-Part2.html), is about more advanced customizations like manipulating legend, annotations, multiplots with faceting and custom layouts
  
- * [Part 3: Other types of Ggplot geoms](ggplot2-Tutorial-Part3.html), applies what was learnt in part 1 and 2 to construct other types of ggplots such as barcharts, boxplots etc.
+ * [Part 3: Other types of Ggplot geoms](ggplot2-r-Tutorial-Part3.html), applies what was learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.
 
 ### Part 1: Introduction to Ggplot 
-1. [Understanding the ggplot syntax](ggplot2-Tutorial-With-R.html#1. Understanding the general ggplot format)
-2. [Making a simple scatter plot](ggplot2-Tutorial-With-R.html#2. Making a simple scatter plot)
-3. [Adjusting the X and Y axis limits](ggplot2-Tutorial-With-R.html#3. Adjusting the X and Y axis limits)
-4. [Changing the title and axis labels](ggplot2-Tutorial-With-R.html#4. Changing the title and axis labels)
-5. [Changing the color and size of points, title and axis labels and axis text](ggplot2-Tutorial-With-R.html#5. Changing the color and size of points, title and axis labels and axis text)
+1. [Understanding the ggplot syntax](ggplot2-r-Tutorial-Part1.html#1. Understanding the general ggplot format)
+2. [Making a simple scatter plot](ggplot2-r-Tutorial-Part1.html#2. Making a simple scatter plot)
+3. [Adjusting the X and Y axis limits](ggplot2-r-Tutorial-Part1.html#3. Adjusting the X and Y axis limits)
+4. [Changing the title and axis labels](ggplot2-r-Tutorial-Part1.html#4. Changing the title and axis labels)
+5. [Changing the color and size of points, title and axis labels and axis text](ggplot2-r-Tutorial-With-R.html#5. Changing the color and size of points, title and axis labels and axis text)
 
 
 ## 1. Understanding the ggplot syntax
@@ -63,7 +63,7 @@ embed_png("screenshots/ggplot_tut_1.png", dpi = 220)
 
 A blank ggplot is drawn. Even though the `x` and `y` are specified, there are no points or lines in it. This is because, ggplot doesn't assume that you meant a scatterplot or a line chart to be drawn. I have only told ggplot what dataset to use and what columns should be used for X and Y axis. I haven't explicitly asked it to draw any points. 
 
-Also note that `aes()` function is used to specify the X and Y axes. That's because, any information that is part of the dataframe has to be specified inside the `aes()` function.
+Also note that `aes()` function is used to specify the X and Y axes. That's because, any information that is part of the source dataframe has to be specified inside the `aes()` function.
 
 ## 2. Making a simple scatter plot
 Let's make a scatterplot on top of the blank ggplot by adding points using a geom layer called `geom_point`. 
@@ -84,12 +84,12 @@ plot(g)
 embed_png("screenshots/ggplot_tut_2.png", dpi = 220)
 ```
 
-We got a basic scatterplot, but it lacks some basic components such as the plot title, meaningful axis labels etc. Moreover most of the points are concentrated on the bottom portion of the plot, which is not so nice. You will see how to rectify these in upcoming steps.
+We got a basic scatterplot, where each point represents a county. However, it lacks some basic components such as the plot title, meaningful axis labels etc. Moreover most of the points are concentrated on the bottom portion of the plot, which is not so nice. You will see how to rectify these in upcoming steps.
 
 Like `geom_point()`, there are many such geom layers which we will see in a subsequent part in this tutorial series. For now, let's just add a smoothing layer using `geom_smooth(method='lm')`. Since the `method` is set as `lm` (short for [_linear model_](Linear-Regression.html)), it draws the line of best fit.
 
 ```{r}
-g <- ggplot(midwest, aes(x=area, y=poptotal)) + geom_point() + geom_smooth(method="lm")
+g <- ggplot(midwest, aes(x=area, y=poptotal)) + geom_point() + geom_smooth(method="lm")  # set se=FALSE to turnoff confidence bands
 plot(g)
 ```
 
@@ -110,9 +110,11 @@ The line of best fit is in blue. Can you find out what other `method` options ar
 
 
 ## 3. Adjusting the X and Y axis limits
-The axis limits can be controlled in 2 ways. One by deleting the points outside the range. This will change the lines of best fit or smoothing lines as compared to the original data.
+The axis limits can be controlled in 2 ways. 
 
-This can be done by `xlim()` and `ylim()`. You can pass a numeric vector of length 2 (with maximum and minimum values) or just the maximum and minimum values itself
+1. One by deleting the points outside the range. This will change the lines of best fit or smoothing lines as compared to the original data.
+
+This can be done by `xlim()` and `ylim()`. You can pass a numeric vector of length 2 (with max and min values) or just the max and min values itself.
 ```{r}
 # Delete the points
 g + xlim(c(0, 0.1)) + ylim(c(0, 1000000))   # deletes points
@@ -130,11 +132,14 @@ g + xlim(c(0, 0.1)) + ylim(c(0, 1000000)) + theme(plot.title=element_text(size=3
 ```{r, echo = FALSE, eval=TRUE, fig.align = "center"}
 embed_png("screenshots/ggplot_tut_4.png", dpi = 220)
 ```
-In this case, I did not build the chart from scratch. That is because, the previous plot was stored as `g`, a ggplot object, which when called will reproduce the same plot. Using ggplot, you can add more layers and themes on top of this plot.
 
-Did you notice that the line of best fit became more horizontal compared to the original plot? This is because, when using `xlim()` and `ylim()`, the points outside the specified range are deleted and will not be considered while drawing the line of best fit (using `geom_smooth(method='lm')`). This would come in handy when you would like to know how the line of best fit would change when some extreme values (or outliers) are removed.
+In this case, the chart was not built from scratch but rather was built on top of `g`. This is because, the previous plot was stored as `g`, a ggplot object, which when called will reproduce the original plot. Using ggplot, you can add more layers, themes and other settings on top of this plot.
 
-The other method to change the X and Y axis limits is to zoom in to the region of interest _without_ deleting the point. This is done using `coord_cartesian()`. Let's store this plot as `g1`.
+Did you notice that the line of best fit became more horizontal compared to the original plot? This is because, when using `xlim()` and `ylim()`, the points outside the specified range are deleted and will not be considered while drawing the line of best fit (using `geom_smooth(method='lm')`). This feature might come in handy when you wish to know how the line of best fit would change when some extreme values (or outliers) are removed.
+
+2. The other method to change the X and Y axis limits is to zoom in to the region of interest _without_ deleting the points. This is done using `coord_cartesian()`. 
+
+Let's store this plot as `g1`.
 ```{r}
 # Zoom in
 g1 <- g + coord_cartesian(xlim=c(0,0.1), ylim=c(0, 1000000))  # zooms in
@@ -154,10 +159,10 @@ plot(g1)
 embed_png("screenshots/ggplot_tut_5.png", dpi = 220)
 ```
 
-As a result, the lines of best fit did not change.
+Since all points were considered, the line of best fit did not change.
 
 ## 4. Changing the title and axis labels
-I have stored this as `g1`. Let's add the plot title and labels for X and Y axis. This can be done in one go using the `labs` function with `title`, `x` and `y` arguments. Another option is to use the `ggtitle()`, `xlab()` and `ylab()`. 
+I have stored this as `g1`. Let's add the plot title and labels for X and Y axis. This can be done in one go using the `labs()` function with `title`, `x` and `y` arguments. Another option is to use the `ggtitle()`, `xlab()` and `ylab()`. 
 ```{r}
 g1 + labs(title="Area Vs Population", subtitle="From midwest dataset", y="Population", x="Area", caption="Midwest Demographics")
 # or
@@ -207,7 +212,7 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
 embed_png("screenshots/ggplot_tut_7.png", dpi = 220)
 ```
 
-Suppose if we want the color to change based on another column in the source dataset (`midwest`), it must be specified inside the aes() function.
+Suppose if we want the color to change based on another column in the source dataset (`midwest`), it must be specified inside the `aes()` function.
 ```{r}
 gg <- ggplot(midwest, aes(x=area, y=poptotal)) + 
   geom_point(aes(col=state), size=3) + 
@@ -230,7 +235,7 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
 embed_png("screenshots/ggplot_tut_9.png", dpi = 220)
 ```
 
-As a benefit, the legend is added automatically. It can be removed by changing the legend position in theme function.
+Now each point is colored based on the `state` it belongs because of `aes(col=state)`. As an added benefit, the legend is added automatically. If needed, it can be removed by setting the `legend.position` to `None` from within a `theme()` function.
 ```{r}
 gg + theme(legend.position="None")
 ```
@@ -275,7 +280,7 @@ head(brewer.pal.info, 10)  # show 10 palettes
 embed_png("screenshots/color_palettes.png", dpi = 220)
 ```
 
-Alright, Now let's see how to change the X and Y axis text. This involves two aspects. 
+Alright, now let's see how to change the X and Y axis text. This involves two aspects: `breaks` and `labels`. 
 
 1. You need to specify at what intervals the axis ticks should appear. This can be done by setting the `breaks` option in `scale_x_continuous()`.
     
@@ -339,10 +344,9 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
 embed_png("screenshots/ggplot_tut_13.png", dpi = 220)
 ```
 
-
-You can also format it as percentage and set the `breaks` for Y axis text as well.
+Let's set the `breaks` for Y axis text and format the X and Y axis labels. I have used 2 methods for formatting labels: using `sprintf()` and using a custom function. Use whichever method is convenient.
 ```{r}
-gg + scale_x_continuous(breaks=seq(0, 0.1, 0.01), labels = sprintf("%1.2f%%", seq(0, 0.1, 0.01))) + scale_y_continuous(breaks=seq(0, 1000000, 200000))
+gg + scale_x_continuous(breaks=seq(0, 0.1, 0.01), labels = sprintf("%1.2f%%", seq(0, 0.1, 0.01))) + scale_y_continuous(breaks=seq(0, 1000000, 200000), labels = function(x){paste0(x/1000, 'K')})
 ```
 
 ```{r, echo=F}
@@ -350,7 +354,7 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
   geom_point(aes(col=state), size=3) + 
   geom_smooth(method="lm", col="firebrick", size=2) + 
   coord_cartesian(xlim=c(0, 0.1), ylim=c(0, 1000000)) + 
-  labs(title="Area Vs Population", subtitle="From midwest dataset", y="Population", x="Area", caption="Midwest Demographics") + scale_x_continuous(breaks=seq(0, 0.1, 0.01), labels = sprintf("%1.2f%%", seq(0, 0.1, 0.01))) + scale_y_continuous(breaks=seq(0, 1000000, 200000)) + theme(plot.title=element_text(size=30, face="bold"), plot.subtitle=element_text(size=20, face="bold"),  axis.text.x=element_text(size=15), axis.text.y=element_text(size=15), axis.title.x=element_text(size=25),
+  labs(title="Area Vs Population", subtitle="From midwest dataset", y="Population", x="Area", caption="Midwest Demographics") + scale_x_continuous(breaks=seq(0, 0.1, 0.01), labels = sprintf("%1.2f%%", seq(0, 0.1, 0.01))) + scale_y_continuous(breaks=seq(0, 1000000, 200000), labels = function(x){paste0(x/1000, 'K')}) + theme(plot.title=element_text(size=30, face="bold"), plot.subtitle=element_text(size=20, face="bold"),  axis.text.x=element_text(size=15), axis.text.y=element_text(size=15), axis.title.x=element_text(size=25),
                   axis.title.y=element_text(size=25), plot.caption=element_text(size=15))
 ```
 
@@ -358,13 +362,26 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
 embed_png("screenshots/ggplot_tut_14.png", dpi = 220)
 ```
 
-The aesthetics of components such as plot and axis titles and the axis text can also be customised. Since they are part of the plot's theme, it has to be passed to the `theme()` function and the values need to be set using the `element_text()` function. Below, I have changed the size, color, face and lineheight. The axis text can be tilted by changing the `angle`. It is not possible to cover all the aesthetics, but you can check `?theme` for the full list.
+The aesthetics of components such as plot and axis titles and the axis text can also be customized. Since they are part of the plot's theme, it has to be passed to the `theme()` function and the values need to be set using the `element_text()` function. Below, I have changed the size, color, face and line-height. The axis text can be tilted by changing the `angle`. 
 ```{r}
-gg1 <- gg + theme(plot.title=element_text(size=35, face="bold", color="steelblue", lineheight=1.2),  # title
-                  plot.subtitle=element_text(size=25, face="bold"),  # subtitle
+gg1 <- gg + theme(plot.title=element_text(size=35, 
+                                          face="bold", 
+                                          family="American Typewriter",
+                                          color="chocolate",
+                                          hjust=0.5,
+                                          lineheight=1.2),  # title
+                  plot.subtitle=element_text(size=25, 
+                                             family="American Typewriter",
+                                             face="bold",
+                                             hjust=0.5),  # subtitle
                   plot.caption=element_text(size=20),  # caption
-                  axis.title.x=element_text(size=30), axis.title.y=element_text(size=30), # axis title
-                  axis.text.x=element_text(size=20, angle = 30), axis.text.y=element_text(size=20))  # axis text
+                  axis.title.x=element_text(vjust=10,  
+                                            size=30),  # X axis title
+                  axis.title.y=element_text(size=30),  # Y axis title
+                  axis.text.x=element_text(size=20, 
+                                           angle = 30,
+                                           vjust=.5),  # X axis text
+                  axis.text.y=element_text(size=20))  # Y axis text
 plot(gg1)
 ```
 
@@ -372,7 +389,14 @@ plot(gg1)
 embed_png("screenshots/ggplot_tut_15.png", dpi = 220)
 ```
 
-Finally, instead of changing this separately, we can change the entire theme. The help page `?theme_bw` shows all the available built-in themes.
+* `vjust`, increases the spacing between title (or label) and plot.
+* `hjust`, setting it to 0.5 centers the title.
+* `family`, sets a new font
+* `face`, sets the font face ("plain", "italic", "bold", "bold.italic")
+
+Above example covers some of the frequently used theme modifications and the actual list is too long. So `?theme` is the first place you want to look at if you want to change the look and feel of any component.
+
+Finally, instead of changing the theme components individually, we can change the entire theme itself using pre-built themes. The help page `?theme_bw` shows all the available built-in themes.
 ```{r}
 gg1 + theme_bw()
 gg1 + theme_classic()
@@ -395,9 +419,9 @@ embed_png("screenshots/ggplot_tut_16.png", dpi = 220)
 embed_png("screenshots/ggplot_tut_17.png", dpi = 220)
 ```
 
-For more customised and fancy themes have a look at the [ggthemes](https://github.com/jrnold/ggthemes) package and the [ggthemr](https://github.com/cttobin/ggthemr) package.
+For more customized and fancy themes have a look at the [ggthemes](https://github.com/jrnold/ggthemes) package and the [ggthemr](https://github.com/cttobin/ggthemr) package.
 
-That's it for now. In [ggplot tutorial part-2](ggplot2-Tutorial-Part2.html), I will discuss manipulating legend, annotations, faceting and custom layouts.
+That's it for the basics. We are now ably positioned to tackle more advanced customizations. In [ggplot tutorial part-2](ggplot2-r-Tutorial-Part2.html), I discuss about advanced customizations on modifying theme components, manipulating legend, annotations, faceting and custom layouts.
 
 ___________________________________________________
 

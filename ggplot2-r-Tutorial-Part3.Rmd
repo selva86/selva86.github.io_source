@@ -1,0 +1,21 @@
+---
+title: GGplot2 3-Part Tutorial in R (with examples and code) - Part 3
+layout: default
+sitemap:
+    priority: 1
+    changefreq: 'monthly'
+    lastmod: 2016-12-22T12:49:30-05:00
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+___________________________________________________
+
+Have a suggestion or found a bug? Notify [here.](https://docs.google.com/forms/d/e/1FAIpQLSeIJmlvwe562R7JVpi5J2ydLyhk5-7OrGRMFGYrMJvjPal8eA/viewform)
+
+_**Editors Note:** The [mastering R programming](packtpub.com/big-data-and-business-intelligence/mastering-r-programming-video) video course has a dedicated section for ggplot2 where the concepts are demonstrated in detail. Additionally it includes solving real coding challenges at the end of every video lesson._
