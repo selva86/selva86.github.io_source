@@ -1,5 +1,5 @@
 ---
-title: GGplot2 3-Part Tutorial in R (with examples and code) - Part 3
+title: The Ggplot2 Geoms - What visualisation to use for what type of problem? | GGplot2 3-Part Tutorial in R (with examples and code) - Part 3
 layout: default
 sitemap:
     priority: 1
@@ -8,10 +8,976 @@ sitemap:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, interval = .2)
+```
+
+> What type of visualization to use for what sort of problem? This matters whenever the results of data analysis needs to be presented. This article provides some guidelines to help you choose the right type of chart so when someone sees it they instantly get it.
+
+This is part 3 of a three part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot. 
+
+ * [Part 1: Introduction to Ggplot](ggplot2-r-Tutorial-Part1.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
+ 
+ * [Part 2: Customizing the look and feel](ggplot2-r-Tutorial-Part2.html), is about more advanced customizations like manipulating legend, annotations, multiplots with faceting and custom layouts
+ 
+ * [Part 3: The Ggplot2 Geoms - What visualisation to use for a given objective?](ggplot2-r-Tutorial-Part3.html), applies what was learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.
+
+
+### Part 3: The Ggplot2 Geoms - What visualisation to use for a given objective?
+
+An effective chart is one that:
+ - Conveys the right information without distorting facts
+ - Is simple but elegant. It should not force the audience to think much in order to get it.
+ - Aesthetics supports information rather that overshadow it.
+ - Is not overloaded with information.
+
+1. [Correlation] - Show relationship between two or more variables. How change in one column varible relates to change in another column variable. (Scatterplot, jitter, count, bubble plot)
+
+- Scatterplot: Compare relation between 2 numeric variables. This is the most common plot ever used.
+Draw normal scatter plot and add the feature of 'Encircling points automagically' using https://github.com/hrbrmstr/ggalt
+
+- Jitter: Compare two numeric variables but there are many points overlapping is specific regions. Helps when you have large number of datapoints.
+
+- Counts chart: Compare two numeric variables but there are many points overlapping is specific regions. Helps when you have large number of datapoints.
+
+- Bubble plot: Compare two numeric variables and you want to compare how the relation varies between categories by changing the size and color of points. Particularly good if you have 4-Dimensional data where you  have to compare 2 numeric variables based on 1 other categorial (color) and another numeric variable(size)
+
+- Animated Bubble chart: Same as a bubble chart. But you have to show how the values change over a fifth dimension (typically time).
+https://github.com/dgrtwo/gganimate
+
+- Hierarchical Heatmaps (optional)
+
+- Marginal Histogram: If you want to show the relationship as well as the distribution of the variable. In a sense, it does the job of scatterplot plus the counts plot. 
+http://motioninsocial.com/tufte/#marginal-histogram
+Combine the above chart with 'Encircling points automagically' using https://github.com/hrbrmstr/ggalt
+
+
+
+
+
+2. [Deviation] - Compare variation in _values_ between small number of categories with respect to a fixed reference. (diverging bar, spine chart, area chart)
+http://uc-r.github.io/lollipop#finishing
+
+- Diverging bar: A bar chart that can handle both negative and positive values
+http://uc-r.github.io/lollipop
+
+- Spine chart: Show how males and females scored in an example, how young and old voted in an election etc.
+http://uc-r.github.io/lollipop
+
+- Area chart: how an individual stock performed compared to a baseline
+
+
+
+
+
+3. [Ranking] - Used to compare the position or performance of multiple items with respect to each other. Actual values matters less than the ranking.
+
+- Bar chart
+http://uc-r.github.io/lollipop
+
+- Lollipop charts: Just like barchart. It shows more emphasis on the value and looks nice and fancy.
+http://uc-r.github.io/lollipop
+
+- Slope Chart: Compare ranking at one point in time to another point in time.
+http://motioninsocial.com/tufte/#slopegraph
+https://github.com/jkeirstead/r-slopegraph
+https://acaird.github.io/computers/r/2013/11/27/slopegraphs-ggplot
+
+- Dumbbell chart: dumbbell charts are a great tool if you wish to:
+ - Visualise relative positions (like growth and decline) between two points in time (1)
+ - Compare distance between two categories. (2)
+ 
+https://github.com/hrbrmstr/ggalt  (see dumbell portion under lollipop charts) (example for 1)
+https://rud.is/b/2016/04/17/ggplot2-exercising-with-ggalt-dumbbells/ (example for 2)
+
+- Dot Plot: Emphasizes on the rank ordering of items with respect to actual values and how far apart are the entities with respect to each other.
+
+ - Have done this in base graphics
+ http://www.statmethods.net/graphs/dot.html
+ - See slide in : https://speakerdeck.com/hadley/eight-visualisation-challenges-with-ggplot2
+
+
+4. [Distribution] - When you have lots and lots of datapointss and want to study where and how the data points are distributed.
+https://github.com/hrbrmstr/ggalt
+
+- Histogram 
+http://shinyapps.stat.ubc.ca/r-graph-catalog/#fig10-03_presidential-approval-data-waffle-chart
+
+- Density plot
+http://shinyapps.stat.ubc.ca/r-graph-catalog/#fig10-03_presidential-approval-data-waffle-chart
+
+- Box Plot: Show distributions within multiple groups, additionally showing the median, range and outliers if any.
+Show how to make multiple boxplots within categories.
+
+- Geom_dot + Boxplot: 
+http://www.sthda.com/english/wiki/ggplot2-dot-plot-quick-start-guide-r-software-and-data-visualization
+
+- Tufte Boxplot: http://motioninsocial.com/tufte/#minimal-boxplot
+
+- Violin plots: Similar to boxplot but shows the density within groups. Not much info provided as in boxplots.
+
+- Population Pyramids
+https://rpubs.com/walkerke/pyramids_ggplot2
+http://stackoverflow.com/questions/14680075/simpler-population-pyramid-in-ggplot2
+http://stackoverflow.com/questions/31897329/population-pyramid-plot-with-ggplot2-and-dplyr-instead-of-plyr
+
+
+5. [Change] - How data changed over time
+Line chart - Shows how a metric changed over time.
+
+Time series with confidence intervals - Show the forecast predictions along with confidence interval bands.
+
+Stacked Area chart - Show how something changed over time along with the contributions from individual components. The caveat is: it is nice to look at but can easily become complicated and uninterprettable if there are too many components.
+
+Calendar Heatmap: Shows variation visually over time rather than the actual value.
+http://margintale.blogspot.in/2012/04/ggplot2-time-series-heatmaps.html
+https://rpubs.com/haj3/calheatmap
+http://www.guru-gis.net/charting-time-series-as-calendar-heat-maps/
+http://stackoverflow.com/questions/26214032/fill-ggplot2-calender-heat-map-by-month
+
+
+6. [Composition] - What parts make up the whole and how much they contribute.
+Stacked bar chart
+See example in: https://speakerdeck.com/hadley/eight-visualisation-challenges-with-ggplot2
+
+Pie chart
+http://shinyapps.stat.ubc.ca/r-graph-catalog/#fig10-03_presidential-approval-data-waffle-chart
+
+Waffle chart
+http://shinyapps.stat.ubc.ca/r-graph-catalog/#fig10-03_presidential-approval-data-waffle-chart
+https://www.r-bloggers.com/making-waffle-charts-in-r-with-the-new-waffle-package/
+
+Donut Chart
+http://www.r-graph-gallery.com/128-ring-or-donut-plot/
+
+Treemap: treemapping is a method for displaying hierarchical data by using nested rectangles.
+https://github.com/wilkox/treemapify
+https://rud.is/b/2016/03/18/stacking-the-deck-against-treemaps/
+
+
+7. [Spatial] - Visualize maps
+http://stackoverflow.com/questions/17723822/administrative-regions-map-of-a-country-with-ggmap-and-ggplot2
+https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf
+http://stat405.had.co.nz/ggmap.pdf
+https://blog.dominodatalab.com/geographic-visualization-with-rs-ggmaps/
+https://www.r-bloggers.com/google-maps-and-ggmap/
+
+8. Miscellaneous tasks
+- Ggplot with 2 Y axis: See example in: https://speakerdeck.com/hadley/eight-visualisation-challenges-with-ggplot2
+- Saving Ggplots: ggsave()
+
+
+1. [Correlation](ggplot2-r-Tutorial-Part3.html#1. Understanding the general ggplot format)
+2. [Making a simple scatter plot](ggplot2-r-Tutorial-Part3.html#2. Making a simple scatter plot)
+3. [Adjusting the X and Y axis limits](ggplot2-r-Tutorial-Part3.html#3. Adjusting the X and Y axis limits)
+4. [Changing the title and axis labels](ggplot2-r-Tutorial-Part3.html#4. Changing the title and axis labels)
+5. [Changing the color and size of points, title and axis labels and axis text](ggplot2-r-Tutorial-Part3.html#5. Changing the color and size of points, title and axis labels and axis text)
+
+
+
+
+## 1. Correlation
+
+### Scatterplot
+The most frequently used plot for data analysis is undoubtedly the scatterplot. Whenever you want to understand the nature of relationship between two variables, invariably the first choice is the scatterplot.
+
+```{r}
+# load package and data
+theme_set(theme_bw())  # pre-set the bw theme.
+options(scipen=999)  # turn-off scientific notation like 1e+48
+library(ggplot2)
+data("midwest", package = "ggplot2")
+# midwest <- read.csv("http://goo.gl/G1K41K")  # bkup data source
+
+# Scatterplot
+gg <- ggplot(midwest, aes(x=area, y=poptotal)) + 
+  geom_point(aes(col=state, size=popdensity)) + 
+  geom_smooth(method="loess", se=F) + xlim(c(0, 0.1)) + ylim(c(0, 500000)) + 
+  labs(title="Area Vs Population", y="Population", x="Area", subtitle="Scatterplot")
+
+plot(gg)
+```
+
+When presenting the results, sometimes I would encirlce certain points or regions in the chart so as to draw the attention to those particular cases.  But how to make a curve that goes around the points/regions of interest? 
+
+This can be conveniently done using the `geom_encircle()` in `ggalt` package. Just set the `data` to a new dataframe that contains only the points (rows) or interest.  You can `expand` the curve so as to pass just outside the points. The `color` and `size` (thickness) of the curve can be modified as well. See below example.
+
+```{r}
+# devtools::install_github("hrbrmstr/ggalt")  # install 'ggalt' pkg
+options(scipen = 999)
+library(ggalt)
+midwest_select <- midwest[midwest$poptotal > 350000 & midwest$poptotal <= 500000 & 
+                     midwest$area > 0.01 & midwest$area < 0.1, ]
+gg + geom_encircle(aes(x=area, y=poptotal), data=midwest_select, color="red", size=2, expand=0.08) + labs(subtitle="Scatterplot + Encircle")
 ```
 
 
+### Jitter 
+Let's look at new example of scatterplot. But this time, I will use the `mpg` dataset to plot city mileage (`cty`) vs highway mileage (`hwy`).
+
+```{r}
+# load package and data
+library(ggplot2)
+data(mpg, package="ggplot2")
+# mpg <- read.csv("http://goo.gl/uEeRGu")
+
+# Scatterplot
+theme_set(theme_bw())  # pre-set the bw theme.
+g <- ggplot(mpg, aes(cty, hwy))
+g + geom_point() + geom_smooth(method="lm", se=F)
+```
+What we have here is a scatterplot of city and highway mileage in `mpg` dataset. We have seen a similar scatterplot and this looks neat and gives a clear idea of how the city mileage (`cty`) and highway mileage (`hwy`) are well correlated.
+
+But, this innocent looking plot is _hiding_ something. Can you find out? 
+
+```{r}
+dim(mpg)
+```
+
+The original data has 234 data points but the chart seems to display fewer points. What has happened? This is because there are many overlapping points appearing as a single dot. The fact that both `cty` and `hwy` are integers in the source dataset made it all the more convenient to hide this detail. So just be extra careful the next time you make scatterplot with integers.
+
+So how to handle this? There are few options. We can make a jitter plot with `jitter_geom()`. As the name suggests, the overlapping points are randomly jittered around its original position based on a threshold controlled by the `width` argument.
+```{r}
+g + geom_jitter(width = .5, size=1)
+```
+More points are revealed now. More the `width`, more the points are moved around from their original position.
+
+### Counts chart
+The second option is to use a counts chart. Where ever there more points overlap, the size of the circle gets bigger. I like this one.
+```{r}
+g + geom_count(col="steelblue", show.legend=F)
+```
+
+
+### Bubble plot
+While scatterplot lets you compare the relationship between 2 continuous variables, bubble chart serves well if you want to understand underlying relationship within groups based on another categorical variable (by changing the color) and another continuous variable (by changing the size of points). In simpler words, bubble charts are more suitable if you have 4-Dimensional data where two of them are numeric (X and Y) and one other categorial (color) and another numeric variable(size).
+
+```{r}
+# load package and data
+library(ggplot2)
+data(mpg, package="ggplot2")
+# mpg <- read.csv("http://goo.gl/uEeRGu")
+
+mpg_select <- mpg[mpg$manufacturer %in% c("audi", "ford", "honda", "hyundai"), ]
+
+# Scatterplot
+theme_set(theme_bw())  # pre-set the bw theme.
+g <- ggplot(mpg_select, aes(displ, cty)) + labs(title="Bubble chart of 'Displ' Vs 'Cty'")
+g + geom_jitter(aes(col=manufacturer, size=hwy)) + geom_smooth(aes(col=manufacturer), method="lm", se=F)
+g + geom_jitter(aes(col=manufacturer, size=hwy), shape=1) + geom_smooth(aes(col=manufacturer), method="lm", se=F)
+# g + geom_point(aes(col=manufacturer, size=hwy), shape=1) + geom_smooth(aes(col=manufacturer), method="lm", se=F)
+```
+
+The bubble chart clearly distinguishes the range of `displ` between the manufacturers and how the slope of lines-of-bestfit varies, providing a better visual comparison between the groups.
+
+### Animated Bubble chart
+An animated bubbel chart can be implemented using the `gganimate` package. It is same as a bubble chart, but, you have to show how the values change over a fifth dimension (typically time).
+
+```{r, interval = .2}
+# install.packages("cowplot")  # a gganimate dependency
+devtools::install_github("dgrtwo/gganimate")
+library(gganimate)
+library(ggplot2)
+theme_set(theme_bw())  # pre-set the bw theme.
+
+library(gapminder)
+p5 <- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, frame = year)) +
+  geom_point() +
+  geom_smooth(aes(group = year), method = "lm", show.legend = FALSE) +
+  facet_wrap(~continent, scales = "free") +
+  scale_x_log10()
+
+gganimate(p5, interval=0.2)
+```
+
+
+### Marginal Histogram / Boxplot / Density plot
+
+If you want to show the relationship as well as the distribution of the variable, use the marginal histogram. It has a histogram of the X and Y variables at the margins of the scatterplot. This can be implemented using the `ggMarginal()` function from the '`ggExtra`' package. Apart from a histogram, you could choose to draw a `boxplot` or `density` plot by setting the `type` option.
+
+```{r}
+# load package and data
+library(ggplot2)
+library(ggExtra)
+data(mpg, package="ggplot2")
+# mpg <- read.csv("http://goo.gl/uEeRGu")
+
+# Scatterplot
+theme_set(theme_bw())  # pre-set the bw theme.
+mpg_select <- mpg[mpg$hwy >= 35 & mpg$cty > 27, ]
+g <- ggplot(mpg, aes(cty, hwy)) + geom_count() + 
+                                  geom_smooth(method="lm", se=F)
+
+ggMarginal(g, type = "histogram", fill="transparent")
+ggMarginal(g, type = "boxplot", fill="transparent")
+ggMarginal(g, type = "density", fill="transparent")
+```
+
+
+
+
+
+## 2. Deviation 
+Compare variation in _values_ between small number of categories with respect to a fixed reference. (diverging bar, spine chart, area chart)
+
+### Diverging bars
+A bar chart that can handle both negative and positive values. By default, geom_bar() has the `stat` set to `count`. That means, when you provide just a continuous X variable (an no Y variable), it tries to make a histogram out of the data. 
+
+In order to make a barchart create bars instead of histogram, you need to set `stat=identity` and provide both `x` and `y` inside `aes()` where, `x` is either `character` or `factor` and `y` is numeric.
+```{r}
+library(ggplot2)
+theme_set(theme_bw())  
+data("mtcars")  # load data
+mtcars$`car name` <- rownames(mtcars)  # create new column for car names
+mtcars$mpg_z <- round((mtcars$mpg - mean(mtcars$mpg))/sd(mtcars$mpg), 2)  # compute normalized mpg
+mtcars$mpg_type <- ifelse(mtcars$mpg_z < 0, "below", "above")  # above / below avg flag
+mtcars <- mtcars[order(mtcars$mpg_z), ]  # sort
+mtcars$`car name` <- factor(mtcars$`car name`, levels = mtcars$`car name`)  # convert to factor to retain sorted order in plot.
+
+# Diverging Barcharts
+ggplot(mtcars, aes(x=`car name`, y=mpg_z, label=mpg_z)) + 
+  geom_bar(stat='identity', aes(fill=mpg_type))  +
+  scale_fill_manual(name="Mileage", 
+                    labels = c("Above Average", "Below Average"), 
+                    values = c("above"="#00ba38", "below"="#f8766d")) + 
+  labs(title="Normalised mileage from 'mtcars': Diverging Bars") + 
+  coord_flip()
+```
+
+### Diverging Lollipop chart
+Lollipop chart conveys the same information as bar chart and diverging bar. Except that it looks more modern. Let's draw a lollipop using the same data I prepared in the previous example of diverging bars.
+```{r}
+ggplot(mtcars, aes(x=`car name`, y=mpg_z, label=mpg_z)) + 
+  geom_point(stat='identity', fill="black", size=7)  +
+  geom_segment(aes(y = 0, x = `car name`, yend = mpg_z, xend = `car name`), color = "black") +
+  geom_text(color="white", size=2) +
+  labs(title="Normalised mileage from 'mtcars': Lollipop") + 
+  ylim(-2.5, 2.5) +
+  coord_flip()
+```
+
+
+
+### Dot Plot
+Dot plot conveys similar information. Below example uses the same data prepared in the diverging bars example.
+```{r}
+ggplot(mtcars, aes(x=`car name`, y=mpg_z, label=mpg_z)) + 
+  geom_point(stat='identity', aes(col=mpg_type), size=6)  +
+  scale_color_manual(name="Mileage", 
+                     labels = c("Above Average", "Below Average"), 
+                     values = c("above"="#00ba38", "below"="#f8766d")) + 
+  geom_text(color="white", size=2) +
+  labs(title="Normalised mileage from 'mtcars': Dotplot") + 
+  ylim(-2.5, 2.5) +
+  coord_flip()
+```
+
+
+### Area chart
+How an individual stock performed compared to a baseline
+
+```{r}
+library(ggplot2)
+library(quantmod)
+data("economics")
+head(economics$pce)
+economics$returns_perc <- c(0, diff(economics$psavert)/economics$psavert[-length(economics$psavert)])
+
+# create break points and labels for axis ticks
+brks <- economics$date[seq(1, length(economics$date), 12)]
+lbls <- lubridate::year(economics$date[seq(1, length(economics$date), 12)])
+
+# plot
+ggplot(economics[1:100, ], aes(date, returns_perc)) + geom_area() + scale_x_date(breaks=brks, labels=lbls) + 
+  theme(axis.text.x = element_text(angle=90)) + 
+  labs(title = "Perc Returns for Personal Savings", y="% Returns for Personal savings", caption="Source: economics")
+```
+
+### Seasonal Plot 
+If you are working with a time series object of class `ts` or `xts`, you can view the seasonal fluctuations through a seasonal plot drawn using `forecast::ggseasonplot`. Below is an example using the native `nottem` time series.
+```{r}
+library(forecast)
+nottem_small <- window(nottem, start=c(1920, 1), end=c(1925, 12))  # subset a smaller timewindow
+ggseasonplot(nottem_small) + labs(title="Seasonal plot: Air temperatures at Nottingham Castle")
+ggseasonplot(AirPassengers) + labs(title="Seasonal plot: International Airline Passengers")
+```
+
+## 3. Ranking
+Used to compare the position or performance of multiple items with respect to each other. Actual values matters somewhat less than the ranking.
+
+### Ordered Bar Chart
+If you want to plot the mean city mileage of each manufacturer, we might first aggregate the data and sort it before you draw the plot. Just sorting the dataframe by the variable of interest isn't enough to order the bar chart. In order for the barchart to retain the order of the rows, the X axis variable (car names in this case) has to be converted into a factor.
+```{r}
+# Prepare data: group mean city mileage by manufacturer.
+cty_mpg <- aggregate(mpg$cty, by=list(mpg$manufacturer), FUN=mean)  # aggregate
+colnames(cty_mpg) <- c("make", "mileage")  # change column names
+cty_mpg <- cty_mpg[order(cty_mpg$mileage), ]  # sort
+cty_mpg$make <- factor(cty_mpg$make, levels = cty_mpg$make)  # to retain the order in plot.
+cty_mpg
+```
+
+The data is ready, let's plot.
+```{r}
+# Draw plot
+ggplot(cty_mpg, aes(x=make, y=mileage)) + 
+  geom_bar(stat="identity", width=.5) + 
+  labs(title="Make Vs Avg. Mileage", caption="source: mpg") + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+```
+
+
+### Lollipop charts: 
+Lollipop charts conveys the same information as in barcharts. By reducing the thick bars to thin lines, it reduces the clutter and lays more emphasis on the value. Looks nice and modern.
+
+```{r}
+ggplot(cty_mpg, aes(x=make, y=mileage)) + 
+  geom_point() + 
+  geom_segment(aes(x=make, xend=make, y=0, yend=mileage)) + 
+  labs(title="Make Vs Avg. Mileage", caption="source: mpg") + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+```
+
+### Dot Plot
+Dot plots are very similar to lollipops, but without the line and is flipped to horizontal position. It emphasizes more on the rank ordering of items with respect to actual values and how far apart are the entities with respect to each other.
+```{r}
+ggplot(cty_mpg, aes(x=make, y=mileage)) + 
+  geom_point(col="steelblue") + 
+  geom_segment(aes(x=make, xend=make, y=min(mileage), yend=max(mileage)), linetype="dashed", size=0.1) + 
+  labs(title="Make Vs Avg. Mileage", caption="source: mpg") + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  coord_flip()
+```
+
+ - See slide in : https://speakerdeck.com/hadley/eight-visualisation-challenges-with-ggplot2
+
+
+### Slope Chart
+
+```{r}
+library(ggplot2)
+library(scales)
+
+df <- read.csv("https://raw.githubusercontent.com/selva86/datasets/master/gdppercap.csv")
+colnames(df) <- c("continent", "1952", "1957")
+left_label <- paste(df$continent, round(df$`1952`),sep=", ")
+right_label <- paste(df$continent, round(df$`1957`),sep=", ")
+
+p <- ggplot(df) + geom_segment(aes(x=1, xend=2, y=`1952`, yend=`1957`), size=.75)
+p <- p + xlab("") + ylab("Mean GdpPerCap")
+p <- p + xlim(.5, 2.5)
+p <- p + ylim(0,(1.1*(max(df$`1952`, df$`1957`))))
+p <- p + geom_text(label=left_label, y=df$`1952`, x=rep(1, NROW(df)), hjust=1.1, size=3.5)
+p <- p + geom_text(label=right_label, y=df$`1957`, x=rep(2, NROW(df)), hjust=-0.1, size=3.5)
+p <- p + geom_text(label="Time 1", x=1, y=1.1*(max(df$`1952`, df$`1957`)), hjust=1.2, size=5)  # title
+p <- p + geom_text(label="Time 2", x=2, y=1.1*(max(df$`1952`, df$`1957`)), hjust=-0.1, size=5)  # title
+p <- p + theme(panel.background = element_blank())
+p <- p + theme(panel.grid = element_blank())
+p <- p + theme(axis.ticks = element_blank())
+p <- p + theme(axis.text.x = element_blank())
+p <- p + theme(panel.border = element_blank())
+p <- p + theme(axis.title.y = element_text(vjust=3))
+p
+```
+
+
+Compare ranking at one point in time to another point in time.
+http://motioninsocial.com/tufte/#slopegraph
+https://github.com/jkeirstead/r-slopegraph
+https://acaird.github.io/computers/r/2013/11/27/slopegraphs-ggplot
+
+```{r}
+library(ggplot2)
+library(dplyr)
+theme_set(theme_classic())
+source_df <- read.csv("https://raw.githubusercontent.com/jkeirstead/r-slopegraph/master/cancer_survival_rates.csv")
+
+## Defin functions. Source: https://github.com/jkeirstead/r-slopegraph
+tufte_sort <- function(df, x="year", y="value", group="group", method="tufte", min.space=0.05) {
+    ## First rename the columns for consistency
+    ids <- match(c(x, y, group), names(df))
+    df <- df[,ids]
+    names(df) <- c("x", "y", "group")
+
+    ## Expand grid to ensure every combination has a defined value
+    tmp <- expand.grid(x=unique(df$x), group=unique(df$group))
+    tmp <- merge(df, tmp, all.y=TRUE)
+    df <- mutate(tmp, y=ifelse(is.na(y), 0, y))
+  
+    ## Cast into a matrix shape and arrange by first column
+    require(reshape2)
+    tmp <- dcast(df, group ~ x, value.var="y")
+    ord <- order(tmp[,2])
+    tmp <- tmp[ord,]
+    
+    min.space <- min.space*diff(range(tmp[,-1]))
+    yshift <- numeric(nrow(tmp))
+    ## Start at "bottom" row
+    ## Repeat for rest of the rows until you hit the top
+    for (i in 2:nrow(tmp)) {
+        ## Shift subsequent row up by equal space so gap between
+        ## two entries is >= minimum
+        mat <- as.matrix(tmp[(i-1):i, -1])
+        d.min <- min(diff(mat))
+        yshift[i] <- ifelse(d.min < min.space, min.space - d.min, 0)
+    }
+
+    
+    tmp <- cbind(tmp, yshift=cumsum(yshift))
+
+    scale <- 1
+    tmp <- melt(tmp, id=c("group", "yshift"), variable.name="x", value.name="y")
+    ## Store these gaps in a separate variable so that they can be scaled ypos = a*yshift + y
+
+    tmp <- transform(tmp, ypos=y + scale*yshift)
+    return(tmp)
+   
+}
+
+plot_slopegraph <- function(df) {
+    ylabs <- subset(df, x==head(x,1))$group
+    yvals <- subset(df, x==head(x,1))$ypos
+    fontSize <- 3
+    gg <- ggplot(df,aes(x=x,y=ypos)) +
+        geom_line(aes(group=group),colour="grey80") +
+        geom_point(colour="white",size=8) +
+        geom_text(aes(label=y), size=fontSize, family="American Typewriter") +
+        scale_y_continuous(name="", breaks=yvals, labels=ylabs)
+    return(gg)
+    
+
+## Prepare data    
+df <- tufte_sort(source_df, x="year", y="value", group="group", method="tufte", min.space=0.05)
+df <- transform(df, x=factor(x, levels=c(5,10,15,20), labels=c("5 years","10 years","15 years","20 years")), 
+                y=round(y))
+
+## Plot
+plot_slopegraph(df) + labs(title="Estimates of % survival rates") + theme(axis.title=element_blank(), 
+                                                                          axis.ticks = element_blank(),
+                                                                          plot.title = element_text(hjust=0.5,
+                                                                                                    family = "American Typewriter",
+                                                                                                    face="bold"),
+                                                                          axis.text = element_text(family = "American Typewriter",
+                                                                                                   face="bold"))
+
+}
+```
+
+
+### Dumbbell chart
+Dumbbell charts are a great tool if you wish to:
+ - Visualise relative positions (like growth and decline) between two points in time (1)
+ - Compare distance between two categories. (2)
+ 
+https://github.com/hrbrmstr/ggalt  (see dumbell portion under lollipop charts) (example for 1)
+https://rud.is/b/2016/04/17/ggplot2-exercising-with-ggalt-dumbbells/ (example for 2)
+
+```{r}
+# devtools::install_github("hrbrmstr/ggalt")
+library(ggplot2)
+library(ggalt)
+theme_set(theme_classic())
+
+health <- read.csv("health.csv")
+gg <- ggplot(health, aes(x=pct_2013, xend=pct_2014, y=Area, group=Area)) + 
+        geom_dumbbell(color="#a3c4dc", size=0.75, point.colour.l="#0e668b") + 
+        scale_x_continuous(label=percent) + 
+        labs(x=NULL, y=NULL, title="Pct Change: 2013 vs 2014", caption="Source: https://github.com/hrbrmstr/ggalt") +
+        theme(plot.title = element_text(hjust=0.5, face="bold"),
+              plot.background=element_rect(fill="#f7f7f7"),
+              panel.background=element_rect(fill="#f7f7f7"),
+              panel.grid.minor=element_blank(),
+              panel.grid.major.y=element_blank(),
+              panel.grid.major.x=element_line(),
+              axis.ticks=element_blank(),
+              legend.position="top",
+              panel.border=element_blank())
+plot(gg)
+```
+
+
+
+## 4. Distribution
+When you have lots and lots of datapointss and want to study where and how the data points are distributed.
+https://github.com/hrbrmstr/ggalt
+
+### Histogram 
+Now, Let's move on to barchart. By default, if only one variable is supplied, the `geom_bar()` tries to calculate the count. In order for it to behave like a bar chart, the `stat=identity` option has to be set and `x` and `y` values must be provided.
+
+
+#### Histogram on a continuous variable
+Histogram on a continuous variable can be accomplished using either `geom_bar()` or `geom_histogram()`. When using `geom_histogram()`, you can control the number of bars using the `bins` option. Else, you can set the range covered by each bin using `binwidth`. The value of `binwidth` is on the same scale as the continuous variable on which histogram is built.
+Since, `geom_histogram` gives facility to control both number of `bins` as well as `binwidth`, it is the preferred option to create histogram on continuous variables.
+
+```{r}
+# Histogram on a continuous variable
+g <- ggplot(mpg, aes(displ)) + scale_fill_brewer(palette = "Spectral")
+
+g + geom_histogram(aes(fill=class), binwidth = .1, col="black", size=.1)   # change binwidth
+g + geom_histogram(aes(fill=class), bins=5, col="black", size=.1)  # change number of bins
+```
+
+#### Histogram on a categorical variable
+Histogram on a categorical variable would result in a frequency chart showing bars for each category. By adjusting `width`, you can adjust the thickness of the bars.
+```{r}
+# Histogram on a categorical variable
+g <- ggplot(mpg, aes(manufacturer))
+g + geom_bar(aes(fill=class), width = 0.5) + theme(axis.text.x = element_text(angle=65, vjust=0.6))
+```
+
+So according to this dataset, only chevrolet manufactures 2seaters. Jeep, landrover, lincoln and mercury makes only SUVs. Also, Toyota seems to have the largest mix, with 4 classes of cars. Can you think of a couple of such observations?
+
+
+
+### Density plot
+```{r}
+g <- ggplot(mpg, aes(cty))
+g + geom_density(aes(fill=factor(cyl))) + labs(title="Density plot", 
+                                               subtitle="Grouped by Number of cylinders",
+                                               caption="Source: mpg",
+                                               x="City Mileage",
+                                               fill="# Cylinders")
+```
+
+
+
+### Box Plot
+Boxplot shows the distributions within multiple groups, additionally showing the median, range and outliers if any. The dark line inside the box represents the median. The top of box is 75%ile and bottom of box is 25%ile. The end points of the lines (aka whiskers) is at a distance of 1.5*IQR, where IQR or Inter Quartile Range is the distance between 25th and 75th percentiles. The points outside the whiskers are marked as dots and are normally considered as extreme points.
+
+Setting `varwidth=T` adjusts the width of the boxes to be proportional to the number of observation it contains.
+```{r}
+g <- ggplot(mpg, aes(class, cty))
+g + geom_boxplot(varwidth=T) + labs(title="Box plot", 
+                          subtitle="City Mileage grouped by Class of vehicle",
+                          caption="Source: mpg",
+                          x="Class of Vehicle",
+                          y="City Mileage")
+```
+
+```{r}
+library(ggthemes)
+g <- ggplot(mpg, aes(class, cty))
+g + geom_boxplot(aes(fill=factor(cyl))) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
+  labs(title="Box plot", 
+       subtitle="City Mileage grouped by Class of vehicle",
+       caption="Source: mpg",
+       x="Class of Vehicle",
+       y="City Mileage")
+```
+
+### Dot + Boxplot: 
+The dotplot can provide more clear information in the form of summary statistics by each group. The dots are stacked such that each dot represents one observation. So, in below chart, the number of dots for a given manufacturer will match the number of rows of that manufacturer in source data.
+
+```{r}
+library(ggplot2)
+theme_set(theme_bw())
+
+# plot
+g <- ggplot(mpg, aes(manufacturer, cty))
+g + geom_boxplot() + 
+  geom_dotplot(binaxis='y', stackdir='center', dotsize = .5, fill="red") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
+  labs(title="Box plot + Dot plot", 
+       subtitle="City Mileage vs Class: Each dot represents 1 row in source data",
+       caption="Source: mpg",
+       x="Class of Vehicle",
+       y="City Mileage")
+```
+
+
+### Tufte Boxplot
+Tufte boxplot, provided by `ggthemes` package is inspired by the works of Edward Tufte. Tufte's Boxplot is just a box plot made minimal and visually appealing.
+```{r}
+library(ggthemes)
+library(ggplot2)
+theme_set(theme_tufte())  # from ggthemes
+
+# plot
+g <- ggplot(mpg, aes(manufacturer, cty))
+g + geom_tufteboxplot() + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) + 
+  labs(title="Box plot", 
+       subtitle="City Mileage grouped by Class of vehicle",
+       caption="Source: mpg",
+       x="Class of Vehicle",
+       y="City Mileage")
+
+```
+
+
+
+### Violin plots
+A violin plot is similar to boxplot but shows the density within groups. Not much info provided as in boxplots. It can be drawn using `geom_violin()`.
+```{r}
+library(ggplot2)
+theme_set(theme_bw())
+
+# plot
+g <- ggplot(mpg, aes(class, cty))
+g + geom_violin() + 
+  labs(title="Violin plot", 
+       subtitle="City Mileage vs Class of vehicle",
+       caption="Source: mpg",
+       x="Class of Vehicle",
+       y="City Mileage")
+```
+
+
+### Population Pyramids
+https://rpubs.com/walkerke/pyramids_ggplot2
+http://stackoverflow.com/questions/14680075/simpler-population-pyramid-in-ggplot2
+http://stackoverflow.com/questions/31897329/population-pyramid-plot-with-ggplot2-and-dplyr-instead-of-plyr
+```{r}
+devtools::install_github("jennybc/gapminder")
+library(gapminder)
+```
+
+
+## 5. Composition
+
+### Waffle
+```{r}
+var <- mpg$class  # the categorical data 
+
+## Prep data (nothing to change here)
+nrows <- 10
+df <- expand.grid(y = 1:nrows, x = 1:nrows)
+categ_table <- round(table(var) * ((nrows*nrows)/(length(var))))
+categ_table
+#>   2seater    compact    midsize    minivan     pickup subcompact        suv 
+#>         2         20         18          5         14         15         26 
+
+df$category <- factor(rep(names(categ_table), categ_table))  
+# NOTE: if sum(categ_table) is not 100 (i.e. nrows^2), it will need adjustment to make the sum to 100.
+
+## Plot
+ggplot(df, aes(x = x, y = y, fill = category)) + 
+        geom_tile(color = "black", size = 0.5) +
+        scale_x_continuous(expand = c(0, 0)) +
+        scale_y_continuous(expand = c(0, 0), trans = 'reverse') +
+        scale_fill_brewer(palette = "Set3") +
+        labs(title="Waffle: 'Class' of vehicles",
+             caption="Source: mpg") + 
+        theme(panel.border = element_rect(size = 2),
+              plot.title = element_text(size = rel(1.2)),
+              axis.text = element_blank(),
+              axis.title = element_blank(),
+              axis.ticks = element_blank(),
+              legend.title = element_blank(),
+              legend.position = "right")
+```
+
+
+### Pie Chart
+```{r}
+library(ggplot2)
+theme_set(theme_classic())
+
+# Pie chart from a Frequency table
+df <- as.data.frame(table(mpg$class))
+colnames(df) <- c("class", "freq")
+pie <- ggplot(df, aes(x = "", y=freq, fill = factor(class))) + 
+  geom_bar(width = 1, stat = "identity") + 
+  theme(axis.line = element_blank(), plot.title = element_text(hjust=0.5)) + 
+  labs(fill="class", x=NULL, y=NULL, title="Pie Chart of class", caption="Source: mpg")
+
+pie + coord_polar(theta = "y", start=0)
+
+# Pie chart from a Categorical variable.
+mpg$class
+pie <- ggplot(mpg, aes(x = "", fill = factor(class))) + 
+  geom_bar(width = 1) + 
+  theme(axis.line = element_blank(), plot.title = element_text(hjust=0.5)) + 
+  labs(fill="class", x=NULL, y=NULL, title="Pie Chart of class", caption="Source: mpg")
+pie + coord_polar(theta = "y", start=0)
+```
+
+
+
+### Treemap
+Treemap: treemapping is a method for displaying hierarchical data by using nested rectangles.
+https://github.com/wilkox/treemapify
+https://rud.is/b/2016/03/18/stacking-the-deck-against-treemaps/
+```{r}
+# devtools::install_github("wilkox/treemapify")
+library(treemapify)
+library(gapminder)
+data("gapminder")
+gapminder <- na.omit(gapminder[gapminder$year == 2007 & gapminder$continent %in% c("Asia", "Americas"), ])
+gapminder$continent <- factor(gapminder$continent)
+gapminder$country <- factor(gapminder$country)
+str(gapminder)
+
+
+gapminder$class <- cut(gapminder$gdpPercap, breaks=quantile(gapminder$gdpPercap, c(0, .2, .5, .75, .95, 1)),
+                       labels=c("very poor", "poor", "middle", "rich", "very rich"))
+
+gapminder <- as.data.frame(gapminder)
+
+treeMapCoordinates <- treemapify(gapminder,
+                                 area = "pop",
+                                 fill = "class",
+                                 label = "country",
+                                 group = "continent")
+
+```
+
+```{r}
+library(ggplot2)      
+proglangs <- read.csv("proglanguages.csv")
+
+# plot
+treeMapCoordinates <- treemapify(proglangs,
+                                 area = "value",
+                                 fill = "parent",
+                                 label = "id",
+                                 group = "parent")
+
+treeMapPlot <- ggplotify(treeMapCoordinates) + scale_fill_brewer(palette = "Dark2")
+print(treeMapPlot)
+```
+
+
+### Bar chart
+A bar chart can be drawn from a categorical column variable or from a separate frequency table. By adjusting `width`, you can adjust the thickness of the bars. If your data source is a frequency table, that is, if you don't want ggplot to compute the counts, you need to set the `stat=identity` inside the `geom_bar()`.
+
+```{r}
+# prep frequency table
+freqtable <- table(mpg$manufacturer)
+df <- as.data.frame.table(freqtable)
+head(df)
+#>          Var1 Freq
+#> 1        audi   18
+#> 2   chevrolet   19
+#> 3       dodge   37
+#> 4        ford   25
+#> 5       honda    9
+#> 6     hyundai   14
+```
+
+```{r}
+# plot
+library(ggplot2)
+g <- ggplot(df, aes(Var1, Freq))
+g + geom_bar(stat="identity", width = 0.5) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+```
+
+It can be computed directly from a column variable as well. In this case, only X is provided and `stat=identity` is _not_ set.
+```{r}
+# From on a categorical column variable
+g <- ggplot(mpg, aes(manufacturer))
+g + geom_bar(aes(fill=class), width = 0.5) + theme(axis.text.x = element_text(angle=65, vjust=0.6))
+```
+
+So according to this dataset, only chevrolet manufactures 2seaters. Jeep, landrover, lincoln and mercury makes only SUVs. Also, Toyota seems to have the largest mix, with 4 classes of cars. Can you think of a couple of such observations?
+
+
+
+
+
+
+
+
+
+
+
+
+
+Now, let's move on to time series plots. Time series objects can be converted to a dataframe using the fortify function and then plotted.
+```{r}
+library(ggfortify)
+ts_data <- ggplot2::fortify(AirPassengers)
+ggplot(ts_data, aes(Index, Data)) + geom_line(linetype="solid") 
+# ggplot2 linetype parameter corresponds to the lty parameter of the R base graphics package (see the "lty" description on the help page of the par() function)
+
+brks = ts_data$Index[seq(1, nrow(ts_data), 12)]
+lbls = lubridate::year(ts_data$Index[seq(1, nrow(ts_data), 12)])
+ggplot(ts_data, aes(Index, Data)) + geom_line() + scale_x_date(breaks=brks, labels = lbls)
+```
+
+What if you have to plot multiple lines? we need to draw separate geom_lines for each column.
+```{r}
+set.seed(100)
+ts_data$y2 <- ts_data$Data + runif(nrow(ts_data), 50, 100)
+ts_data$y3 <- ts_data$y2 + runif(nrow(ts_data), 50, 100)
+head(ts_data)
+```
+
+
+```{r}
+# Time series plot on Long Data
+ts_data2 <- reshape2::melt(ts_data, 
+                     variable.name = "Data",
+                     value.names = "value",
+                     id.vars = c("Index"))
+head(ts_data2)
+
+ggplot(ts_data2, aes(Index)) + 
+  geom_line(aes(y=value, col=Data))
+
+# Changing legend title with labs
+# ggplot(ts_data2, aes(Index)) + 
+#   geom_line(aes(y=value, col=Data)) + 
+#   scale_color_manual(labels = c("x", "y", "z"), values = c("blue", "red", "green")) + 
+#   labs(color = "Air Passengers")
+
+# Changing legend title with guides
+# ggplot(ts_data2, aes(Index)) + 
+#   geom_line(aes(y=value, col=Data)) + 
+#   scale_color_manual(labels = c("x", "y", "z"), values = c("blue", "red", "green")) + 
+#   guides(color=guide_legend("Air Passengers"))
+
+# Changing legend title and labels with scale_color_manual
+ggplot(ts_data2, aes(Index)) + 
+  geom_line(aes(y=value, col=Data)) + 
+  scale_color_manual(name="Air Passengers", labels = c("x", "y", "z"), values = c("Data"="blue", "y2"="red", "y3"="green"))
+
+```
+
+When you call multiple `geom_line()`s, a legend is not automatically drawn. It can be added by manually with the `scale_color_manual()` function and by replacing the `colour` aestheic with the series name.
+```{r}
+# Time series plot on Wide Data
+head(ts_data)
+
+ggplot(ts_data, aes(Index)) + 
+  geom_line(aes(y=Data, colour="line1")) + 
+  geom_line(aes(y=y2, colour="line2")) + 
+  geom_line(aes(y=y3, colour="line3")) + 
+  scale_colour_manual(name="Air Passengers",  values=c("line1"="green2", "line2"="firebrick", "line3"="steelblue"))
+
+# ref: http://stackoverflow.com/questions/10349206/add-legend-to-ggplot2-line-plot
+```
+
+Now let's see ribbon and area plots. A ribbon plot works like a time series, by the lines are thicker. So we need to specify the min and max values along the Y axis.
+```{r}
+ggplot(ts_data, aes(Index)) + geom_ribbon(aes(ymin=y2, ymax=y3)) 
+```
+
+An area plot, is a variation of ribbon plot where the ymin is zero. 
+```{r}
+ggplot(ts_data, aes(Index)) + geom_ribbon(aes(ymin=0, ymax=y2), fill="firebrick") 
+```
+
+Or we can use the geom_area function itself.
+```{r}
+ggplot(ts_data, aes(Index)) + geom_area(aes(y=y3), fill="firebrick", alpha=0.5) + geom_area(aes(y=y2), fill="firebrick")
+```
+Sweet!
+
+
+```{r}
+# Using fortify.ts
+p <- ggplot(aes(x=x, y=y), data=USAccDeaths)
+p <- p + geom_line()
+p + geom_forecast()
+p + geom_forecast(h=60)
+
+
+p <- ggplot(aes(x=time, y=USAccDeaths), data=data)
+p + geom_forecast(level=c(70,98))
+p + geom_forecast(level=c(70,98),colour="lightblue")
+
+```
 
 
 ___________________________________________________
@@ -19,3 +985,100 @@ ___________________________________________________
 Have a suggestion or found a bug? Notify [here.](https://docs.google.com/forms/d/e/1FAIpQLSeIJmlvwe562R7JVpi5J2ydLyhk5-7OrGRMFGYrMJvjPal8eA/viewform)
 
 _**Editors Note:** The [mastering R programming](packtpub.com/big-data-and-business-intelligence/mastering-r-programming-video) video course has a dedicated section for ggplot2 where the concepts are demonstrated in detail. Additionally it includes solving real coding challenges at the end of every video lesson._
+
+## 6. Change
+### Time Series Plots
+### Time Series Forecasts
+### Stacked Area Chart
+Show how something changed over time along with the contributions from individual components. The caveat is: it is nice to look at but can easily become complicated and uninterprettable if there are too many components.
+
+### Calendar Heatmap
+Calendar Heatmap: Shows variation visually over time rather than the actual value.
+http://margintale.blogspot.in/2012/04/ggplot2-time-series-heatmaps.html
+https://rpubs.com/haj3/calheatmap
+http://www.guru-gis.net/charting-time-series-as-calendar-heat-maps/
+http://stackoverflow.com/questions/26214032/fill-ggplot2-calender-heat-map-by-month
+
+### Slope Chart
+```{r}
+library(dplyr)
+theme_set(theme_classic())
+source_df <- read.csv("https://raw.githubusercontent.com/jkeirstead/r-slopegraph/master/cancer_survival_rates.csv")
+
+## Defin functions. Source: https://github.com/jkeirstead/r-slopegraph
+tufte_sort <- function(df, x="year", y="value", group="group", method="tufte", min.space=0.05) {
+    ## First rename the columns for consistency
+    ids <- match(c(x, y, group), names(df))
+    df <- df[,ids]
+    names(df) <- c("x", "y", "group")
+
+    ## Expand grid to ensure every combination has a defined value
+    tmp <- expand.grid(x=unique(df$x), group=unique(df$group))
+    tmp <- merge(df, tmp, all.y=TRUE)
+    df <- mutate(tmp, y=ifelse(is.na(y), 0, y))
+  
+    ## Cast into a matrix shape and arrange by first column
+    require(reshape2)
+    tmp <- dcast(df, group ~ x, value.var="y")
+    ord <- order(tmp[,2])
+    tmp <- tmp[ord,]
+    
+    min.space <- min.space*diff(range(tmp[,-1]))
+    yshift <- numeric(nrow(tmp))
+    ## Start at "bottom" row
+    ## Repeat for rest of the rows until you hit the top
+    for (i in 2:nrow(tmp)) {
+        ## Shift subsequent row up by equal space so gap between
+        ## two entries is >= minimum
+        mat <- as.matrix(tmp[(i-1):i, -1])
+        d.min <- min(diff(mat))
+        yshift[i] <- ifelse(d.min < min.space, min.space - d.min, 0)
+    }
+
+    
+    tmp <- cbind(tmp, yshift=cumsum(yshift))
+
+    scale <- 1
+    tmp <- melt(tmp, id=c("group", "yshift"), variable.name="x", value.name="y")
+    ## Store these gaps in a separate variable so that they can be scaled ypos = a*yshift + y
+
+    tmp <- transform(tmp, ypos=y + scale*yshift)
+    return(tmp)
+   
+}
+
+plot_slopegraph <- function(df) {
+    ylabs <- subset(df, x==head(x,1))$group
+    yvals <- subset(df, x==head(x,1))$ypos
+    fontSize <- 3
+    gg <- ggplot(df,aes(x=x,y=ypos)) +
+        geom_line(aes(group=group),colour="grey80") +
+        geom_point(colour="white",size=8) +
+        geom_text(aes(label=y), size=fontSize, family="American Typewriter") +
+        scale_y_continuous(name="", breaks=yvals, labels=ylabs)
+    return(gg)
+    
+
+## Prepare data    
+df <- tufte_sort(source_df, x="year", y="value", group="group", method="tufte", min.space=0.05)
+df <- transform(df, x=factor(x, levels=c(5,10,15,20), labels=c("5 years","10 years","15 years","20 years")), 
+                y=round(y))
+
+## Plot
+plot_slopegraph(df) + labs(title="Estimates of % survival rates") + theme(axis.title=element_blank(), 
+                                                                          axis.ticks = element_blank(),
+                                                                          plot.title = element_text(hjust=0.5,
+                                                                                                    family = "American Typewriter",
+                                                                                                    face="bold"),
+                                                                          axis.text = element_text(family = "American Typewriter",
+                                                                                                   face="bold"))
+
+}
+```
+
+
+
+
+
+
+

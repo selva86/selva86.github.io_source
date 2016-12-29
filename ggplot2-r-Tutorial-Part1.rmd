@@ -13,22 +13,22 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, fig.asp = 0.618, fig.width = 6,
 
 # Ggplot2 Tutorial - Part 1
 
-> Previously we saw a brief [tutorial](ggplot2-Tutorial-With-R.html) of making charts with ggplot2 package. It quickly touched upon the various aspects of making ggplot. In this and the following two parts, I discuss the individual steps and nuances required for constructing effective and visually appealing ggplots. So, for practical purposes I hope this tutorial serves well as a bookmark reference that will be useful for your day-to-day plotmaking.
+> Previously we saw a brief [tutorial](ggplot2-Tutorial-With-R.html) of making charts with ggplot2 package. It quickly touched upon the various aspects of making ggplot. Now, this is a complete and full fledged tutorial. I start from scratch and discuss how to construct and customize almost any ggplot. It goes into the principles, steps and nuances of making the plots effective and more visually appealing. So, for practical purposes I hope this tutorial serves well as a bookmark reference that will be useful for your day-to-day plotmaking.
 
 This is part 1 of a three part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot. 
 
  * [Part 1: Introduction to Ggplot](ggplot2-r-Tutorial-Part1.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
  
- * [Part 2: Advanced customizations](ggplot2-r-Tutorial-Part2.html), is about more advanced customizations like manipulating legend, annotations, multiplots with faceting and custom layouts
+ * [Part 2: Customizing the look and feel](ggplot2-r-Tutorial-Part2.html), is about more advanced customizations like manipulating legend, annotations, multiplots with faceting and custom layouts
  
- * [Part 3: Other types of Ggplot geoms](ggplot2-r-Tutorial-Part3.html), applies what was learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.
+ * [Part 3: The Ggplot2 Geoms - What visualisation to use for a given objective?](ggplot2-r-Tutorial-Part3.html), applies what was learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.
 
 ### Part 1: Introduction to Ggplot 
 1. [Understanding the ggplot syntax](ggplot2-r-Tutorial-Part1.html#1. Understanding the general ggplot format)
 2. [Making a simple scatter plot](ggplot2-r-Tutorial-Part1.html#2. Making a simple scatter plot)
 3. [Adjusting the X and Y axis limits](ggplot2-r-Tutorial-Part1.html#3. Adjusting the X and Y axis limits)
 4. [Changing the title and axis labels](ggplot2-r-Tutorial-Part1.html#4. Changing the title and axis labels)
-5. [Changing the color and size of points, title and axis labels and axis text](ggplot2-r-Tutorial-With-R.html#5. Changing the color and size of points, title and axis labels and axis text)
+5. [Changing the color and size of points](ggplot2-r-Tutorial-Part1.html#5. Changing the color and size of points)
 
 
 ## 1. Understanding the ggplot syntax
@@ -189,7 +189,7 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
   labs(title="Area Vs Population", subtitle="From midwest dataset", y="Population", x="Area", caption="Midwest Demographics")
 ```
 
-## 5. Changing the color and size of points, title and axis labels and text
+## 5. Changing the color and size of points
 We can change the aesthetics of a geom layer by modifying the respective geoms. Let's change the color of the points and the line.
 ```{r}
 ggplot(midwest, aes(x=area, y=poptotal)) + 
@@ -235,7 +235,9 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
 embed_png("screenshots/ggplot_tut_9.png", dpi = 220)
 ```
 
-Now each point is colored based on the `state` it belongs because of `aes(col=state)`. As an added benefit, the legend is added automatically. If needed, it can be removed by setting the `legend.position` to `None` from within a `theme()` function.
+Now each point is colored based on the `state` it belongs because of `aes(col=state)`. Not just color, but `size`, `shape`, `stroke` (thickness of boundary) and `fill` (fill color) can be used to discriminate groupings.
+
+As an added benefit, the legend is added automatically. If needed, it can be removed by setting the `legend.position` to `None` from within a `theme()` function.
 ```{r}
 gg + theme(legend.position="None")
 ```
@@ -279,6 +281,9 @@ head(brewer.pal.info, 10)  # show 10 palettes
 ```{r, echo = FALSE, eval=TRUE}
 embed_png("screenshots/color_palettes.png", dpi = 220)
 ```
+
+
+## 6. Changing axis texts and ticks location.
 
 Alright, now let's see how to change the X and Y axis text. This involves two aspects: `breaks` and `labels`. 
 
@@ -344,9 +349,15 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
 embed_png("screenshots/ggplot_tut_13.png", dpi = 220)
 ```
 
-Let's set the `breaks` for Y axis text and format the X and Y axis labels. I have used 2 methods for formatting labels: using `sprintf()` and using a custom function. Use whichever method is convenient.
+Let's set the `breaks` for Y axis text as well and format the X and Y axis labels. I have used 2 methods for formatting labels: 
+  * Using `sprintf()`. (Have formatted it as % in below example)
+  * Using a custom user defined function. (Formated 1000's to 1K scale)
+
+Use whichever method feels convenient.
+
 ```{r}
-gg + scale_x_continuous(breaks=seq(0, 0.1, 0.01), labels = sprintf("%1.2f%%", seq(0, 0.1, 0.01))) + scale_y_continuous(breaks=seq(0, 1000000, 200000), labels = function(x){paste0(x/1000, 'K')})
+gg + scale_x_continuous(breaks=seq(0, 0.1, 0.01), labels = sprintf("%1.2f%%", seq(0, 0.1, 0.01))) + 
+  scale_y_continuous(breaks=seq(0, 1000000, 200000), labels = function(x){paste0(x/1000, 'K')})
 ```
 
 ```{r, echo=F}
@@ -362,42 +373,18 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
 embed_png("screenshots/ggplot_tut_14.png", dpi = 220)
 ```
 
-The aesthetics of components such as plot and axis titles and the axis text can also be customized. Since they are part of the plot's theme, it has to be passed to the `theme()` function and the values need to be set using the `element_text()` function. Below, I have changed the size, color, face and line-height. The axis text can be tilted by changing the `angle`. 
+
+Finally, instead of changing the theme components individually (which I discuss in detail in [part 2](ggplot2-r-Tutorial-Part2.html)), we can change the entire theme itself using pre-built themes. The help page `?theme_bw` shows all the available built-in themes.
+
+This again is commonly done in couple of ways. 
+  * Use the theme_set() to set the theme before drawing the ggplot. Note that this setting will affect all future plots.
+  * Draw the ggplot and then add the overall theme setting (eg. `theme_bw()`)
 ```{r}
-gg1 <- gg + theme(plot.title=element_text(size=35, 
-                                          face="bold", 
-                                          family="American Typewriter",
-                                          color="chocolate",
-                                          hjust=0.5,
-                                          lineheight=1.2),  # title
-                  plot.subtitle=element_text(size=25, 
-                                             family="American Typewriter",
-                                             face="bold",
-                                             hjust=0.5),  # subtitle
-                  plot.caption=element_text(size=20),  # caption
-                  axis.title.x=element_text(vjust=10,  
-                                            size=30),  # X axis title
-                  axis.title.y=element_text(size=30),  # Y axis title
-                  axis.text.x=element_text(size=20, 
-                                           angle = 30,
-                                           vjust=.5),  # X axis text
-                  axis.text.y=element_text(size=20))  # Y axis text
-plot(gg1)
-```
+# method 1
+theme_set(theme_classic())  # not run
+gg1
 
-```{r, echo = FALSE, eval=TRUE}
-embed_png("screenshots/ggplot_tut_15.png", dpi = 220)
-```
-
-* `vjust`, increases the spacing between title (or label) and plot.
-* `hjust`, setting it to 0.5 centers the title.
-* `family`, sets a new font
-* `face`, sets the font face ("plain", "italic", "bold", "bold.italic")
-
-Above example covers some of the frequently used theme modifications and the actual list is too long. So `?theme` is the first place you want to look at if you want to change the look and feel of any component.
-
-Finally, instead of changing the theme components individually, we can change the entire theme itself using pre-built themes. The help page `?theme_bw` shows all the available built-in themes.
-```{r}
+# method 2
 gg1 + theme_bw()
 gg1 + theme_classic()
 ```
