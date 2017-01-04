@@ -1,23 +1,78 @@
-<h2>Ggplot Tutorial - Part 3: Advanced Visualizations - What Chart to Use for Given Objective?</h2>
+<h2>Ggplot Tutorial - Part 3: Top 50 Ggplot2 Visualizations - The Master List</h2>
 <blockquote>
 <p>What type of visualization to use for what sort of problem? This matters whenever the results of data analysis needs to be presented. This article provides guidelines to help you choose the right type of chart for your specific objectives. So when someone sees the plot, they instantly get it.</p>
 </blockquote>
 <p>This is part 3 of a three part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot.</p>
 <ul>
 <li><p><a href="ggplot2-r-Tutorial-Part1.html">Part 1: Introduction to Ggplot</a>, covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.</p></li>
-<li><p><a href="ggplot2-r-Tutorial-Part2.html">Part 2: Customizing the look and feel</a>, is about more advanced customizations like manipulating legend, annotations, multiplots with faceting and custom layouts</p></li>
-<li><p><a href="ggplot2-r-Tutorial-Part3.html">Part 3: The Ggplot2 Geoms - What visualisation to use for given objective?</a>, applies what was learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.</p></li>
+<li><p><a href="ggplot2-r-Tutorial-Part2.html">Part 2: Customizing the Look and Feel</a>, is about more advanced customizations like manipulating legend, annotations, multiplots with faceting and custom layouts</p></li>
+<li><p><a href="ggplot2-r-Tutorial-Part3.html">Part 3: Top 50 Ggplot2 Visualizations - The Master List</a>, applies what was learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.</p></li>
 </ul>
 <h3>Part 3: The Ggplot2 Geoms - What visualisation to use for a given objective?</h3>
-<p>An effective chart is one that: - Conveys the right information without distorting facts - Is simple but elegant. It should not force the audience to think much in order to get it. - Aesthetics supports information rather that overshadow it. - Is not overloaded with information.</p>
+<p>An effective chart is one that:</p>
+<ul>
+<li>Conveys the right information without distorting facts.</li>
+<li>Is simple but elegant. It should not force you to think much in order to get it.</li>
+<li>Aesthetics supports information rather that overshadow it.</li>
+<li>Is not overloaded with information.</li>
+</ul>
 <ol style="list-style-type: decimal">
-<li><a href="ggplot2-r-Tutorial-Part3.html#1.%20Correlation">Correlation</a></li>
-<li><a href="ggplot2-r-Tutorial-Part3.html#2.%20Deviation">Deviation</a></li>
-<li><a href="ggplot2-r-Tutorial-Part3.html#3.%20Ranking">Ranking</a></li>
-<li><a href="ggplot2-r-Tutorial-Part3.html#4.%20Distribution">Distribution</a></li>
-<li><a href="ggplot2-r-Tutorial-Part3.html#5.%20Composition">Composition</a></li>
-<li><a href="ggplot2-r-Tutorial-Part3.html#6.%20Change">Change</a></li>
-<li><a href="ggplot2-r-Tutorial-Part3.html#7.%20Groups">Groups</a></li>
+<li><a href="ggplot2-r-Tutorial-Part3.html#1.%20Correlation">Correlation</a>
+<ul>
+<li>Scatterplot</li>
+<li>Jitter Plot</li>
+<li>Counts Chart</li>
+<li>Bubble Plot</li>
+<li>Animated Bubble Plot</li>
+<li>Marginal Histogram / Boxplot</li>
+<li>Correlogram</li>
+</ul></li>
+<li><a href="ggplot2-r-Tutorial-Part3.html#2.%20Deviation">Deviation</a>
+<ul>
+<li>Diverging Bars</li>
+<li>Diverging Lollipop Chart</li>
+<li>Diverging Dot Plot</li>
+<li>Area Chart</li>
+</ul></li>
+<li><a href="ggplot2-r-Tutorial-Part3.html#3.%20Ranking">Ranking</a>
+<ul>
+<li>Ordered Bar Chart</li>
+<li>Lollipop Chart</li>
+<li>Dot Plot</li>
+<li>Slope Chart</li>
+<li>Dumbbell Chart</li>
+</ul></li>
+<li><a href="ggplot2-r-Tutorial-Part3.html#4.%20Distribution">Distribution</a>
+<ul>
+<li>Histogram</li>
+<li>Density Plot</li>
+<li>Box Plot</li>
+<li>Dot + Box Plot</li>
+<li>Tufte Boxplot</li>
+<li>Violin Plot</li>
+<li>Population Pyramid</li>
+</ul></li>
+<li><a href="ggplot2-r-Tutorial-Part3.html#5.%20Composition">Composition</a>
+<ul>
+<li>Waffle Chart</li>
+<li>Pie Chart</li>
+<li>Treemap</li>
+<li>Bar Chart</li>
+</ul></li>
+<li><a href="ggplot2-r-Tutorial-Part3.html#6.%20Change">Change</a>
+<ul>
+<li>Time Series Plots</li>
+<li>Stacked Area Chart</li>
+<li>Calendar Heat Map</li>
+<li>Slope Chart</li>
+<li>Seasonal Plot</li>
+</ul></li>
+<li><a href="ggplot2-r-Tutorial-Part3.html#7.%20Groups">Groups</a>
+<ul>
+<li>Hierarchical Dendrogram</li>
+<li>Clusters</li>
+<li>Spatial</li>
+</ul></li>
 </ol>
 <h2>1. Correlation</h2>
 <h3>Scatterplot</h3>
@@ -134,7 +189,7 @@ g &lt;-<span class="st"> </span><span class="kw">ggplot</span>(gapminder, <span 
 
 <span class="kw">gganimate</span>(g, <span class="dt">interval=</span><span class="fl">0.2</span>)</code></pre></div>
 <p><img src="screenshots/ggplot_masterlist_7.gif" alt="Ggplot Animated Bubble Plot" /></p>
-<h3>Marginal Histogram / Boxplot / Density plot</h3>
+<h3>Marginal Histogram / Boxplot</h3>
 <p>If you want to show the relationship as well as the distribution of the variable, use the marginal histogram. It has a histogram of the X and Y variables at the margins of the scatterplot. This can be implemented using the <code>ggMarginal()</code> function from the ‘<code>ggExtra</code>’ package. Apart from a histogram, you could choose to draw a <code>boxplot</code> or <code>density</code> plot by setting the <code>type</code> option.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># load package and data</span>
 <span class="kw">library</span>(ggplot2)
@@ -196,7 +251,7 @@ mtcars$<span class="st">`</span><span class="dt">car name</span><span class="st"
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle=</span><span class="st">&quot;Normalised mileage from &#39;mtcars&#39;&quot;</span>, <span class="dt">title=</span> <span class="st">&quot;Diverging Bars&quot;</span>) +<span class="st"> </span>
 <span class="st">  </span><span class="kw">coord_flip</span>()</code></pre></div>
 <p><img src="screenshots/ggplot_masterlist_10.png" alt="Ggplot Diverging Bars" /></p>
-<h3>Diverging Lollipop chart</h3>
+<h3>Diverging Lollipop Chart</h3>
 <p>Lollipop chart conveys the same information as bar chart and diverging bar. Except that it looks more modern. Let’s draw a lollipop using the same data I prepared in the previous example of diverging bars.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())
@@ -269,7 +324,7 @@ cty_mpg$make &lt;-<span class="st"> </span><span class="kw">factor</span>(cty_mp
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Ordered Bar Chart&quot;</span>, <span class="dt">subtitle=</span><span class="st">&quot;Make Vs Avg. Mileage&quot;</span>, <span class="dt">caption=</span><span class="st">&quot;source: mpg&quot;</span>) +<span class="st"> </span>
 <span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">65</span>, <span class="dt">vjust=</span><span class="fl">0.6</span>))</code></pre></div>
 <p><img src="screenshots/ggplot_masterlist_14.png" alt="Ggplot Ordered Barchart" /></p>
-<h3>Lollipop charts:</h3>
+<h3>Lollipop Chart:</h3>
 <p>Lollipop charts conveys the same information as in barcharts. By reducing the thick bars to thin lines, it reduces the clutter and lays more emphasis on the value. Looks nice and modern.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())
@@ -453,7 +508,7 @@ g +<span class="st"> </span><span class="kw">geom_tufteboxplot</span>() +<span c
            <span class="dt">x=</span><span class="st">&quot;Class of Vehicle&quot;</span>,
            <span class="dt">y=</span><span class="st">&quot;City Mileage&quot;</span>)</code></pre></div>
 <p><img src="screenshots/ggplot_masterlist_27.png" alt="Ggplot Tufte Boxplot" /></p>
-<h3>Violin plots</h3>
+<h3>Violin Plot</h3>
 <p>A violin plot is similar to boxplot but shows the density within groups. Not much info provided as in boxplots. It can be drawn using <code>geom_violin()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">theme_set</span>(<span class="kw">theme_bw</span>())
@@ -467,7 +522,7 @@ g +<span class="st"> </span><span class="kw">geom_violin</span>() +<span class="
        <span class="dt">x=</span><span class="st">&quot;Class of Vehicle&quot;</span>,
        <span class="dt">y=</span><span class="st">&quot;City Mileage&quot;</span>)</code></pre></div>
 <p><img src="screenshots/ggplot_masterlist_28.png" alt="Ggplot Violin Plot" /></p>
-<h3>Population Pyramids</h3>
+<h3>Population Pyramid</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(ggthemes)
 <span class="kw">options</span>(<span class="dt">scipen =</span> <span class="dv">999</span>)  <span class="co"># turns of scientific notations like 1e+40</span>
@@ -475,17 +530,21 @@ g +<span class="st"> </span><span class="kw">geom_violin</span>() +<span class="
 <span class="co"># Read data</span>
 email_campaign_funnel &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/selva86/datasets/master/email_campaign_funnel.csv&quot;</span>)
 
+<span class="co"># X Axis Breaks and Labels </span>
+brks &lt;-<span class="st"> </span><span class="kw">seq</span>(-<span class="dv">15000000</span>, <span class="dv">15000000</span>, <span class="dv">5000000</span>)
+lbls =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">as.character</span>(<span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">15</span>, <span class="dv">0</span>, -<span class="dv">5</span>), <span class="kw">seq</span>(<span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">5</span>))), <span class="st">&quot;m&quot;</span>)
+
 <span class="co"># Plot</span>
-<span class="kw">ggplot</span>(email_campaign_funnel, <span class="kw">aes</span>(<span class="dt">x =</span> Stage, <span class="dt">y =</span> Users,  <span class="co"># set data source, X and Y axis columns</span>
-                                  <span class="dt">fill =</span> Gender)) +<span class="st">   </span><span class="co"># Fill column</span>
-<span class="st">  </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">width =</span> .<span class="dv">6</span>) +<span class="st">   </span><span class="co"># draw the bars</span>
-<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(-<span class="dv">15000000</span>, <span class="dv">15000000</span>, <span class="dv">5000000</span>),   <span class="co"># X Axis Breaks</span>
-                     <span class="dt">labels =</span> <span class="kw">paste0</span>(<span class="kw">as.character</span>(<span class="kw">c</span>(<span class="kw">seq</span>(<span class="dv">15</span>, <span class="dv">0</span>, -<span class="dv">5</span>), <span class="kw">seq</span>(<span class="dv">5</span>, <span class="dv">15</span>, <span class="dv">5</span>))), <span class="st">&quot;m&quot;</span>)) +<span class="st">   </span><span class="co"># X Axis Labels</span>
-<span class="st">  </span><span class="kw">coord_flip</span>() +<span class="st">  </span><span class="co"># Flip axes</span>
-<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Email Campaign Funnel&quot;</span>) +
-<span class="st">  </span><span class="kw">theme_tufte</span>() +<span class="st">  </span><span class="co"># Tufte theme from ggfortify</span>
-<span class="st">  </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> .<span class="dv">5</span>), <span class="dt">axis.ticks =</span> <span class="kw">element_blank</span>()) +<span class="st">   </span><span class="co"># Centre plot title</span>
-<span class="st">  </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">&quot;Dark2&quot;</span>)  <span class="co"># Color palette</span></code></pre></div>
+<span class="kw">ggplot</span>(email_campaign_funnel, <span class="kw">aes</span>(<span class="dt">x =</span> Stage, <span class="dt">y =</span> Users, <span class="dt">fill =</span> Gender)) +<span class="st">   </span><span class="co"># Fill column</span>
+<span class="st">                              </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">width =</span> .<span class="dv">6</span>) +<span class="st">   </span><span class="co"># draw the bars</span>
+<span class="st">                              </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks =</span> brks,   <span class="co"># Breaks</span>
+                                                 <span class="dt">labels =</span> lbls) +<span class="st"> </span><span class="co"># Labels</span>
+<span class="st">                              </span><span class="kw">coord_flip</span>() +<span class="st">  </span><span class="co"># Flip axes</span>
+<span class="st">                              </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Email Campaign Funnel&quot;</span>) +
+<span class="st">                              </span><span class="kw">theme_tufte</span>() +<span class="st">  </span><span class="co"># Tufte theme from ggfortify</span>
+<span class="st">                              </span><span class="kw">theme</span>(<span class="dt">plot.title =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> .<span class="dv">5</span>), 
+                                    <span class="dt">axis.ticks =</span> <span class="kw">element_blank</span>()) +<span class="st">   </span><span class="co"># Centre plot title</span>
+<span class="st">                              </span><span class="kw">scale_fill_brewer</span>(<span class="dt">palette =</span> <span class="st">&quot;Dark2&quot;</span>)  <span class="co"># Color palette</span></code></pre></div>
 <p><img src="screenshots/ggplot_masterlist_29.png" alt="Population Pyramid With Ggplot" /></p>
 <h2>5. Composition</h2>
 <h3>Waffle</h3>
@@ -820,7 +879,7 @@ nottem_small &lt;-<span class="st"> </span><span class="kw">window</span>(nottem
 <span class="kw">ggseasonplot</span>(nottem_small) +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title=</span><span class="st">&quot;Seasonal plot: Air temperatures at Nottingham Castle&quot;</span>)</code></pre></div>
 <p><img src="screenshots/ggplot_masterlist_45.png" alt="Seasonal Plot in Ggplot" /> <br> <img src="screenshots/ggplot_masterlist_46.png" alt="Seasonal Plot in Ggplot" /></p>
 <h2>7. Groups</h2>
-<h3>Hierarchical Clusters</h3>
+<h3>Hierarchical Dendrogram</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># install.packages(&quot;ggdendro&quot;)</span>
 <span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(ggdendro)
@@ -860,8 +919,7 @@ df_pc_ver &lt;-<span class="st"> </span>df_pc[df_pc$Species ==<span class="st"> 
 <span class="st">  </span><span class="kw">geom_encircle</span>(<span class="dt">data =</span> df_pc_set, <span class="kw">aes</span>(<span class="dt">x=</span>PC1, <span class="dt">y=</span>PC2)) +<span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_encircle</span>(<span class="dt">data =</span> df_pc_ver, <span class="kw">aes</span>(<span class="dt">x=</span>PC1, <span class="dt">y=</span>PC2))</code></pre></div>
 <p><img src="screenshots/ggplot_masterlist_49.png" alt="Clustering in Ggplot" /></p>
-<h2>Spatial</h2>
-<h3>Ggmap</h3>
+<h3>Spatial</h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Better install the dev versions ----------</span>
 <span class="co"># devtools::install_github(&quot;dkahle/ggmap&quot;)</span>
 <span class="co"># devtools::install_github(&quot;hrbrmstr/ggalt&quot;)</span>

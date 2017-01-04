@@ -1,5 +1,5 @@
 ---
-title: "GGplot2 3-Part Tutorial in R (with examples and code) - Part 2"
+title: The Complete GGplot2 Tutorial - Part2 | Customizing the Look and Feel (with code in R)
 sitemap:
   changefreq: monthly
   lastmod: '2016-12-22T12:49:30-05:00'
@@ -11,15 +11,15 @@ layout: default
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE, fig.asp = 0.618, fig.width = 6, fig.align = 'center')
 ```
 
-## Ggplot Tutorial - Part 2: Styling and Manipulating the Output
+## Ggplot Tutorial - Part 2: Customizing the Look and Feel
 
 This is part 2 of a three part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot. 
 
  * [Part 1: Introduction to Ggplot](ggplot2-r-Tutorial-Part1.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
  
- * [Part 2: Styling and Manipulating the Output](ggplot2-r-Tutorial-Part2.html), is about more advanced customizations related to styling the plot elements (like legend, annotations, multiplots with faceting and custom layout, etc) and manipulating the output. 
+ * [Part 2: Customizing the Look and Feel](ggplot2-r-Tutorial-Part2.html), is about more advanced customizations related to styling the plot elements (like legend, annotations, multiplots with faceting and custom layout, etc) and manipulating the output. 
  
- * [Part 3: Advanced Visualizations with Ggplot2 Geoms. What Chart to Use for Given Objective?](ggplot2-r-Tutorial-Part3.html), applies what we learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.
+ * [Part 3: Top 50 Ggplot2 Visualizations - The Master List](ggplot2-r-Tutorial-Part3.html), applies what we learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.
 
 ### Part 2: Customizing the look and feel
 In this tutorial, I will cover how to modify and customize the looks of:
