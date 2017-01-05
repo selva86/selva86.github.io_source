@@ -466,11 +466,17 @@ g <- ggplot(mpg, aes(x=displ, y=hwy)) +
 # Change Plot Background elements -----------------------------------
 g + theme(panel.background = element_rect(fill = 'khaki'),
           panel.grid.major = element_line(colour = "burlywood", size=1.5),
-          panel.grid.minor = element_line(colour = "tomato", size=.25, linetype = "dashed"),
+          panel.grid.minor = element_line(colour = "tomato", 
+                                          size=.25, 
+                                          linetype = "dashed"),
           panel.border = element_blank(),
-          axis.line.x = element_line(colour = "darkorange", size=1.5, lineend = "butt"),
-          axis.line.y = element_line(colour = "darkorange", size=1.5)) +
-  labs(title="Modified Background", subtitle="How to Change Major and Minor grid, Axis Lines, No Border")
+          axis.line.x = element_line(colour = "darkorange", 
+                                     size=1.5, 
+                                     lineend = "butt"),
+          axis.line.y = element_line(colour = "darkorange", 
+                                     size=1.5)) +
+    labs(title="Modified Background", 
+         subtitle="How to Change Major and Minor grid, Axis Lines, No Border")
 
 # Change Plot Margins -----------------------------------------------
 g + theme(plot.background=element_rect(fill="salmon"), 
@@ -526,7 +532,7 @@ g + theme(panel.grid.major = element_blank(),
 ### Inheritance Structure of Theme Components
 
 ![Ggplot2 - Inheritance Structure of Ggplot theme components](screenshots/ggplot_tutorial_customize_theme_29.png)
-_source: http://docs.ggplot2.org/dev/vignettes/themes.html_
+source: http://docs.ggplot2.org/dev/vignettes/themes.html
 ___________________________________________________
 
 Have a suggestion or found a bug? Notify [here.](https://docs.google.com/forms/d/e/1FAIpQLSeIJmlvwe562R7JVpi5J2ydLyhk5-7OrGRMFGYrMJvjPal8eA/viewform)
