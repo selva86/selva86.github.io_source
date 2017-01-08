@@ -1,5 +1,5 @@
 ---
-title: The Complete GGplot2 Tutorial - Part1 | Introduction to Ggplot (with code in R)
+title: The Complete GGplot2 Tutorial - Part1 | Introduction To Ggplot (Full R code)
 layout: default
 sitemap:
     priority: 1
@@ -11,27 +11,36 @@ sitemap:
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE, fig.asp = 0.618, fig.width = 6, fig.align = 'center')
 ```
 
-# Ggplot2 Tutorial - Part 1: Introduction To Gplot
+# The Complete GGplot2 Tutorial - Part1 | Introduction To Ggplot (Full R code)
 
 > Previously we saw a brief [tutorial](ggplot2-Tutorial-With-R.html) of making charts with ggplot2 package. It quickly touched upon the various aspects of making ggplot. Now, this is a complete and full fledged tutorial. I start from scratch and discuss how to construct and customize almost any ggplot. It goes into the principles, steps and nuances of making the plots effective and more visually appealing. So, for practical purposes I hope this tutorial serves well as a bookmark reference that will be useful for your day-to-day plotmaking.
 
 This is part 1 of a three part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot. 
 
- * [Part 1: Introduction to Ggplot](ggplot2-r-Tutorial-Part1.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
+ * [Part 1: Introduction to Ggplot](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
  
- * [Part 2: Customizing the Look and Feel](ggplot2-r-Tutorial-Part2.html), is about more advanced customizations like manipulating legend, annotations, multiplots with faceting and custom layouts
+ * [Part 2: Customizing the Look and Feel](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html), is about more advanced customization like manipulating legend, annotations, multiplots with faceting and custom layouts
  
- * [Part 3: Top 50 Ggplot2 Visualizations - The Master List](ggplot2-r-Tutorial-Part3.html), applies what was learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.
+ * [Part 3: Top 50 Ggplot2 Visualizations - The Master List](Top50-Ggplot2-Visualizations-MasterList-R-Code.html), applies what was learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.
 
 ### Part 1: Introduction to Ggplot 
-1. [Understanding the ggplot syntax](ggplot2-r-Tutorial-Part1.html#1. Understanding the general ggplot format)
-2. [Making a simple scatter plot](ggplot2-r-Tutorial-Part1.html#2. Making a simple scatter plot)
-3. [Adjusting the X and Y axis limits](ggplot2-r-Tutorial-Part1.html#3. Adjusting the X and Y axis limits)
-4. [Changing the title and axis labels](ggplot2-r-Tutorial-Part1.html#4. Changing the title and axis labels)
-5. [Changing the color and size of points](ggplot2-r-Tutorial-Part1.html#5. Changing the color and size of points)
+1. [Understanding the Ggplot Syntax](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html#1. Understanding the general ggplot format)
+2. [How to Making a Simple Scatterplot](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html#2. Making a simple scatter plot)
+3. [How to Adjust the X and Y Axis Limits](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html#3. Adjusting the X and Y axis limits)
+    * [Method 1: By Deleting the Points Outside the Range](#__Method 1__: By deleting the points outside the range)
+    * [Method 2: Zooming In](#__Method 2__: Zooming In)
+4. [How to Change the Title and Axis Labels](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html#4. Changing the title and axis labels)
+5. [How to Change the Color and Size of Points](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html#5. Changing the color and size of points)
+    * [Change the Color and Size To Static](#How to Change the Color and Size To Static)
+    * [Change the Color To Reflect Categories in Another Column](#How to Change the Color To Reflect Categories in Another Column)
+6. [How to Change the X Axis Texts and Ticks Location](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html#6. How to Change the X Axis Texts and Ticks Location)
+    * [Change the X and Y Axis Text and its Location?](#How to Change the X and Y Axis Text and its Location)
+    * [Write Customized Texts for Axis Labels, by Formatting the Original Values?](#How to Write Customized Texts for Axis Labels, by Formatting the Original Values)
+    * [Customize the Entire Theme in One Shot using Pre-Built Themes?](#How to Customize the Entire Theme in One Shot using Pre-Built Themes)
+    
 
 
-## 1. Understanding the ggplot syntax
+## 1. Understanding the Ggplot Syntax
 The syntax for constructing ggplots could be puzzling if you are a beginner or work primarily with base graphics. The main difference is that, unlike base graphics, ggplot works with dataframes and not individual vectors. All the data needed to make the plot should be contained within the dataframe supplied to the `ggplot()` itself.
 
 The second noticeable feature is that you can keep enhancing the plot by adding more layers (and themes) to an existing plot created using the `ggplot()` function.
@@ -54,7 +63,7 @@ A blank ggplot is drawn. Even though the `x` and `y` are specified, there are no
 
 Also note that `aes()` function is used to specify the X and Y axes. That's because, any information that is part of the source dataframe has to be specified inside the `aes()` function.
 
-## 2. Making a simple scatter plot
+## 2. How to Make a Simple Scatterplot
 Let's make a scatterplot on top of the blank ggplot by adding points using a geom layer called `geom_point`. 
 ```{r}
 library(ggplot2)
@@ -82,7 +91,8 @@ The line of best fit is in blue. Can you find out what other `method` options ar
 ## 3. Adjusting the X and Y axis limits
 The X and Y axis limits can be controlled in 2 ways. 
 
-1. __Method 1__: By deleting the points outside the range. This will change the lines of best fit or smoothing lines as compared to the original data.
+### <a name="__Method 1__: By deleting the points outside the range"></a>__Method 1__: By deleting the points outside the range 
+This will change the lines of best fit or smoothing lines as compared to the original data.
 
 This can be done by `xlim()` and `ylim()`. You can pass a numeric vector of length 2 (with max and min values) or just the max and min values itself.
 ```{r}
@@ -101,7 +111,8 @@ In this case, the chart was not built from scratch but rather was built on top o
 
 Did you notice that the line of best fit became more horizontal compared to the original plot? This is because, when using `xlim()` and `ylim()`, the points outside the specified range are deleted and will not be considered while drawing the line of best fit (using `geom_smooth(method='lm')`). This feature might come in handy when you wish to know how the line of best fit would change when some extreme values (or outliers) are removed.
 
-2. __Method 2__: The other method is to change the X and Y axis limits by zooming in to the region of interest _without_ deleting the points. This is done using `coord_cartesian()`. 
+### <a name="__Method 2__: Zooming In"></a>__Method 2__: Zooming In
+The other method is to change the X and Y axis limits by zooming in to the region of interest _without_ deleting the points. This is done using `coord_cartesian()`. 
 
 Let's store this plot as `g1`.
 ```{r}
@@ -118,7 +129,7 @@ plot(g1)
 
 Since all points were considered, the line of best fit did not change.
 
-## 4. How to change the title and axis labels
+## 4. How to Change the Title and Axis Labels
 I have stored this as `g1`. Let's add the plot title and labels for X and Y axis. This can be done in one go using the `labs()` function with `title`, `x` and `y` arguments. Another option is to use the `ggtitle()`, `xlab()` and `ylab()`. 
 ```{r}
 library(ggplot2)
@@ -150,6 +161,7 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
 ```
 
 ## 5. How to Change the Color and Size of Points
+### <a name="How to Change the Color and Size To Static"></a>How to Change the Color and Size To Static?
 We can change the aesthetics of a geom layer by modifying the respective geoms. Let's change the color of the points and the line to a static value.
 ```{r}
 library(ggplot2)
@@ -162,7 +174,7 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
 
 ![Ggplot Scatterplot](screenshots/ggplot_tut_7.png)
 
-### How to change the color To reflect categories in another column?
+### <a name="How to Change the Color To Reflect Categories in Another Column"></a>How to Change the Color To Reflect Categories in Another Column?
 Suppose if we want the color to change based on another column in the source dataset (`midwest`), it must be specified inside the `aes()` function.
 ```{r}
 library(ggplot2)
@@ -213,10 +225,11 @@ embed_png("screenshots/color_palettes.png", dpi = 220)
 ```
 
 ## 6. How to Change the X Axis Texts and Ticks Location
+### <a name="How to Change the X and Y Axis Text and its Location"></a>How to Change the X and Y Axis Text and its Location?
 
-Alright, now let's see how to change the X and Y axis text. This involves two aspects: `breaks` and `labels`. 
+Alright, now let's see how to change the X and Y axis text and its location. This involves two aspects: `breaks` and `labels`. 
 
-    
+1. __Step 1: Set the `breaks`__    
 The `breaks` should be of the same scale as the X axis variable. Note that I am using `scale_x_continuous` because, the X axis variable is a continuous variable. Had it been a date variable, `scale_x_date` could be used. Like `scale_x_continuous()` an equivalent `scale_y_continuous()` is available for Y axis.
 
 ```{r}
@@ -236,7 +249,8 @@ gg + scale_x_continuous(breaks=seq(0, 0.1, 0.01))
 ![Changing breaks in ggplot2](screenshots/ggplot_tut_11.png)
 
 
-2. __Step 2: Change the `labels()`__: You can optionally change the `labels` at the axis ticks. `labels` take a vector of the same length as `breaks`.
+2. __Step 2: Change the `labels`__
+You can optionally change the `labels` at the axis ticks. `labels` take a vector of the same length as `breaks`.
 
 Let me demonstrate by setting the `labels` to alphabets from a to k (though there is no meaning to it in this context). 
     
@@ -271,11 +285,11 @@ gg + scale_x_reverse()
 
 ![How to reverse the axis scales in ggplot2](screenshots/ggplot_tut_13.png)
 
-### How to write customized texts for axis labels, by formatting the original values?
+### <a name="How to Write Customized Texts for Axis Labels, by Formatting the Original Values"></a>How to Write Customized Texts for Axis Labels, by Formatting the Original Values?
 
 Let's set the `breaks` for Y axis text as well and format the X and Y axis labels. I have used 2 methods for formatting labels: 
   * __Method 1__: Using `sprintf()`. (Have formatted it as % in below example)
-  * __Method 2__: Using a custom user defined function. (Formated 1000's to 1K scale)
+  * __Method 2__: Using a custom user defined function. (Formatted 1000's to 1K scale)
 
 Use whichever method feels convenient.
 ```{r}
@@ -295,9 +309,9 @@ gg + scale_x_continuous(breaks=seq(0, 0.1, 0.01), labels = sprintf("%1.2f%%", se
 
 ![How to format axis texts in ggplot2](screenshots/ggplot_tut_14.png)
 
-### How to customize the entire theme in one shot using pre-built themes?
+### <a name="How to Customize the Entire Theme in One Shot using Pre-Built Themes"></a>How to Customize the Entire Theme in One Shot using Pre-Built Themes?
 
-Finally, instead of changing the theme components individually (which I discuss in detail in [part 2](ggplot2-r-Tutorial-Part2.html)), we can change the entire theme itself using pre-built themes. The help page `?theme_bw` shows all the available built-in themes.
+Finally, instead of changing the theme components individually (which I discuss in detail in [part 2](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html)), we can change the entire theme itself using pre-built themes. The help page `?theme_bw` shows all the available built-in themes.
 
 This again is commonly done in couple of ways. 
   * Use the theme_set() to set the theme before drawing the ggplot. Note that this setting will affect all future plots.
@@ -328,7 +342,7 @@ gg + theme_classic() + labs(subtitle="Classic Theme")
 
 For more customized and fancy themes have a look at the [ggthemes](https://github.com/jrnold/ggthemes) package and the [ggthemr](https://github.com/cttobin/ggthemr) package.
 
-That's it for the basics. We are now ably positioned to tackle more advanced customizations. In [ggplot tutorial part-2](ggplot2-r-Tutorial-Part2.html), I discuss about advanced customizations on modifying theme components, manipulating legend, annotations, faceting and custom layouts.
+That's it for the basics. We are now ably positioned to tackle more advanced customization. In [ggplot tutorial part-2](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html), I discuss about advanced customization on modifying theme components, manipulating legend, annotations, faceting and custom layouts.
 
 ___________________________________________________
 

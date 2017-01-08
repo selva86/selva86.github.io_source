@@ -1,5 +1,5 @@
 ---
-title: The Complete GGplot2 Tutorial - Part2 | Customizing the Look and Feel (with code in R)
+title: The Complete GGplot2 Tutorial - Part2 | How To Customize Ggplots (Full R code)
 sitemap:
   changefreq: monthly
   lastmod: '2016-12-22T12:49:30-05:00'
@@ -11,27 +11,46 @@ layout: default
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE, fig.asp = 0.618, fig.width = 6, fig.align = 'center')
 ```
 
-## Ggplot Tutorial - Part 2: Customizing the Look and Feel
+# <a name="top"></a>The Complete Ggplot Tutorial - Part 2 | How To Customize Ggplots (Full R code)
 
-This is part 2 of a three part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot. 
+This is part 2 of a 3-part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot. 
 
- * [Part 1: Introduction to Ggplot](ggplot2-r-Tutorial-Part1.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
+ * [Part 1: Introduction to Ggplot](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
  
- * [Part 2: Customizing the Look and Feel](ggplot2-r-Tutorial-Part2.html), is about more advanced customizations related to styling the plot elements (like legend, annotations, multiplots with faceting and custom layout, etc) and manipulating the output. 
+ * [Part 2: Customizing the Look and Feel](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html), is about more advanced customization like manipulating legend, annotations, multiplots with faceting and custom layouts
  
- * [Part 3: Top 50 Ggplot2 Visualizations - The Master List](ggplot2-r-Tutorial-Part3.html), applies what we learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.
+ * [Part 3: Top 50 Ggplot2 Visualizations - The Master List](Top50-Ggplot2-Visualizations-MasterList-R-Code.html), applies what was learnt in part 1 and 2 to construct other types of ggplots such as bar charts, boxplots etc.
 
 ### Part 2: Customizing the look and feel
-In this tutorial, I will cover how to modify and customize the looks of:
+In this tutorial, I discuss how to customize the looks of the 6 most important aesthetics of a plot. Put together, it provides a fairly comprehensive list of how to accomplish your plot customization tasks in detail.
 
-1. [Plot and Axis Titles](ggplot2-r-Tutorial-Part2.html#1. Plot and Axis Titles)
-2. [Modifying Legend](ggplot2-r-Tutorial-Part2.html#2. Modifying Legend)
-3. [Text, Label and Annotation](ggplot2-r-Tutorial-Part2.html#3. Text, Label and Annotation)
-4. [Flipping and Reversing X and Y Axis](ggplot2-r-Tutorial-Part2.html#4. Flipping and Reversing X and Y Axis)
-5. [Faceting: Draw multiple plots within one figure](ggplot2-r-Tutorial-Part2.html#5. Faceting: Draw multiple plots within one figure)
-6. [Plot Background, Major and Minor Axis](ggplot2-r-Tutorial-Part2.html#6. Plot Background, Major and Minor Axis)
+1. [Adding Plot and Axis Titles](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#1. Adding Plot and Axis Titles)
+2. [Modifying Legend](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#2. Modifying Legend)
+    * [How to Change Legend Title](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Legend Title)
+    * [How to Change Legend Labels and Point Color](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Legend Labels and Point Color)
+    * [How to Change Order of Legend](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Order of Legend)
+    * [How to Style the Legend Title, Text and Key](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Style of Legend Title, Text and Key)
+    * [How to Change Legend Positions](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Legend Positions)
+3. [Adding Text, Label and Annotation](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#3. Adding Text, Label and Annotation)
+    * [How to Adding Text and Label around the Points](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Text and Label around the Points)
+    * [How to Adding Custom Annotation Anywhere inside Plot](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Annotation)
+4. [Flipping and Reversing X and Y Axis](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#4. Flipping and Reversing X and Y Axis)
+5. [Faceting: Draw multiple plots within one figure](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#5. Faceting: Draw multiple plots within one figure)
+    * [Facet Wrap](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Facet Wrap)
+    * [Facet Grid](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Facet Grid)
+6. [Modifying Plot Background, Major and Minor Axis](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#6. Modifying Plot Background, Major and Minor Axis)
+    * [How to Change Plot Background](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Change Plot Background)
+    * [How to Removing Major and Minor Grid, Border, Axis Title, Text and Ticks](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Removing Major and Minor Grid, Border, Axis Title, Text and Ticks)
+    * [How to Add an Image in Background](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Add an Image in Background)
+    * [Inheritance Structure of Theme Components](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html#Inheritance Structure of Theme Components)
 
-Let's begin with a scatterplot of Population against Area where the point's color and size vary based on state (categorial) and `popdensity` (continuous) respectively.
+
+Let's begin with a scatterplot of Population against Area from `midwest` dataset. The point's color and size vary based on `state` (categorical) and `popdensity` (continuous) columns respectively. We have done something similar in the [previous ggplot2 tutorial](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html) already.
+
+The below plot has the essential components such as the title, axis labels and legend setup nicely. But how to modify the looks? 
+
+Most of the requirements related to look and feel can be achieved using the `theme()` function. It accepts a large number of arguments. Type `?theme` in the R console and see for yourself.
+
 ```{r}
 # Setup
 options(scipen=999)
@@ -52,21 +71,21 @@ plot(gg)
 
 ![A full featured ggplot](screenshots/ggplot_tutorial_customize_theme_1.png)
 
-
-Let's discuss a number of tasks related to changing the plot output, starting with modifying the legend.
-
-## 1. Plot and Axis Titles
-The aesthetics of components such as plot and axis titles and the axis text can also be customized. Since they are part of the plot's theme, it has to be passed to the `theme()` function and the values need to be set using the `element_text()` function. 
-
 The arguments passed to `theme()` components require to be set using special `element_type()` functions. They are of 4 major types.
 
 1. `element_text()`: Since the title, subtitle and captions are textual items, `element_text()` function is used to set it.
-2. `element_line()`: Likewise `element_line()` is use to modify line based components such as [axis line, major and minor grid lines](Plot Background, Major and Minor Axis](ggplot2-r-Tutorial-Part2.html#6. Plot Background, Major and Minor Axis)
-3. `element_rect()`: Modifies rectangle components such as [plot and panel background](ggplot2-r-Tutorial-Part2.html#6. Plot Background, Major and Minor Axis)
+2. `element_line()`: Likewise `element_line()` is use to modify line based components such as the axis lines, major and minor grid lines, etc.
+3. `element_rect()`: Modifies rectangle components such as plot and panel background.
 4. `element_blank()`: Turns off displaying the theme item.
 
-Below, I have changed the size, color, face and line-height. The axis text can be tilted by changing the `angle`. 
+More on this follows in upcoming discussion. 
 
+Let's discuss a number of tasks related to changing the plot output, starting with modifying the title and axis texts.
+
+## 1. Adding Plot and Axis Titles
+Plot and axis titles and the axis text are part of the plot's theme. Therefore, it can be modified using the `theme()` function. The `theme()` function accepts one of the four `element_type()` functions mentioned above as arguments. Since the plot and axis titles are textual components, `element_text()` is used to modify them. 
+
+Below, I have changed the size, color, face and line-height. The axis text can be rotated by changing the `angle`. 
 
 ```{r}
 library(ggplot2)
@@ -108,11 +127,16 @@ gg + theme(plot.title=element_text(size=20,
 
 Above example covers some of the frequently used theme modifications and the actual list is too long. So `?theme` is the first place you want to look at if you want to change the look and feel of any component.
 
+<a href="#top">[Back to Top]</a>
 
 ## 2. Modifying Legend
 
-### Legend Title
-Let's begin with changing the legend title. We have two legends, one each for color and size. The size is based on a continuous variable while the color is based on a categorical(discrete).
+Whenever your plot's geom (like points, lines, bars, etc) is set to change the aesthetics (`fill`, `size`, `col`, `shape` or `stroke`) based on another column, as in `geom_point(aes(col=state, size=popdensity))`, a legend is automatically drawn.
+
+If you are creating a geom where the aesthetics are static, a legend is _not_ drawn by default. In such cases you might want to [create your own legend manually](ggplot2-r-Tutorial-Part3.html#Time Series Plot From  Wide Data Format). The below examples are for cases where you have the legend created automatically.
+
+### <a name="Legend Title"></a>How to Change the Legend Title
+Let's now change the legend title. We have two legends, one each for color and size. The size is based on a continuous variable while the color is based on a categorical(discrete) variable. 
 
 There are 3 ways to change the legend title.
 
@@ -146,7 +170,9 @@ plot(gg)
 <br>
 
 #### Method 3: Using `scale_aesthetic_vartype()` format
-The format of `scale_aestheic_vartype()` (like `scale_size_continuous()`) allows you to turn off legend for one particular aesthetic, leaving the rest in place. This can be done just by setting `guide=FALSE`.
+The format of `scale_aestheic_vartype()` allows you to turn off legend for one particular aesthetic, leaving the rest in place. This can be done just by setting `guide=FALSE`. For example, if the legend is for size of points based on a continuous variable, then `scale_size_continuous()` would be the right function to use. 
+
+Can you guess what function to use if you have a legend for shape and is based on a categorical variable?
 
 ```{r}
 library(ggplot2)
@@ -162,8 +188,12 @@ gg + scale_color_discrete(name="State") + scale_size_continuous(name = "Density"
 ```
 ![Change Ggplot2 Legend Title](screenshots/ggplot_tutorial_customize_theme_3.png)
 
+<a href="#top">[Back to Top]</a>
 
-### How to Change Legend Labels and Point Colors for Categories
+### <a name="Legend Labels and Point Color"></a>How to Change Legend Labels and Point Colors for Categories
+
+This can be done using the respective `scale_aesthetic_manual()` function. The new legend labels are supplied as a character vector to the `labels` argument. If you want to change the color of the categories, it can be assigned to the `values` argument as shown in below example.
+
 ```{r}
 library(ggplot2)
 
@@ -188,8 +218,13 @@ gg + scale_color_manual(name="State",
 
 ![Change Ggplot2 Legend Label and Point Color](screenshots/ggplot_tutorial_customize_theme_4.png)
 
-### Change the Order of Legend
-In case you want to show the legend for color (`State`) before size (`Density`).
+<a href="#top">[Back to Top]</a>
+
+### <a name="Order of Legend"></a>Change the Order of Legend
+In case you want to show the legend for color (`State`) before size (`Density`), it can be done with the `guides()` function. The `order` of the legend has to be set as desired. 
+
+If you want to change the position of the labels inside the legend, set it in the required order as seen in previous example.
+
 ```{r}
 library(ggplot2)
 
@@ -204,9 +239,10 @@ gg + guides(colour = guide_legend(order = 1),
 ```
 ![Change the Order of Legend in Ggplot2](screenshots/ggplot_tutorial_customize_theme_5.png)
 
+<a href="#top">[Back to Top]</a>
 
-### How to Style the Legend Title, Text and Key
-The styling of legend title, text, key and the guide can also be adjusted.
+### <a name="Style of Legend Title, Text and Key"></a>How to Style the Legend Title, Text and Key
+The styling of legend title, text, key and the guide can also be adjusted. The legend's key is a figure like element, so it has to be set using `element_rect()` function.
 ```{r}
 library(ggplot2)
 
@@ -224,7 +260,9 @@ gg + theme(legend.title = element_text(size=12, color = "firebrick"),
 
 ![Style the Legend Title, Text and Key in Ggplot2](screenshots/ggplot_tutorial_customize_theme_6.png)
 
-### Legend Positions
+<a href="#top">[Back to Top]</a>
+
+### <a name="Legend Positions"></a>How to Remove the Legend and Change Legend Positions
 The legend's position inside the plot is an aspect of the theme. So it can be modified using the `theme()` function. If you want to place the legend inside the plot, you can additionally control the hinge point of the legend using `legend.justification`. 
 
 The `legend.position` is the x and y axis position in chart area, where `(0,0)` is bottom left of the chart and `(1,1)` is top right. Likewise, `legend.justification` refers to the hinge point inside the legend.
@@ -270,10 +308,15 @@ gg + theme(legend.title = element_text(size=12, color = "salmon", face="bold"),
 ![Ggplot2 - Legend Inside the Plot - Bottom-right](screenshots/ggplot_tutorial_customize_theme_10.png)
 ![Ggplot2 - Legend Inside the Plot - Top-Left](screenshots/ggplot_tutorial_customize_theme_11.png)
 
-## 3. Text, Label and Annotation
+<a href="#top">[Back to Top]</a>
 
-### Text and Label around the points
-Let's try adding some text. We will add text to those counties with population greater than 400K. In order to achieve this, I create another dataframe (`midwest_sub`) that contains only the counties that qualifies the said condition. Then, draw the `geom_text` and `geom_label` with this new dataframe as the `data` source. This will ensure that labels (`geom_label`) are added only for the points contained in the new dataframe.  
+## 3. Adding Text, Label and Annotation
+
+
+### <a name="Text and Label around the Points"></a>How to Add Text and Label around the Points
+Let's try adding some text. We will add text to only those counties that have population greater than 400K. In order to achieve this, I create another subsetted dataframe (`midwest_sub`) that contains only the counties that qualifies the said condition. 
+
+Then, draw the `geom_text` and `geom_label` with this new dataframe as the `data` source. This will ensure that labels (`geom_label`) are added only for the points contained in the new dataframe.  
 
 ```{r}
 library(ggplot2)
@@ -306,7 +349,9 @@ gg + geom_label_repel(aes(label=large_county), size=2, data=midwest_sub) + labs(
 Since the label is looked up from a different dataframe, we need to set the data argument.
 
 
-### Annotation
+<a href="#top">[Back to Top]</a>
+
+### <a name="Annotation"></a>How to Add Annotations Anywhere inside Plot
 Let's see how to add annotation to any specific point of the chart. It can be done with the `annotation_custom()` function which takes in a `grob` as the argument. So, let's create a grob the holds the text you want to display using the `grid` package.
 ```{r}
 library(ggplot2)
@@ -325,6 +370,8 @@ gg + annotation_custom(my_grob)
 ```
 
 ![Ggplot2 - Text Annotations](screenshots/ggplot_tutorial_customize_theme_16.png)
+
+<a href="#top">[Back to Top]</a>
 
 ## 4. Flipping and Reversing X and Y Axis
 ### How to flip the X and Y axis?
@@ -360,8 +407,10 @@ gg + scale_x_reverse() + scale_y_reverse()
 ![Ggplot2 - How to flip X and Y Axis](screenshots/ggplot_tutorial_customize_theme_17.png)
 ![Ggplot2 - How to reverse X and Y axis scales](screenshots/ggplot_tutorial_customize_theme_18.png)
 
+<a href="#top">[Back to Top]</a>
+
 ## 5. Faceting: Draw multiple plots within one figure
-Let's use a the `mpg` dataset for this one. It is available in the ggplot2 package, or you can read it from this link.
+Let's use a the `mpg` dataset for this one. It is available in the ggplot2 package, or you can import it from this [link](http://goo.gl/uEeRGu).
 
 ```{r}
 library(ggplot2)
@@ -379,7 +428,12 @@ plot(g)
 
 We have a simple chart of highway mileage `(hwy)` against the engine displacement `(displ)` for the whole dataset. But what if you want to study how this relationship varies for different classes of vehicles?
 
-The `facet_wrap()` does just that. By default, all the plots share the same scale in both X and Y axis. You can set them free by setting `scales='free'` but this way it could be harder to compare the groups.
+<a href="#top">[Back to Top]</a>
+
+### <a name="Facet Wrap"></a>Facet Wrap
+The `facet_wrap()` is used to break down a large plot into multiple small plots for individual categories. It takes a formula as the main argument. The items to the left of `~` forms the rows while those to the right form the columns. 
+
+By default, all the plots share the same scale in both X and Y axis. You can set them free by setting `scales='free'` but this way it could be harder to compare between groups.
 ```{r}
 library(ggplot2)
 
@@ -398,10 +452,14 @@ g + facet_wrap( ~ class, scales = "free") + labs(title="hwy vs displ", caption =
 ![Ggplot2 - Faceting - Multiple plots in one figure](screenshots/ggplot_tutorial_customize_theme_20.png)
 ![Ggplot2 - Faceting - Multiple plots in one figure with free scales](screenshots/ggplot_tutorial_customize_theme_21.png)
 
+<a href="#top">[Back to Top]</a>
+
 So, What do you infer from this?
 For one, most 2 seater cars have higher engine displacement while the minivan and compact vehicles are on the lower side. This is evident from where the points are placed along the X-axis.
 
 Also, the highway mileage drops across all segments as the engine displacement increases. This drop seems more pronounced in compact and subcompact vehicles.
+
+### <a name="Facet Grid"></a>Facet Grid
 
 The headings of the middle and bottom rows take up significant space. The `facet_grid()` would get rid of it and give more area to the charts. The main difference with `facet_grid` is that it is not possible to choose the number of rows and columns in the grid.
 
@@ -423,6 +481,7 @@ plot(g1)
 
 ![Ggplot2 - Facet Grid - Multiple plots in one figure](screenshots/ggplot_tutorial_customize_theme_22.png)
 
+<a href="#top">[Back to Top]</a>
 
 Let's make one more to vary by cylinder.
 ```{r}
@@ -448,12 +507,15 @@ Great!. It is possible to layout both these charts in the sample panel. I prefer
 library(gridExtra)
 gridExtra::grid.arrange(g1, g2, ncol=2)
 ```
+
+<a href="#top">[Back to Top]</a>
+
 ![Ggplot2 - Custom Layouts](screenshots/ggplot_tutorial_customize_theme_24.png)
 
 
-## 6. Plot Background, Major and Minor Axis
+## 6. Modifying Plot Background, Major and Minor Axis
 
-### Change Plot background
+### <a name="Change Plot background"></a>How to Change Plot background
 ```{r}
 library(ggplot2)
 
@@ -486,7 +548,10 @@ g + theme(plot.background=element_rect(fill="salmon"),
 ![Ggplot2 - How to change plot background](screenshots/ggplot_tutorial_customize_theme_25.png)
 ![Ggplot2 - How to change plot margin](screenshots/ggplot_tutorial_customize_theme_26.png)
 
-### Removing major and minor grid, border, axis title, text and ticks
+<a href="#top">[Back to Top]</a>
+
+
+### <a name="Removing Major and Minor Grid, Border, Axis Title, Text and Ticks"></a>How to Remove Major and Minor Grid, Change Border, Axis Title, Text and Ticks
 ```{r}
 library(ggplot2)
 
@@ -506,7 +571,9 @@ g + theme(panel.grid.major = element_blank(),
 ```
 ![Ggplot2 - How to remove major and minor axis grid, border, axis title, text and ticks](screenshots/ggplot_tutorial_customize_theme_27.png)
 
-### Add an image in background
+<a href="#top">[Back to Top]</a>
+
+### <a name="Add an Image in Background"></a>Add an Image in Background
 ```{r}
 library(ggplot2)
 library(grid)
@@ -529,12 +596,19 @@ g + theme(panel.grid.major = element_blank(),
 ```
 ![Ggplot2 - Add an image in background](screenshots/ggplot_tutorial_customize_theme_28.png)
 
-### Inheritance Structure of Theme Components
+<a href="#top">[Back to Top]</a>
+
+### <a name="Inheritance Structure of Theme Components"></a>Inheritance Structure of Theme Components
 
 ![Ggplot2 - Inheritance Structure of Ggplot theme components](screenshots/ggplot_tutorial_customize_theme_29.png)
 source: http://docs.ggplot2.org/dev/vignettes/themes.html
+
+<a href="#top">[Back to Top]</a>
+
 ___________________________________________________
 
 Have a suggestion or found a bug? Notify [here.](https://docs.google.com/forms/d/e/1FAIpQLSeIJmlvwe562R7JVpi5J2ydLyhk5-7OrGRMFGYrMJvjPal8eA/viewform)
+
+
 
 _**Editors Note:** The [mastering R programming](packtpub.com/big-data-and-business-intelligence/mastering-r-programming-video) video course has a dedicated section for ggplot2 where the concepts are demonstrated in detail. Additionally it includes solving real coding challenges at the end of every video lesson._
