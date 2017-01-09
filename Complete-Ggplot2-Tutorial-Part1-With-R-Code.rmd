@@ -41,7 +41,7 @@ This is part 1 of a three part tutorial on ggplot2, an aesthetically pleasing (a
 
 
 ## 1. Understanding the Ggplot Syntax
-The syntax for constructing ggplots could be puzzling if you are a beginner or work primarily with base graphics. The main difference is that, unlike base graphics, ggplot works with dataframes and not individual vectors. All the data needed to make the plot should be contained within the dataframe supplied to the `ggplot()` itself.
+The syntax for constructing ggplots could be puzzling if you are a beginner or work primarily with base graphics. The main difference is that, unlike base graphics, ggplot works with dataframes and not individual vectors. All the data needed to make the plot is typically be contained within the dataframe supplied to the `ggplot()` itself or can be supplied to respective geoms. More on that later.
 
 The second noticeable feature is that you can keep enhancing the plot by adding more layers (and themes) to an existing plot created using the `ggplot()` function.
 
