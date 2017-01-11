@@ -1,5 +1,5 @@
 ---
-title: The Complete GGplot2 Tutorial - Part2 | How To Customize Ggplots (Full R code)
+title: The Complete Ggplot2 Tutorial - Part2 | How To Customize Ggplots (Full R code)
 sitemap:
   changefreq: monthly
   lastmod: '2016-12-22T12:49:30-05:00'
@@ -11,11 +11,11 @@ layout: default
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE, fig.asp = 0.618, fig.width = 6, fig.align = 'center')
 ```
 
-# <a name="top"></a>The Complete Ggplot Tutorial - Part 2 | How To Customize Ggplots (Full R code)
+# <a name="top"></a>The Complete Ggplot2 Tutorial - Part 2 | How To Customize Ggplots (Full R code)
 
 This is part 2 of a 3-part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot. 
 
- * [Part 1: Introduction to Ggplot](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
+ * [Part 1: Introduction to ggplot2](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
  
  * [Part 2: Customizing the Look and Feel](Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html), is about more advanced customization like manipulating legend, annotations, multiplots with faceting and custom layouts
  
