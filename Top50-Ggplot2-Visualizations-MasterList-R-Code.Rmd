@@ -13,9 +13,9 @@ knitr::opts_chunk$set(echo = TRUE, interval = .2, eval = FALSE, fig.asp = 0.618,
 
 # Top 50 Ggplot2 Visualizations - The Master List (With Full R Code)
 
-> What type of visualization to use for what sort of problem? This tutorial helps you choose the right type of chart for your specific objectives and how to implement it in R using Ggplot2.
+> What type of visualization to use for what sort of problem? This tutorial helps you choose the right type of chart for your specific objectives and how to implement it in R using ggplot2.
 
-This is part 3 of a three part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot. 
+This is part 3 of a three part tutorial on ggplot2, an aesthetically pleasing (and very popular) graphics framework in R. This tutorial is primarily geared towards those having some basic knowledge of the R programming language and want to make complex and nice looking charts with R ggplot2. 
 
  * [Part 1: Introduction to Ggplot](Complete-Ggplot2-Tutorial-Part1-With-R-Code.html), covers the basic knowledge about constructing simple ggplots and modifying the components and aesthetics.
  
@@ -121,7 +121,7 @@ gg <- ggplot(midwest, aes(x=area, y=poptotal)) +
 plot(gg)
 ```
 
-![Ggplot Scatterplot](screenshots/ggplot_masterlist_1.png)
+![ggplot2 Scatterplot](screenshots/ggplot_masterlist_1.png)
 
 <a href="#top">[Back to Top]</a>
 ### <a name="Scatterplot With Encircling"></a>Scatterplot With Encircling
@@ -148,7 +148,7 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
 ```
 
 
-![Ggplot Scatterplot With Encircling](screenshots/ggplot_masterlist_2.png)
+![ggplot2 Scatterplot With Encircling](screenshots/ggplot_masterlist_2.png)
 <a href="#top">[Back to Top]</a>
 
 ### <a name="Jitter Plot"></a>Jitter Plot 
@@ -168,7 +168,7 @@ g + geom_point() + geom_smooth(method="lm", se=F) +
        title="Scatterplot with overlapping points", 
        caption="Source: midwest")
 ```
-![Ggplot Scatterplot With Hidden Data points](screenshots/ggplot_masterlist_3.png)
+![ggplot2 Scatterplot With Hidden Data points](screenshots/ggplot_masterlist_3.png)
 
 What we have here is a scatterplot of city and highway mileage in `mpg` dataset. We have seen a similar scatterplot and this looks neat and gives a clear idea of how the city mileage (`cty`) and highway mileage (`hwy`) are well correlated.
 
@@ -194,7 +194,7 @@ g + geom_jitter(width = .5, size=1) +
   labs(subtitle="mpg: city vs highway mileage", y="hwy", x="cty", 
        title="Jittered Points")
 ```
-![Ggplot Jitter Plot](screenshots/ggplot_masterlist_4.png)
+![ggplot2 Jitter Plot](screenshots/ggplot_masterlist_4.png)
 More points are revealed now. More the `width`, more the points are moved jittered from their original position.
 
 <a href="#top">[Back to Top]</a>
@@ -214,7 +214,7 @@ g + geom_count(col="tomato3", show.legend=F) +
   labs(subtitle="mpg: city vs highway mileage", y="hwy", x="cty", 
        title="Counts Plot")
 ```
-![Ggplot Counts Plot](screenshots/ggplot_masterlist_5.png)
+![ggplot2 Counts Plot](screenshots/ggplot_masterlist_5.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -242,7 +242,7 @@ g <- ggplot(mpg_select, aes(displ, cty)) + labs(subtitle="mpg: Displacement vs C
 
 g + geom_jitter(aes(col=manufacturer, size=hwy)) + geom_smooth(aes(col=manufacturer), method="lm", se=F)
 ```
-![Ggplot Bubble Plot](screenshots/ggplot_masterlist_6.png)
+![ggplot2 Bubble Plot](screenshots/ggplot_masterlist_6.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -269,7 +269,7 @@ g <- ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, frame = year)) +
 gganimate(g, interval=0.2)
 ```
 
-![Ggplot Animated Bubble Plot](screenshots/ggplot_masterlist_7.gif)
+![ggplot2 Animated Bubble Plot](screenshots/ggplot_masterlist_7.gif)
 
 <a href="#top">[Back to Top]</a>
 
@@ -296,10 +296,10 @@ ggMarginal(g, type = "histogram", fill="transparent")
 ggMarginal(g, type = "boxplot", fill="transparent")
 # ggMarginal(g, type = "density", fill="transparent")
 ```
-![Ggplot Marginal Histogram](screenshots/ggplot_masterlist_8_1.png)
+![ggplot2 Marginal Histogram](screenshots/ggplot_masterlist_8_1.png)
 <br>
 <br>
-![Ggplot Marginal Histogram](screenshots/ggplot_masterlist_8_2.png)
+![ggplot2 Marginal Histogram](screenshots/ggplot_masterlist_8_2.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -325,7 +325,7 @@ ggcorrplot(corr, hc.order = TRUE,
            title="Correlogram of mtcars", 
            ggtheme=theme_bw)
 ```
-![Ggplot Correlogram](screenshots/ggplot_masterlist_9.png)
+![ggplot2 Correlogram](screenshots/ggplot_masterlist_9.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -365,7 +365,7 @@ ggplot(mtcars, aes(x=`car name`, y=mpg_z, label=mpg_z)) +
   labs(subtitle="Normalised mileage from 'mtcars'", title= "Diverging Bars") + 
   coord_flip()
 ```
-![Ggplot Diverging Bars](screenshots/ggplot_masterlist_10.png)
+![ggplot2 Diverging Bars](screenshots/ggplot_masterlist_10.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -384,7 +384,7 @@ ggplot(mtcars, aes(x=`car name`, y=mpg_z, label=mpg_z)) +
   ylim(-2.5, 2.5) +
   coord_flip()
 ```
-![Ggplot Lollipop Plot](screenshots/ggplot_masterlist_11.png)
+![ggplot2 Lollipop Plot](screenshots/ggplot_masterlist_11.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -406,7 +406,7 @@ ggplot(mtcars, aes(x=`car name`, y=mpg_z, label=mpg_z)) +
   ylim(-2.5, 2.5) +
   coord_flip()
 ```
-![Ggplot Dotplot](screenshots/ggplot_masterlist_12.png)
+![ggplot2 Dotplot](screenshots/ggplot_masterlist_12.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -435,7 +435,7 @@ ggplot(economics[1:100, ], aes(date, returns_perc)) +
        y="% Returns for Personal savings", 
        caption="Source: economics")
 ```
-![Ggplot Area Chart](screenshots/ggplot_masterlist_13.png)
+![ggplot2 Area Chart](screenshots/ggplot_masterlist_13.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -474,7 +474,7 @@ ggplot(cty_mpg, aes(x=make, y=mileage)) +
   labs(title="Ordered Bar Chart", subtitle="Make Vs Avg. Mileage", caption="source: mpg") + 
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 ```
-![Ggplot Ordered Barchart](screenshots/ggplot_masterlist_14.png)
+![ggplot2 Ordered Barchart](screenshots/ggplot_masterlist_14.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -492,7 +492,7 @@ ggplot(cty_mpg, aes(x=make, y=mileage)) +
   labs(title="Lollipop Chart", subtitle="Make Vs Avg. Mileage", caption="source: mpg") + 
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 ```
-![Ggplot Lollipop Barchart](screenshots/ggplot_masterlist_15.png)
+![ggplot2 Lollipop Barchart](screenshots/ggplot_masterlist_15.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -510,7 +510,7 @@ ggplot(cty_mpg, aes(x=make, y=mileage)) +
   labs(title="Dot Plot", subtitle="Make Vs Avg. Mileage", caption="source: mpg") +  
   coord_flip()
 ```
-![Ggplot Dot Plot](screenshots/ggplot_masterlist_16.png)
+![ggplot2 Dot Plot](screenshots/ggplot_masterlist_16.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -551,7 +551,7 @@ p + theme(panel.background = element_blank(),
            panel.border = element_blank(),
            plot.margin = unit(c(1,2,1,2), "cm"))
 ```
-![Ggplot Slope Chart](screenshots/ggplot_masterlist_17.png)
+![ggplot2 Slope Chart](screenshots/ggplot_masterlist_17.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -587,7 +587,7 @@ gg <- ggplot(health, aes(x=pct_2013, xend=pct_2014, y=Area, group=Area)) +
               panel.border=element_blank())
 plot(gg)
 ```
-![Ggplot Dumbbell Chart](screenshots/ggplot_masterlist_18.png)
+![ggplot2 Dumbbell Chart](screenshots/ggplot_masterlist_18.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -615,8 +615,8 @@ g + geom_histogram(aes(fill=class), binwidth = .1, col="black", size=.1) +  # ch
 g + geom_histogram(aes(fill=class), bins=5, col="black", size=.1) +   # change number of bins
   labs(title="Histogram with Fixed Bins", subtitle="Engine Displacement across Vehicle Classes") 
 ```
-![Ggplot Histogram on Numeric Variable](screenshots/ggplot_masterlist_19.png)
-![Ggplot Histogram with 5 Bins - Spectral](screenshots/ggplot_masterlist_20.png)
+![ggplot2 Histogram on Numeric Variable](screenshots/ggplot_masterlist_19.png)
+![ggplot2 Histogram with 5 Bins - Spectral](screenshots/ggplot_masterlist_20.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -633,7 +633,7 @@ g + geom_bar(aes(fill=class), width = 0.5) +
   labs(title="Histogram on Categorical Variable", 
        subtitle="Manufacturer across Vehicle Classes") 
 ```
-![Ggplot Histogram on Categorical Variable](screenshots/ggplot_masterlist_22.png)
+![ggplot2 Histogram on Categorical Variable](screenshots/ggplot_masterlist_22.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -650,7 +650,7 @@ g + geom_density(aes(fill=factor(cyl))) + labs(title="Density plot",
                                                x="City Mileage",
                                                fill="# Cylinders")
 ```
-![Ggplot Density Plot](screenshots/ggplot_masterlist_23.png)
+![ggplot2 Density Plot](screenshots/ggplot_masterlist_23.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -672,7 +672,7 @@ g + geom_boxplot(varwidth=T, fill="plum") + labs(title="Box plot",
                                                  x="Class of Vehicle",
                                                  y="City Mileage")
 ```
-![Ggplot BoxPlot](screenshots/ggplot_masterlist_24.png)
+![ggplot2 BoxPlot](screenshots/ggplot_masterlist_24.png)
 
 ```{r}
 library(ggthemes)
@@ -685,7 +685,7 @@ g + geom_boxplot(aes(fill=factor(cyl))) +
        x="Class of Vehicle",
        y="City Mileage")
 ```
-![Ggplot Grouped BoxPlot](screenshots/ggplot_masterlist_25.png)
+![ggplot2 Grouped BoxPlot](screenshots/ggplot_masterlist_25.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -707,7 +707,7 @@ g + geom_boxplot() +
        x="Class of Vehicle",
        y="City Mileage")
 ```
-![Ggplot Box and DotPlot](screenshots/ggplot_masterlist_26.png)
+![ggplot2 Box and DotPlot](screenshots/ggplot_masterlist_26.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -729,7 +729,7 @@ g + geom_tufteboxplot() +
            y="City Mileage")
 
 ```
-![Ggplot Tufte Boxplot](screenshots/ggplot_masterlist_27.png)
+![ggplot2 Tufte Boxplot](screenshots/ggplot_masterlist_27.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -748,7 +748,7 @@ g + geom_violin() +
        x="Class of Vehicle",
        y="City Mileage")
 ```
-![Ggplot Violin Plot](screenshots/ggplot_masterlist_28.png)
+![ggplot2 Violin Plot](screenshots/ggplot_masterlist_28.png)
 
 <a href="#top">[Back to Top]</a>
 
@@ -789,7 +789,7 @@ ggplot(email_campaign_funnel, aes(x = Stage, y = Users, fill = Gender)) +   # Fi
 
 ### <a name="Waffle Chart"></a>Waffle Chart
 
-Waffle charts is a nice way of showing the categorical composition of the total population. Though there is no direct function, it can be articulated by smartly maneuvering the ggplot using `geom_tile()` function. The below template should help you create your own waffle.
+Waffle charts is a nice way of showing the categorical composition of the total population. Though there is no direct function, it can be articulated by smartly maneuvering the ggplot2 using `geom_tile()` function. The below template should help you create your own waffle.
 
 ```{r}
 var <- mpg$class  # the categorical data 
@@ -826,7 +826,7 @@ ggplot(df, aes(x = x, y = y, fill = category)) +
 <a href="#top">[Back to Top]</a>
 
 ### <a name="Pie Chart"></a>Pie Chart
-Pie chart, a classic way of showing the compositions is equivalent to the waffle chart in terms of the information conveyed. But is a slightly tricky to implement in ggplot using the `coord_polar()`.
+Pie chart, a classic way of showing the compositions is equivalent to the waffle chart in terms of the information conveyed. But is a slightly tricky to implement in ggplot2 using the `coord_polar()`.
 ```{r}
 library(ggplot2)
 theme_set(theme_classic())
