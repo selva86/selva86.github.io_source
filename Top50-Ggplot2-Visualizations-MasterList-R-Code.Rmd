@@ -105,10 +105,12 @@ The most frequently used plot for data analysis is undoubtedly the scatterplot. 
 It can be drawn using `geom_point()`. Additionally, `geom_smooth` which draws a smoothing line (based on loess) by default, can be tweaked to draw the line of best fit by setting `method='lm'`. 
 
 ```{r}
+# install.packages("ggplot2")
+
 # load package and data
-theme_set(theme_bw())  # pre-set the bw theme.
 options(scipen=999)  # turn-off scientific notation like 1e+48
 library(ggplot2)
+theme_set(theme_bw())  # pre-set the bw theme.
 data("midwest", package = "ggplot2")
 # midwest <- read.csv("http://goo.gl/G1K41K")  # bkup data source
 
@@ -135,6 +137,7 @@ Within `geom_encircle()`, set the `data` to a new dataframe that contains only t
 # install 'ggalt' pkg
 # devtools::install_github("hrbrmstr/ggalt")
 options(scipen = 999)
+library(ggplot2)
 library(ggalt)
 midwest_select <- midwest[midwest$poptotal > 350000 & midwest$poptotal <= 500000 & 
                      midwest$area > 0.01 & midwest$area < 0.1, ]
@@ -239,10 +242,12 @@ mpg_select <- mpg[mpg$manufacturer %in% c("audi", "ford", "honda", "hyundai"), ]
 
 # Scatterplot
 theme_set(theme_bw())  # pre-set the bw theme.
-g <- ggplot(mpg_select, aes(displ, cty)) + labs(subtitle="mpg: Displacement vs City Mileage", 
-                                                title="Bubble chart")
+g <- ggplot(mpg_select, aes(displ, cty)) + 
+  labs(subtitle="mpg: Displacement vs City Mileage",
+       title="Bubble chart")
 
-g + geom_jitter(aes(col=manufacturer, size=hwy)) + geom_smooth(aes(col=manufacturer), method="lm", se=F)
+g + geom_jitter(aes(col=manufacturer, size=hwy)) + 
+  geom_smooth(aes(col=manufacturer), method="lm", se=F)
 ```
 ![ggplot2 Bubble Plot](screenshots/ggplot_masterlist_6.png)
 
@@ -257,8 +262,8 @@ The key thing to do is to set the `aes(frame)` to the desired column on which yo
 # Source: https://github.com/dgrtwo/gganimate
 # install.packages("cowplot")  # a gganimate dependency
 # devtools::install_github("dgrtwo/gganimate")
-library(gganimate)
 library(ggplot2)
+library(gganimate)
 library(gapminder)
 theme_set(theme_bw())  # pre-set the bw theme.
 
@@ -611,11 +616,19 @@ theme_set(theme_classic())
 # Histogram on a Continuous (Numeric) Variable
 g <- ggplot(mpg, aes(displ)) + scale_fill_brewer(palette = "Spectral")
 
-g + geom_histogram(aes(fill=class), binwidth = .1, col="black", size=.1) +  # change binwidth
-  labs(title="Histogram with Auto Binning", subtitle="Engine Displacement across Vehicle Classes")   
+g + geom_histogram(aes(fill=class), 
+                   binwidth = .1, 
+                   col="black", 
+                   size=.1) +  # change binwidth
+  labs(title="Histogram with Auto Binning", 
+       subtitle="Engine Displacement across Vehicle Classes")  
 
-g + geom_histogram(aes(fill=class), bins=5, col="black", size=.1) +   # change number of bins
-  labs(title="Histogram with Fixed Bins", subtitle="Engine Displacement across Vehicle Classes") 
+g + geom_histogram(aes(fill=class), 
+                   bins=5, 
+                   col="black", 
+                   size=.1) +   # change number of bins
+  labs(title="Histogram with Fixed Bins", 
+       subtitle="Engine Displacement across Vehicle Classes") 
 ```
 ![ggplot2 Histogram on Numeric Variable](screenshots/ggplot_masterlist_19.png)
 ![ggplot2 Histogram with 5 Bins - Spectral](screenshots/ggplot_masterlist_20.png)
@@ -646,11 +659,12 @@ theme_set(theme_classic())
 
 # Plot
 g <- ggplot(mpg, aes(cty))
-g + geom_density(aes(fill=factor(cyl))) + labs(title="Density plot", 
-                                               subtitle="City Mileage Grouped by Number of cylinders",
-                                               caption="Source: mpg",
-                                               x="City Mileage",
-                                               fill="# Cylinders")
+g + geom_density(aes(fill=factor(cyl))) + 
+    labs(title="Density plot", 
+         subtitle="City Mileage Grouped by Number of cylinders",
+         caption="Source: mpg",
+         x="City Mileage",
+         fill="# Cylinders")
 ```
 ![ggplot2 Density Plot](screenshots/ggplot_masterlist_23.png)
 
@@ -668,11 +682,12 @@ theme_set(theme_classic())
 
 # Plot
 g <- ggplot(mpg, aes(class, cty))
-g + geom_boxplot(varwidth=T, fill="plum") + labs(title="Box plot", 
-                                                 subtitle="City Mileage grouped by Class of vehicle",
-                                                 caption="Source: mpg",
-                                                 x="Class of Vehicle",
-                                                 y="City Mileage")
+g + geom_boxplot(varwidth=T, fill="plum") + 
+    labs(title="Box plot", 
+         subtitle="City Mileage grouped by Class of vehicle",
+         caption="Source: mpg",
+         x="Class of Vehicle",
+         y="City Mileage")
 ```
 ![ggplot2 BoxPlot](screenshots/ggplot_masterlist_24.png)
 
@@ -838,8 +853,13 @@ df <- as.data.frame(table(mpg$class))
 colnames(df) <- c("class", "freq")
 pie <- ggplot(df, aes(x = "", y=freq, fill = factor(class))) + 
   geom_bar(width = 1, stat = "identity") +
-  theme(axis.line = element_blank(), plot.title = element_text(hjust=0.5)) + 
-  labs(fill="class", x=NULL, y=NULL, title="Pie Chart of class", caption="Source: mpg")
+  theme(axis.line = element_blank(), 
+        plot.title = element_text(hjust=0.5)) + 
+  labs(fill="class", 
+       x=NULL, 
+       y=NULL, 
+       title="Pie Chart of class", 
+       caption="Source: mpg")
 
 pie + coord_polar(theta = "y", start=0)
 
@@ -847,8 +867,13 @@ pie + coord_polar(theta = "y", start=0)
 # mpg$class
 pie <- ggplot(mpg, aes(x = "", fill = factor(class))) + 
   geom_bar(width = 1) +
-  theme(axis.line = element_blank(), plot.title = element_text(hjust=0.5)) + 
-  labs(fill="class", x=NULL, y=NULL, title="Pie Chart of class", caption="Source: mpg")
+  theme(axis.line = element_blank(), 
+        plot.title = element_text(hjust=0.5)) + 
+  labs(fill="class", 
+       x=NULL, 
+       y=NULL, 
+       title="Pie Chart of class", 
+       caption="Source: mpg")
   
 pie + coord_polar(theta = "y", start=0)
 ```
@@ -922,7 +947,9 @@ theme_set(theme_classic())
 # Plot
 g <- ggplot(df, aes(Var1, Freq))
 g + geom_bar(stat="identity", width = 0.5, fill="tomato2") + 
-      labs(title="Bar Chart", subtitle="Manufacturer of vehicles", caption="Source: Frequency of Manufacturers from 'mpg' dataset") +
+      labs(title="Bar Chart", 
+           subtitle="Manufacturer of vehicles", 
+           caption="Source: Frequency of Manufacturers from 'mpg' dataset") +
       theme(axis.text.x = element_text(angle=65, vjust=0.6))
 ```
 ![Bar Chart With Ggplot](screenshots/ggplot_masterlist_33.png)
@@ -931,8 +958,11 @@ It can be computed directly from a column variable as well. In this case, only X
 ```{r}
 # From on a categorical column variable
 g <- ggplot(mpg, aes(manufacturer))
-g + geom_bar(aes(fill=class), width = 0.5) + theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
-  labs(title="Categorywise Bar Chart", subtitle="Manufacturer of vehicles", caption="Source: Manufacturers from 'mpg' dataset")
+g + geom_bar(aes(fill=class), width = 0.5) + 
+  theme(axis.text.x = element_text(angle=65, vjust=0.6)) +
+  labs(title="Categorywise Bar Chart", 
+       subtitle="Manufacturer of vehicles", 
+       caption="Source: Manufacturers from 'mpg' dataset")
 ```
 ![Bar Chart With Multiple Categories in Ggplot](screenshots/ggplot_masterlist_34.png)
 
@@ -948,7 +978,9 @@ library(ggfortify)
 theme_set(theme_classic())
 
 # Plot 
-autoplot(AirPassengers) + labs(title="AirPassengers") + theme(plot.title = element_text(hjust=0.5))
+autoplot(AirPassengers) + 
+  labs(title="AirPassengers") + 
+  theme(plot.title = element_text(hjust=0.5))
 ```
 ![Time series in ggplot with ts object](screenshots/ggplot_masterlist_35.png)
 
@@ -988,8 +1020,12 @@ brks <- economics_m$date
 # plot
 ggplot(economics_m, aes(x=date)) + 
   geom_line(aes(y=returns_perc)) + 
-  labs(title="Monthly Time Series", subtitle="Returns Percentage from Economics Dataset", caption="Source: Economics", y="Returns %") +  # title and caption
-  scale_x_date(labels = lbls, breaks = brks) +  # change to monthly ticks and labels
+  labs(title="Monthly Time Series", 
+       subtitle="Returns Percentage from Economics Dataset", 
+       caption="Source: Economics", 
+       y="Returns %") +  # title and caption
+  scale_x_date(labels = lbls, 
+               breaks = brks) +  # change to monthly ticks and labels
   theme(axis.text.x = element_text(angle = 90, vjust=0.5),  # rotate x axis text
         panel.grid.minor = element_blank())  # turn off minor grid
 ```
@@ -1012,8 +1048,12 @@ lbls <- lubridate::year(brks)
 # plot
 ggplot(economics_y, aes(x=date)) + 
   geom_line(aes(y=returns_perc)) + 
-  labs(title="Yearly Time Series", subtitle="Returns Percentage from Economics Dataset", caption="Source: Economics", y="Returns %") +  # title and caption
-  scale_x_date(labels = lbls, breaks = brks) +  # change to monthly ticks and labels
+  labs(title="Yearly Time Series", 
+       subtitle="Returns Percentage from Economics Dataset", 
+       caption="Source: Economics", 
+       y="Returns %") +  # title and caption
+  scale_x_date(labels = lbls, 
+               breaks = brks) +  # change to monthly ticks and labels
   theme(axis.text.x = element_text(angle = 90, vjust=0.5),  # rotate x axis text
         panel.grid.minor = element_blank())  # turn off minor grid
 ```
@@ -1143,7 +1183,8 @@ ggplot(df, aes(x=date)) +
        caption="Source: Economics", 
        y="Returns %") +  # title and caption
   scale_x_date(labels = lbls, breaks = brks) +  # change to monthly ticks and labels
-  scale_fill_manual(name="", values = c("psavert"="#00ba38", "uempmed"="#f8766d")) +  # line color
+  scale_fill_manual(name="", 
+                    values = c("psavert"="#00ba38", "uempmed"="#f8766d")) +  # line color
   theme(panel.grid.minor = element_blank())  # turn off minor grid
 ```
 ![Stacked Area Chart in Ggplot](screenshots/ggplot_masterlist_41.png)
@@ -1186,7 +1227,11 @@ ggplot(df, aes(monthweek, weekdayf, fill = VIX.Close)) +
   geom_tile(colour = "white") + 
   facet_grid(year~monthf) + 
   scale_fill_gradient(low="red", high="green") +
-  labs(title = "Time-Series Calendar Heatmap", subtitle="Yahoo Closing Price", fill="Close") +  xlab("Week of Month") + ylab("")
+  labs(x="Week of Month",
+       y="",
+       title = "Time-Series Calendar Heatmap", 
+       subtitle="Yahoo Closing Price", 
+       fill="Close")
 ```
 ![Calendar Heatmap in Ggplot](screenshots/ggplot_masterlist_42.png)
 
