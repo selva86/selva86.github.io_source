@@ -124,6 +124,7 @@ plot(gg)
 ![ggplot2 Scatterplot](screenshots/ggplot_masterlist_1.png)
 
 <a href="#top">[Back to Top]</a>
+
 ### <a name="Scatterplot With Encircling"></a>Scatterplot With Encircling
 
 When presenting the results, sometimes I would encirlce certain special group of points or region in the chart so as to draw the attention to those peculiar cases. This can be conveniently done using the `geom_encircle()` in `ggalt` package. 
