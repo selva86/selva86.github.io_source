@@ -175,7 +175,10 @@ iv_df
 
 ```{r, eval=FALSE, echo=TRUE}
 logitMod <- glm(ABOVE50K ~ RELATIONSHIP + AGE + CAPITALGAIN + OCCUPATION + EDUCATIONNUM, data=trainingData, family=binomial(link="logit"))
-predicted <- plogis(predict(logitMod, testData, type="response"))  # predicted scores
+
+predicted <- plogis(predict(logitMod, testData))  # predicted scores
+# or
+predicted <- predict(logitMod, testData, type="response")  # predicted scores
 ```
 A quick note about the `plogis` function: The `glm()` procedure with `family="binomial"` will build the logistic regression model on the given formula. When we use the `predict` function on this model, it will predict the log(odds) of the Y variable. This is not what we ultimately want because, the predicted values may not lie within the 0 and 1 range as expected. So, to convert it into prediction probability scores that is bound between 0 and 1, we use the `plogis()`.
 
