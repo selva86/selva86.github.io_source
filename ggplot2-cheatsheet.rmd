@@ -1,5 +1,5 @@
 ---
-title: Ggplot2 Quick Reference
+title: ggplot2 Quick Reference
 layout: default
 sitemap:
     priority: 1
@@ -7,7 +7,7 @@ sitemap:
     lastmod: 2015-10-29T12:49:30-05:00
 ---
 
-# Ggplot2 Quickref
+# ggplot2 Quickref
 
 #### Basics tasks
 * [Basic plot setup](ggplot2-cheatsheet.html#Basic plot setup)
