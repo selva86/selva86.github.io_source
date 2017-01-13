@@ -220,6 +220,7 @@ g + geom_count(col="tomato3", show.legend=F) +
 
 ### <a name="Bubble Plot"></a>Bubble plot
 While scatterplot lets you compare the relationship between 2 continuous variables, bubble chart serves well if you want to understand relationship within the underlying groups based on:
+
 1. A Categorical variable (by changing the color) and 
 2. Another continuous variable (by changing the size of points). 
 
@@ -1252,18 +1253,27 @@ plot_slopegraph <- function(df) {
 }    
 
 ## Prepare data    
-df <- tufte_sort(source_df, x="year", y="value", group="group", method="tufte", min.space=0.05)
-df <- transform(df, x=factor(x, levels=c(5,10,15,20), labels=c("5 years","10 years","15 years","20 years")), 
+df <- tufte_sort(source_df, 
+                 x="year", 
+                 y="value", 
+                 group="group", 
+                 method="tufte", 
+                 min.space=0.05)
+
+df <- transform(df, 
+                x=factor(x, levels=c(5,10,15,20), 
+                            labels=c("5 years","10 years","15 years","20 years")), 
                 y=round(y))
 
 ## Plot
-plot_slopegraph(df) + labs(title="Estimates of % survival rates") + theme(axis.title=element_blank(), 
-                                                                          axis.ticks = element_blank(),
-                                                                          plot.title = element_text(hjust=0.5,
-                                                                                                    family = "American Typewriter",
-                                                                                                    face="bold"),
-                                                                          axis.text = element_text(family = "American Typewriter",
-                                                                                                   face="bold"))
+plot_slopegraph(df) + labs(title="Estimates of % survival rates") + 
+                      theme(axis.title=element_blank(),
+                            axis.ticks = element_blank(),
+                            plot.title = element_text(hjust=0.5,
+                                                      family = "American Typewriter",
+                                                      face="bold"),
+                            axis.text = element_text(family = "American Typewriter",
+                                                     face="bold"))
 ```
 ![Slopechart in Ggplot](screenshots/ggplot_masterlist_43.png)
 
