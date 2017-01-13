@@ -82,7 +82,7 @@ The list below sorts the visualizations based on its primary purpose. Primarily,
         + [From Wide Data Format](Top50-Ggplot2-Visualizations-MasterList-R-Code.html#Time Series Plot From  Wide Data Format)
     * [Stacked Area Chart](#Stacked Area Chart)
     * [Calendar Heat Map](#Calendar Heat Map)
-    * [Slope Chart](#Slope Chart)
+    * [Slope Chart](#Slope Chart 2)
     * [Seasonal Plot](#Seasonal Plot)
     
 7. [Groups](Top50-Ggplot2-Visualizations-MasterList-R-Code.html#7. Groups)
@@ -1191,7 +1191,7 @@ ggplot(df, aes(monthweek, weekdayf, fill = VIX.Close)) +
 
 <a href="#top">[Back to Top]</a>
 
-### <a name="Slope Chart"></a>Slope Chart
+### <a name="Slope Chart 2"></a>Slope Chart
 Slope chart is a great tool of you want to visualize change in value and ranking between categories. This is more suitable over a time series when there are very few time points.
 ```{r}
 library(dplyr)
