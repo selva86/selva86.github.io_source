@@ -238,5 +238,3 @@ In yet another approach, the outliers can be replaced with missing values (NA) a
 ___________________________________________________
 
 Have a suggestion or found a bug? Notify [here.](https://docs.google.com/forms/d/e/1FAIpQLSeIJmlvwe562R7JVpi5J2ydLyhk5-7OrGRMFGYrMJvjPal8eA/viewform)
-
-_**Editors Note:** If you liked this article, you might want to check out, [Introduction to R Programming](https://www.packtpub.com/big-data-and-business-intelligence/introduction-r-programming-video) video course if you are a beginner, new to the R programming language and the [Mastering R programming](https://www.packtpub.com/big-data-and-business-intelligence/mastering-r-programming-video) video course for Data scientists and Machine learning engineers._
